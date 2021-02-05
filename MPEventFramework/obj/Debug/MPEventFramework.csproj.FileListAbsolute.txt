@@ -5,3 +5,4 @@ D:\_PROJEKTID\_MPEventFramework\MPEventFramework\bin\Debug\CitizenFX.Core.dll
 D:\_PROJEKTID\_MPEventFramework\MPEventFramework\obj\Debug\MPEventFramework.csproj.CopyComplete
 D:\_PROJEKTID\_MPEventFramework\MPEventFramework\obj\Debug\MPEventFramework.dll
 D:\_PROJEKTID\_MPEventFramework\MPEventFramework\obj\Debug\MPEventFramework.pdb
+D:\_PROJEKTID\_MPEventFramework\MPEventFramework\obj\Debug\MPEventFramework.csprojAssemblyReference.cache

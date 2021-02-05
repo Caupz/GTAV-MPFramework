@@ -53,13 +53,16 @@ namespace MPEventFramework
             playerNetworkId = API.NetworkGetNetworkIdFromEntity(playerHandle);
             pedHandle = API.GetPlayerPed(playerHandle);
             pedNetworkId = API.NetworkGetNetworkIdFromEntity(pedHandle);
+
+            Utils.Log("InitPlayerIds pedHandle"+ pedHandle+ " pedNetworkId"+ pedNetworkId);
         }
 
         [Tick]
-        public void OnTickMain()
+        async Task OnTickMain()
         {
+            CitizenFX.Core.Native.API.Wait(0);
             DateTime dt = DateTime.Now;
-            Utils.Log("OnTickMain ["+ dt.Second + "]["+dt.Millisecond+"]");
+            //Utils.Log("OnTickMain ["+ dt.Second + "]["+dt.Millisecond+"]");
 
             if (previouseSecond != dt.Second)
             {
@@ -76,13 +79,20 @@ namespace MPEventFramework
 
         public void OnSecondPassed()
         {
-            if(debug) Utils.Log("OnSecondPassed");
+            pedHandle = API.GetPlayerPed(playerHandle);
+            pedNetworkId = API.NetworkGetNetworkIdFromEntity(pedHandle);
+
+            Utils.Log("InitPlayerIds pedHandle" + pedHandle + " pedNetworkId" + pedNetworkId);
+
+            if (debug) Utils.Log("OnSecondPassed");
 
             bool isInVehicle = API.IsPedInAnyVehicle(pedHandle, false);
+            Utils.Log("OnSecondPassed: isInVehicle " + isInVehicle+ " state_inVehicle: "+ state_inVehicle);
 
-            if(isInVehicle)
+            if (isInVehicle)
             {
                 int vHandle = API.GetVehiclePedIsIn(pedHandle, false);
+                Utils.Log("OnSecondPassed vHandle " + vHandle);
                 state_lastVehicleHandle = vHandle;
                 state_inVehicle = true;
                 int seat = API.GetSeatPedIsTryingToEnter(pedHandle);
@@ -93,6 +103,7 @@ namespace MPEventFramework
             }
             else if(state_inVehicle)
             {
+                Utils.Log("OnSecondPassed state_inVehicle " + state_inVehicle);
                 state_inVehicle = false;
                 if (debug) Utils.Log("OnPlayerLeaveVehicle");
                 OnPlayerLeaveVehicle?.Invoke(state_lastVehicleHandle, state_vehicleSeat);
@@ -102,7 +113,7 @@ namespace MPEventFramework
 
         public void OnHundredMilliSecondPassed()
         {
-            if (debug) Utils.Log("OnHundredMilliSecondPassed");
+            //if (debug) Utils.Log("OnHundredMilliSecondPassed");
 
             bool isTryingToEnter = API.IsPedInAnyVehicle(pedHandle, true);
 
