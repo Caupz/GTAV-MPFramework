@@ -20,7 +20,6 @@ namespace MPEventFramework
         int pedHandle = -1;
         int pedNetworkId = -1;
 
-        
         int state_lastVehicleHandle = Vehicle.HANDLE_NONE;
         bool state_inVehicle = false;
         int state_vehicleSeat = Vehicle.SEAT_INDEX_NONE;
@@ -28,9 +27,13 @@ namespace MPEventFramework
         int previouseSecond = 0;
         int previouseMilliSecond = 0;
 
-        public delegate int OnTryingToEnterVehicle(int handle);
-        public delegate int OnPlayerEnteredVehicle(int vehicleHandle, int vehicleSeat);
-        public delegate int OnPlayerLeaveVehicle(int vehicleHandle, int vehicleSeat);
+        public event TryingToEnterVehicle OnTryingToEnterVehicle;
+        public event PlayerEnteredVehicle OnPlayerEnteredVehicle;
+        public event PlayerLeaveVehicle OnPlayerLeaveVehicle;
+
+        public delegate void TryingToEnterVehicle(int vehicleHandle);
+        public delegate void PlayerEnteredVehicle(int vehicleHandle, int vehicleSeat);
+        public delegate void PlayerLeaveVehicle(int vehicleHandle, int vehicleSeat);
 
         public Main()
         {
@@ -56,6 +59,8 @@ namespace MPEventFramework
         public void OnTickMain()
         {
             DateTime dt = DateTime.Now;
+            Utils.Log("OnTickMain ["+ dt.Second + "]["+dt.Millisecond+"]");
+
             if (previouseSecond != dt.Second)
             {
                 previouseSecond = dt.Second;
@@ -79,15 +84,18 @@ namespace MPEventFramework
             {
                 int vHandle = API.GetVehiclePedIsIn(pedHandle, false);
                 state_lastVehicleHandle = vHandle;
+                state_inVehicle = true;
                 int seat = API.GetSeatPedIsTryingToEnter(pedHandle);
                 state_vehicleSeat = seat;
                 // TODO seat tuleb kuidagi teistmoodi teha. Kaardistada ära mis sõidukis ollakse ja siis eraldi checkida.
-                OnPlayerEnteredVehicle(vHandle, seat);
+                if (debug) Utils.Log("OnPlayerEnteredVehicle");
+                OnPlayerEnteredVehicle?.Invoke(vHandle, seat);
             }
             else if(state_inVehicle)
             {
                 state_inVehicle = false;
-                OnPlayerLeaveVehicle(state_lastVehicleHandle, state_vehicleSeat);
+                if (debug) Utils.Log("OnPlayerLeaveVehicle");
+                OnPlayerLeaveVehicle?.Invoke(state_lastVehicleHandle, state_vehicleSeat);
                 state_vehicleSeat = Vehicle.SEAT_INDEX_NONE;
             }
         }
@@ -106,26 +114,8 @@ namespace MPEventFramework
                 // TODO testida autode peal ja testida ka helikopterite peal. Kas mõlemas tulevad valued välja? Kasutada ainult seda mis töötab kõige paremini.
 
                 Utils.Log("VEH: [" + veh + "] VEH2: [" + veh2 + "]");
-                TryingToEnterVehicle(veh2);
+                OnTryingToEnterVehicle?.Invoke(veh);
             }
-        }
-
-        public void TryingToEnterVehicle(int handle)
-        {
-            if (debug) Utils.Log("StartingToEnterVehicle");
-        }
-
-        public void PlayerEnteredVehicle(int vehicleHandle, int vehicleSeat)
-        {
-            if (debug) Utils.Log("OnPlayerEnteredVehicle");
-            state_lastVehicleHandle = vehicleHandle;
-            state_inVehicle = true;
-        }
-
-        public void PlayerLeaveVehicle(int vehicleHandle, int vehicleSeat)
-        {
-            if (debug) Utils.Log("OnPlayerLeaveVehicle");
-            state_inVehicle = false;
         }
     }
 }
