@@ -45,7 +45,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Commands.cs" />
-    <Compile Include="Main.cs" />
+    <Compile Include="Base.cs" />
     <Compile Include="OnPlayerEnteredVehicle.cs" />
     <Compile Include="OnPlayerLeaveVehicle.cs" />
     <Compile Include="OnTryingToEnterVehicle.cs" />
