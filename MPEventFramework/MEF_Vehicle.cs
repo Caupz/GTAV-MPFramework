@@ -8,7 +8,7 @@ using static CitizenFX.Core.Native.API;
 
 namespace MPEventFramework
 {
-    class Vehicle : BaseScript
+    class MEF_Vehicle : BaseScript
     {
         public const int HANDLE_NONE = -1;
 

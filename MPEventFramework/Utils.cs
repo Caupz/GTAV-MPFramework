@@ -12,7 +12,7 @@ namespace MPEventFramework
     {
         public static void Log(string data)
         {
-            Debug.WriteLine(data);
+            Debug.WriteLine(String.Format("BASE: {0}", data));
         }
     }
 }
