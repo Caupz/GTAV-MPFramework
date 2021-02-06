@@ -46,12 +46,13 @@
   <ItemGroup>
     <Compile Include="Commands.cs" />
     <Compile Include="Base.cs" />
+    <Compile Include="MEF_Player.cs" />
     <Compile Include="OnPlayerEnteredVehicle.cs" />
     <Compile Include="OnPlayerLeaveVehicle.cs" />
     <Compile Include="OnTryingToEnterVehicle.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Utils.cs" />
-    <Compile Include="Vehicle.cs" />
+    <Compile Include="MEF_Vehicle.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
