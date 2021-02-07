@@ -13,7 +13,6 @@ namespace MPEventFramework
     {
         // NOTE (07.02.2021): I know I could have used reflection to get code lesser rows longer but it uses more CPU time. But the goal here is to save CPU time as much as possible.
 
-
         /* TODO?
         IsControlPressed
         IsControlJustPressed
@@ -46,10 +45,10 @@ namespace MPEventFramework
         const float weatherTransitionPerSecond = 0.0167f;
 
         // PLAYER IDS
-        int playerHandle = -1;
-        int playerNetworkId = -1;
-        int pedHandle = -1;
-        int pedNetworkId = -1;
+        public int playerHandle { get; protected set; }
+        public int playerNetworkId { get; protected set; }
+        public int pedHandle { get; protected set; }
+        public int pedNetworkId { get; protected set; }
         // PLAYER IDS END
 
         // STATES
@@ -399,7 +398,7 @@ namespace MPEventFramework
 
         public void SetCurrentWeatherState()
         {
-            //Utils.Log("previouslySelectedWeathers.Count: "+ previouslySelectedWeathers.Count+ " previouseWeather" + previouseWeather+ " selectedWeathers.Count:"+ selectedWeathers.Count+ " currentWeather: "+ currentWeather);
+            Utils.Log("previouslySelectedWeathers.Count: "+ previouslySelectedWeathers.Count+ " previouseWeather" + previouseWeather+ " selectedWeathers.Count:"+ selectedWeathers.Count+ " currentWeather: "+ currentWeather+ " weatherTransition: "+ weatherTransition);
             API.SetWeatherTypeTransition((uint)API.GetHashKey(previouslySelectedWeathers[previouseWeather]), (uint)API.GetHashKey(selectedWeathers[currentWeather]), weatherTransition);
         }
 
