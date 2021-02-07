@@ -193,8 +193,8 @@ namespace MPEventFramework
         public event PlayerLeaveVehicle OnPlayerLeaveVehicle;
         public event PlayerSeatChange OnPlayerSeatChange;
         public event PlayerSpawnIntoVehicle OnPlayerSpawnIntoVehicle;
-        public event PlayerEnteredBoat OnPlayerEnteredBoat; // TEST
-        public event PlayerLeftBoat OnPlayerLeftBoat; // TEST
+        public event PlayerEnteredBoat OnPlayerEnteredBoat;
+        public event PlayerLeftBoat OnPlayerLeftBoat;
         public event PlayerEnteredHeli OnPlayerEnteredHeli;
         public event PlayerLeftHeli OnPlayerLeftHeli;
         public event PlayerEnteredPlane OnPlayerEnteredPlane; // TEST
@@ -363,24 +363,29 @@ namespace MPEventFramework
 
                 if (currentWeatherUpdateInMinutes <= 0)
                 {
-                    if (enableSnowOnly)
-                    {
-                        selectedWeathers = MEF_Weathers.snowWeathers;
-                    }
-                    else
-                    {
-                        if (enableSnowyWeathers)
-                        {
-                            selectedWeathers = MEF_Weathers.weathersWithSnow;
-                        }
-                        else
-                        {
-                            selectedWeathers = MEF_Weathers.weathersWithoutSnow;
-                        }
-                    }
-
+                    previouslySelectedWeathers = selectedWeathers;
+                    GetNewSelectedWeathers();
                     SetCurrentWeatherState();
                     GetNewWeatherUpdates();
+                }
+            }
+        }
+
+        public void GetNewSelectedWeathers()
+        {
+            if (enableSnowOnly)
+            {
+                selectedWeathers = MEF_Weathers.snowWeathers;
+            }
+            else
+            {
+                if (enableSnowyWeathers)
+                {
+                    selectedWeathers = MEF_Weathers.weathersWithSnow;
+                }
+                else
+                {
+                    selectedWeathers = MEF_Weathers.weathersWithoutSnow;
                 }
             }
         }
@@ -396,7 +401,6 @@ namespace MPEventFramework
             previouseWeather = currentWeather;
             currentWeather = Utils.GetRandom(0, selectedWeathers.Count);
             currentWeatherUpdateInMinutes = weatherUpdateIntervalInMinutes;
-            previouslySelectedWeathers = selectedWeathers;
         }
 
         public void UpdateWind()
