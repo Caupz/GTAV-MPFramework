@@ -5,13 +5,20 @@ using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using CitizenFX.Core;
-using API = CitizenFX.Core.Native.API; // Õppisin, et niiviisi saab namespacedele aliasi teha.
+using API = CitizenFX.Core.Native.API;
 
 namespace MPEventFramework
 {
     public class Base : BaseScript
     {
         // NOTE (07.02.2021): I know I could have used reflection to get code lesser rows longer but it uses more CPU time. But the goal here is to save CPU time as much as possible.
+
+
+        /* TODO?
+        IsControlPressed
+        IsControlJustPressed
+        IsControlReleased
+        */
 
         const bool debug = true;
 
@@ -35,7 +42,7 @@ namespace MPEventFramework
         int previouseWeather = 0;
         float weatherTransition = 0;
         List<string> previouslySelectedWeathers = MEF_Weathers.weathersWithSnow;
-        List<string> selectedWeathers;
+        List<string> selectedWeathers = MEF_Weathers.weathersWithSnow;
         const float weatherTransitionPerSecond = 0.0167f;
 
         // PLAYER IDS
@@ -110,17 +117,17 @@ namespace MPEventFramework
         int previouseHour = 0;
         int previouseMilliSecond = 0;
 
-        public event SecondPassed OnSecondPassed; // TEST
-        public event HundredSecondPassed OnHundredSecondPassed; // TEST
-        public event MinutePassed OnMinutePassed; // TEST
-        public event HourPassed OnHourPassed; // TEST
+        public event SecondPassed OnSecondPassed;
+        public event HundredSecondPassed OnHundredSecondPassed;
+        public event MinutePassed OnMinutePassed;
+        public event HourPassed OnHourPassed;
         public delegate void SecondPassed();
         public delegate void HundredSecondPassed();
         public delegate void MinutePassed();
         public delegate void HourPassed();
 
         // PLAYER RELATED EVENTS
-        public event PlayerSpawned OnPlayerSpawned; // TEST
+        public event PlayerSpawned OnPlayerSpawned;
         public event PlayerStartedWalking OnPlayerStartedWalking;
         public event PlayerStoppedWalking OnPlayerStoppedWalking;
         public event PlayerStartedRunning OnPlayerStartedRunning;
@@ -129,63 +136,63 @@ namespace MPEventFramework
         public event PlayerStoppedSprinting OnPlayerStoppedSprinting;
         public event PlayerStartedJumping OnPlayerStartedJumping;
         public event PlayerStoppedJumping OnPlayerStoppedJumping;
-        public event PlayerCuffed OnPlayerCuffed; // TEST
-        public event PlayerUnCuffed OnPlayerUnCuffed; // TEST
+        public event PlayerCuffed OnPlayerCuffed; // TEST CMD vaja mis cuffib
+        public event PlayerUnCuffed OnPlayerUnCuffed; // TEST CMD vaja mis uncuffib
         public event PlayerStartedToGetUp OnPlayerStartedToGetUp;
         public event PlayerStoppedToGetUp OnPlayerStoppedToGetUp;
-        public event PlayerStartedToAimFromCover OnPlayerStartedToAimFromCover; // TEST
-        public event PlayerStoppedToAimFromCover OnPlayerStoppedToAimFromCover; // TEST
-        public event PlayerStartedGettingJacked OnPlayerStartedGettingJacked; // TEST
-        public event PlayerStoppedGettingJacked OnPlayerStoppedGettingJacked; // TEST
-        public event PlayerStartedJacking OnPlayerStartedJacking; // TEST
-        public event PlayerStoppedJacking OnPlayerStoppedJacking; // TEST
-        public event PlayerStartedGettingStunned OnPlayerStartedGettingStunned; // TEST
-        public event PlayerStoppedGettingStunned OnPlayerStoppedGettingStunned; // TEST
+        public event PlayerStartedToAimFromCover OnPlayerStartedToAimFromCover; // TEST CMD vaja teha mis relva annab
+        public event PlayerStoppedToAimFromCover OnPlayerStoppedToAimFromCover; // TEST CMD vaja teha mis relva annab
+        public event PlayerStartedGettingJacked OnPlayerStartedGettingJacked; // TEST teist inimest vaja
+        public event PlayerStoppedGettingJacked OnPlayerStoppedGettingJacked; // TEST teist inimest vaja
+        public event PlayerStartedJacking OnPlayerStartedJacking; // TEST ei tööta?
+        public event PlayerStoppedJacking OnPlayerStoppedJacking; // TEST ei tööta?
+        public event PlayerStartedGettingStunned OnPlayerStartedGettingStunned; // TEST teist inimest vaja
+        public event PlayerStoppedGettingStunned OnPlayerStoppedGettingStunned; // TEST teist inimest vaja
         public event PlayerStartedClimbing OnPlayerStartedClimbing;
         public event PlayerStoppedClimbing OnPlayerStoppedClimbing;
-        public event PlayerDied OnPlayerDied; // TEST
-        public event PlayerRevived OnPlayerRevived; // TEST
-        public event PlayerStartedDiving OnPlayerStartedDiving; // TEST
-        public event PlayerStoppedDiving OnPlayerStoppedDiving; // TEST
+        public event PlayerDied OnPlayerDied;
+        public event PlayerRevived OnPlayerRevived;
+        public event PlayerStartedDiving OnPlayerStartedDiving; // TEST ei tööta?
+        public event PlayerStoppedDiving OnPlayerStoppedDiving; // TEST ei tööta?
         public event PlayerStartedDriveBy OnPlayerStartedDriveBy;
         public event PlayerStoppedDriveBy OnPlayerStoppedDriveBy;
         public event PlayerStartedDucking OnPlayerStartedDucking; // TEST EI TOIMI
         public event PlayerStoppedDucking OnPlayerStoppedDucking; // TEST EI TOIMI
-        public event PlayerStartedFalling OnPlayerStartedFalling; // TEST
-        public event PlayerStoppedFalling OnPlayerStoppedFalling; // TEST
+        public event PlayerStartedFalling OnPlayerStartedFalling;
+        public event PlayerStoppedFalling OnPlayerStoppedFalling;
         public event PlayerStartedOnFoot OnPlayerStartedOnFoot;
         public event PlayerStoppedOnFoot OnPlayerStoppedOnFoot;
-        public event PlayerEnteredMeleeCombat OnPlayerEnteredMeleeCombat; // TEST
-        public event PlayerLeftMeleeCombat OnPlayerLeftMeleeCombat; // TEST
+        public event PlayerEnteredMeleeCombat OnPlayerEnteredMeleeCombat;
+        public event PlayerLeftMeleeCombat OnPlayerLeftMeleeCombat;
         public event PlayerEnteredCover OnPlayerEnteredCover;
         public event PlayerLeftCover OnPlayerLeftCover;
-        public event PlayerEnteredParachuteFreefall OnPlayerEnteredParachuteFreefall; // TEST
-        public event PlayerLeftParachuteFreefall OnPlayerLeftParachuteFreefall; // TEST
-        public event PlayerStartedReloading OnPlayerStartedReloading; // TEST
-        public event PlayerStoppedReloading OnPlayerStoppedReloading; // TEST
-        public event PlayerStartedShooting OnPlayerStartedShooting; // TEST
-        public event PlayerStoppedShooting OnPlayerStoppedShooting; // TEST
+        public event PlayerEnteredParachuteFreefall OnPlayerEnteredParachuteFreefall; // TEST CMD vaja teha mis relva annab
+        public event PlayerLeftParachuteFreefall OnPlayerLeftParachuteFreefall; // TEST CMD vaja teha mis relva annab
+        public event PlayerStartedReloading OnPlayerStartedReloading; // TEST CMD vaja teha mis relva annab
+        public event PlayerStoppedReloading OnPlayerStoppedReloading; // TEST CMD vaja teha mis relva annab
+        public event PlayerStartedShooting OnPlayerStartedShooting; // TEST CMD vaja teha mis relva annab
+        public event PlayerStoppedShooting OnPlayerStoppedShooting; // TEST CMD vaja teha mis relva annab
         public event PlayerStartedSwimming OnPlayerStartedSwimming;
-        public event PlayerStoppedSwimming OnPlayerStoppedSwimming; // TEST
+        public event PlayerStoppedSwimming OnPlayerStoppedSwimming;
         public event PlayerStartedSwimmingUnderwater OnPlayerStartedSwimmingUnderwater;
         public event PlayerStoppedSwimmingUnderwater OnPlayerStoppedSwimmingUnderwater;
-        public event PlayerStartedStealthKill OnPlayerStartedStealthKill; // TEST
-        public event PlayerStoppedStealthKill OnPlayerStoppedStealthKill; // TEST
+        public event PlayerStartedStealthKill OnPlayerStartedStealthKill; // TEST CMD vaja teha mis relva annab
+        public event PlayerStoppedStealthKill OnPlayerStoppedStealthKill; // TEST CMD vaja teha mis relva annab
         public event PlayerStartedVaulting OnPlayerStartedVaulting;
         public event PlayerStoppedVaulting OnPlayerStoppedVaulting;
-        public event PlayerStartedWearingHelmet OnPlayerStartedWearingHelmet; // TEST
-        public event PlayerStoppedWearingHelmet OnPlayerStoppedWearingHelmet; // TEST
+        public event PlayerStartedWearingHelmet OnPlayerStartedWearingHelmet; // TEST motikas ei hakanud kiivrit kandma
+        public event PlayerStoppedWearingHelmet OnPlayerStoppedWearingHelmet; // TEST motikas ei hakanud kiivrit kandma
         public event PlayerEnteredMainMenu OnPlayerEnteredMainMenu;
         public event PlayerLeftMainMenu OnPlayerLeftMainMenu;
-        public event PlayerReadyToShoot OnPlayerReadyToShoot; // TEST
-        public event PlayerNotReadyToShoot OnPlayerNotReadyToShoot; // TEST
-        public event PlayerStartedAiming OnPlayerStartedAiming; // TEST
-        public event PlayerStoppedAiming OnPlayerStoppedAiming; // TEST
+        public event PlayerReadyToShoot OnPlayerReadyToShoot; // TEST CMD vaja teha mis relva annab
+        public event PlayerNotReadyToShoot OnPlayerNotReadyToShoot; // TEST CMD vaja teha mis relva annab
+        public event PlayerStartedAiming OnPlayerStartedAiming; // TEST CMD vaja teha mis relva annab
+        public event PlayerStoppedAiming OnPlayerStoppedAiming; // TEST CMD vaja teha mis relva annab
 
         public event PlayerHealthGain OnPlayerHealthGain;
         public event PlayerHealthLoss OnPlayerHealthLoss;
-        public event PlayerArmourGain OnPlayerArmourGain; // TEST
-        public event PlayerArmourLoss OnPlayerArmourLoss; // TEST
+        public event PlayerArmourGain OnPlayerArmourGain; // TEST CMD vaja teha mis armi annab
+        public event PlayerArmourLoss OnPlayerArmourLoss; // TEST CMD vaja teha mis armi annab
 
         // VEHICLE RELATED EVENTS
         public event PlayerTryingToEnterVehicle OnPlayerTryingToEnterVehicle;
@@ -197,31 +204,31 @@ namespace MPEventFramework
         public event PlayerLeftBoat OnPlayerLeftBoat;
         public event PlayerEnteredHeli OnPlayerEnteredHeli;
         public event PlayerLeftHeli OnPlayerLeftHeli;
-        public event PlayerEnteredPlane OnPlayerEnteredPlane; // TEST
-        public event PlayerLeftPlane OnPlayerLeftPlane; // TEST
-        public event PlayerEnteredPoliceVehicle OnPlayerEnteredPoliceVehicle; // TEST
-        public event PlayerLeftPoliceVehicle OnPlayerLeftPoliceVehicle; // TEST
-        public event PlayerEnteredSub OnPlayerEnteredSub; // TEST
-        public event PlayerLeftSub OnPlayerLeftSub; // TEST
-        public event PlayerEnteredTaxi OnPlayerEnteredTaxi; // TEST
-        public event PlayerLeftTaxi OnPlayerLeftTaxi; // TEST
-        public event PlayerEnteredTrain OnPlayerEnteredTrain; // TEST
-        public event PlayerLeftTrain OnPlayerLeftTrain; // TEST
+        public event PlayerEnteredPlane OnPlayerEnteredPlane;
+        public event PlayerLeftPlane OnPlayerLeftPlane;
+        public event PlayerEnteredPoliceVehicle OnPlayerEnteredPoliceVehicle;
+        public event PlayerLeftPoliceVehicle OnPlayerLeftPoliceVehicle;
+        public event PlayerEnteredSub OnPlayerEnteredSub;
+        public event PlayerLeftSub OnPlayerLeftSub;
+        public event PlayerEnteredTaxi OnPlayerEnteredTaxi;
+        public event PlayerLeftTaxi OnPlayerLeftTaxi;
+        public event PlayerEnteredTrain OnPlayerEnteredTrain;
+        public event PlayerLeftTrain OnPlayerLeftTrain;
         public event PlayerEnteredFlyingVehicle OnPlayerEnteredFlyingVehicle;
         public event PlayerLeftFlyingVehicle OnPlayerLeftFlyingVehicle;
-        public event PlayerStartedOnBike OnPlayerStartedOnBike; // TEST
-        public event PlayerStoppedOnBike OnPlayerStoppedOnBike; // TEST
-        public event PlayerStartedOnVehicle OnPlayerStartedOnVehicle; // TEST
-        public event PlayerStoppedOnVehicle OnPlayerStoppedOnVehicle; // TEST
-        public event PlayerStartedJumpingOutOfVehicle OnPlayerStartedJumpingOutOfVehicle; // TEST
-        public event PlayerStoppedJumpingOutOfVehicle OnPlayerStoppedJumpingOutOfVehicle; // TEST
-        public event PlayerStartedMovingVehicle OnPlayerStartedMovingVehicle; // TEST
-        public event PlayerStoppedVehicle OnPlayerStoppedVehicle; // TEST
-        public event PlayerStartedBurnouting OnPlayerStartedBurnouting; // TEST
-        public event PlayerStoppedBurnouting OnPlayerStoppedBurnouting; // TEST
-        public event VehicleHealthGain OnVehicleHealthGain; // TEST
-        public event VehicleHealthLoss OnVehicleHealthLoss; // TEST
-        public event VehicleCrash OnVehicleCrash; // TEST
+        public event PlayerStartedOnBike OnPlayerStartedOnBike;
+        public event PlayerStoppedOnBike OnPlayerStoppedOnBike;
+        public event PlayerStartedOnVehicle OnPlayerStartedOnVehicle;
+        public event PlayerStoppedOnVehicle OnPlayerStoppedOnVehicle;
+        public event PlayerStartedJumpingOutOfVehicle OnPlayerStartedJumpingOutOfVehicle;
+        public event PlayerStoppedJumpingOutOfVehicle OnPlayerStoppedJumpingOutOfVehicle;
+        public event PlayerStartedMovingVehicle OnPlayerStartedMovingVehicle; // TEST EI TÖÖTA
+        public event PlayerStoppedVehicle OnPlayerStoppedVehicle; // TEST EI TÖÖTA
+        public event PlayerStartedBurnouting OnPlayerStartedBurnouting;
+        public event PlayerStoppedBurnouting OnPlayerStoppedBurnouting;
+        public event VehicleHealthGain OnVehicleHealthGain;
+        public event VehicleHealthLoss OnVehicleHealthLoss;
+        public event VehicleCrash OnVehicleCrash; // TEST. Peab logima mis kiirused ja healthi muutused.
 
         // VEHICLE RELATED DELEGATES
         public delegate void PlayerStartedBurnouting();
@@ -392,6 +399,7 @@ namespace MPEventFramework
 
         public void SetCurrentWeatherState()
         {
+            //Utils.Log("previouslySelectedWeathers.Count: "+ previouslySelectedWeathers.Count+ " previouseWeather" + previouseWeather+ " selectedWeathers.Count:"+ selectedWeathers.Count+ " currentWeather: "+ currentWeather);
             API.SetWeatherTypeTransition((uint)API.GetHashKey(previouslySelectedWeathers[previouseWeather]), (uint)API.GetHashKey(selectedWeathers[currentWeather]), weatherTransition);
         }
 
@@ -774,14 +782,14 @@ namespace MPEventFramework
             {
                 state_vehicleBurnouting = false;
                 if (debug) Utils.Log("OnPlayerStoppedBurnouting");
-                OnPlayerStoppedBurnouting();
+                OnPlayerStoppedBurnouting?.Invoke();
             }
 
             if(state_onBike)
             {
                 state_onBike = false;
                 if (debug) Utils.Log("OnPlayerStoppedOnBike");
-                OnPlayerStoppedOnBike();
+                OnPlayerStoppedOnBike?.Invoke();
             }
 
             if(state_inTrain)
@@ -851,19 +859,11 @@ namespace MPEventFramework
             {
                 state_inBoat = false;
                 if(debug) Utils.Log("OnPlayerLeftBoat");
-                OnPlayerLeftBoat();
+                OnPlayerLeftBoat?.Invoke();
             }
         }
 
         // HELPER FUNCTIONS
-
-        /*
-         OnVehicleCrash healthiga mängida ja kiirust ka arvestada
-
-         IsControlPressed
-         IsControlJustPressed
-         IsControlReleased
-             */
 
         public void CheckPlayerAiming()
         {
