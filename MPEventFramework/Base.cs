@@ -11,8 +11,32 @@ namespace MPEventFramework
 {
     public class Base : BaseScript
     {
-        public bool enableRealtimeGametime = false;
+        // NOTE (07.02.2021): I know I could have used reflection to get code lesser rows longer but it uses more CPU time. But the goal here is to save CPU time as much as possible.
+
         const bool debug = true;
+
+        // TIME SYSTEM
+        public bool enableRealtimeGametime = true;
+
+        // WIND SYSTEM
+        public bool enableRandomWinds = true;
+        public int maxWindSpeed = 70;
+        public int minWindSpeed = 0;
+        public int currentWind = 0;
+        public float currentWindDirection = 0;
+
+        // WEATHER SYSTEM
+        public bool enableRandomWeathers = true;
+        public bool enableSnowyWeathers = false;
+        public bool enableSnowOnly = false;
+        public int weatherUpdateIntervalInMinutes = 10;
+        int currentWeatherUpdateInMinutes = 0;
+        int currentWeather = 0;
+        int previouseWeather = 0;
+        float weatherTransition = 0;
+        List<string> previouslySelectedWeathers = MEF_Weathers.weathersWithSnow;
+        List<string> selectedWeathers;
+        const float weatherTransitionPerSecond = 0.0167f;
 
         // PLAYER IDS
         int playerHandle = -1;
@@ -22,6 +46,14 @@ namespace MPEventFramework
         // PLAYER IDS END
 
         // STATES
+        int pedHealth = MEF_Player.HEALTH_NONE;
+        int pedArmour = MEF_Player.ARMOUR_NONE;
+        int vehicleHealth = MEF_Vehicle.HEALTH_NONE;
+        float vehicleBodyHealth = MEF_Vehicle.HEALTH_NONE;
+        float vehicleEngineHealth = MEF_Vehicle.HEALTH_NONE;
+        float vehiclePetrolTankHealth = MEF_Vehicle.HEALTH_NONE;
+        float vehicleSpeed = 0;
+
         int state_lastVehicleHandle = MEF_Vehicle.HANDLE_NONE;
         bool state_inVehicle = false;
         int state_vehicleSeat = MEF_Vehicle.SEAT_NONE;
@@ -75,12 +107,17 @@ namespace MPEventFramework
 
         int previouseSecond = 0;
         int previouseMinute = 0;
+        int previouseHour = 0;
         int previouseMilliSecond = 0;
 
         public event SecondPassed OnSecondPassed; // TEST
         public event HundredSecondPassed OnHundredSecondPassed; // TEST
+        public event MinutePassed OnMinutePassed; // TEST
+        public event HourPassed OnHourPassed; // TEST
         public delegate void SecondPassed();
         public delegate void HundredSecondPassed();
+        public delegate void MinutePassed();
+        public delegate void HourPassed();
 
         // PLAYER RELATED EVENTS
         public event PlayerSpawned OnPlayerSpawned; // TEST
@@ -145,6 +182,11 @@ namespace MPEventFramework
         public event PlayerStartedAiming OnPlayerStartedAiming; // TEST
         public event PlayerStoppedAiming OnPlayerStoppedAiming; // TEST
 
+        public event PlayerHealthGain OnPlayerHealthGain; // TEST
+        public event PlayerHealthLoss OnPlayerHealthLoss; // TEST
+        public event PlayerArmourGain OnPlayerArmourGain; // TEST
+        public event PlayerArmourLoss OnPlayerArmourLoss; // TEST
+
         // VEHICLE RELATED EVENTS
         public event PlayerTryingToEnterVehicle OnPlayerTryingToEnterVehicle;
         public event PlayerEnteredVehicle OnPlayerEnteredVehicle;
@@ -177,6 +219,9 @@ namespace MPEventFramework
         public event PlayerStoppedVehicle OnPlayerStoppedVehicle; // TEST
         public event PlayerStartedBurnouting OnPlayerStartedBurnouting; // TEST
         public event PlayerStoppedBurnouting OnPlayerStoppedBurnouting; // TEST
+        public event VehicleHealthGain OnVehicleHealthGain; // TEST
+        public event VehicleHealthLoss OnVehicleHealthLoss; // TEST
+        public event VehicleCrash OnVehicleCrash; // TEST
 
         // VEHICLE RELATED DELEGATES
         public delegate void PlayerStartedBurnouting();
@@ -210,6 +255,9 @@ namespace MPEventFramework
         public delegate void PlayerStoppedOnBike();
         public delegate void PlayerStartedOnVehicle();
         public delegate void PlayerStoppedOnVehicle();
+        public delegate void VehicleHealthGain(int vehicleHealth, float vehicleBodyHealth, float vehicleEngineHealth, float vehiclePetrolTankHealth);
+        public delegate void VehicleHealthLoss(int vehicleHealth, float vehicleBodyHealth, float vehicleEngineHealth, float vehiclePetrolTankHealth);
+        public delegate void VehicleCrash();
 
         // PLAYER RELATED DELEGATES
         public delegate void PlayerStartedAiming();
@@ -273,11 +321,108 @@ namespace MPEventFramework
         public delegate void PlayerLeftParachuteFreefall();
         public delegate void PlayerStartedJacking();
         public delegate void PlayerStoppedJacking();
+        public delegate void PlayerHealthGain();
+        public delegate void PlayerHealthLoss();
+        public delegate void PlayerArmourGain();
+        public delegate void PlayerArmourLoss();
 
         public Base()
         {
+            DateTime dt = DateTime.Now;
             InitPlayerIds();
             InitSystemVariables();
+            UpdateWind();
+            UpdateWeather();
+            UpdateTime(dt.Hour, dt.Minute, dt.Second);
+        }
+
+        public void TransitionWeather()
+        {
+            if (enableRandomWeathers && weatherTransition > 0.0)
+            {
+                weatherTransition += weatherTransitionPerSecond;
+
+                if (weatherTransition > 1.0f)
+                {
+                    weatherTransition = 1.0f;
+                    SetCurrentWeatherState();
+                    weatherTransition = 0f;
+                }
+                else
+                {
+                    SetCurrentWeatherState();
+                }
+            }
+        }
+
+        public void UpdateWeather()
+        {
+            if(enableRandomWeathers)
+            {
+                currentWeatherUpdateInMinutes--;
+
+                if (currentWeatherUpdateInMinutes <= 0)
+                {
+                    if (enableSnowOnly)
+                    {
+                        selectedWeathers = MEF_Weathers.snowWeathers;
+                    }
+                    else
+                    {
+                        if (enableSnowyWeathers)
+                        {
+                            selectedWeathers = MEF_Weathers.weathersWithSnow;
+                        }
+                        else
+                        {
+                            selectedWeathers = MEF_Weathers.weathersWithoutSnow;
+                        }
+                    }
+
+                    SetCurrentWeatherState();
+                    GetNewWeatherUpdates();
+                }
+            }
+        }
+
+        public void SetCurrentWeatherState()
+        {
+            API.SetWeatherTypeTransition((uint)API.GetHashKey(previouslySelectedWeathers[previouseWeather]), (uint)API.GetHashKey(selectedWeathers[currentWeather]), weatherTransition);
+        }
+
+        public void GetNewWeatherUpdates()
+        {
+            weatherTransition = weatherTransitionPerSecond;
+            previouseWeather = currentWeather;
+            currentWeather = Utils.GetRandom(0, selectedWeathers.Count);
+            currentWeatherUpdateInMinutes = weatherUpdateIntervalInMinutes;
+            previouslySelectedWeathers = selectedWeathers;
+        }
+
+        public void UpdateWind()
+        {
+            if(enableRandomWinds)
+            {
+                GetRandomWind();
+                GetRandomWindDirection();
+                ApplyCurrentWind();
+            }
+        }
+
+        public void GetRandomWind()
+        {
+            currentWind = Utils.GetRandom(minWindSpeed, maxWindSpeed);
+        }
+
+        public void GetRandomWindDirection()
+        {
+            currentWindDirection = Utils.GetRandom(0, 8);
+        }
+
+        public void ApplyCurrentWind()
+        {
+            API.SetWind(currentWind);
+            API.SetWindDirection(currentWindDirection);
         }
 
         public void InitSystemVariables()
@@ -309,8 +454,14 @@ namespace MPEventFramework
 
                 if (previouseMinute != dt.Minute)
                 {
-                    CallbackOnMinutePassed(dt.Hour, dt.Minute);
+                    CallbackOnMinutePassed();
                     previouseMinute = dt.Minute;
+
+                    if(previouseHour != dt.Hour)
+                    {
+                        OnHourPassed?.Invoke();
+                        previouseHour = dt.Hour;
+                    }
                 }
 
                 CallbackOnSecondPassed(dt.Hour, dt.Minute, dt.Second);
@@ -325,16 +476,25 @@ namespace MPEventFramework
 
         // TIMING EVENTS
 
-        public void CallbackOnMinutePassed(int hour, int minute)
+        public void CallbackOnMinutePassed()
         {
+            UpdateWind();
+            UpdateWeather();
+            OnMinutePassed?.Invoke();
+        }
+
+        private void UpdateTime(int hour, int minute, int second)
+        {
+            if (enableRealtimeGametime)
+            {
+                API.SetClockTime(hour, minute, second);
+            }
         }
 
         public void CallbackOnSecondPassed(int hour, int minute, int second)
         {
-            if(enableRealtimeGametime)
-            {
-                API.SetClockTime(hour, minute, second);
-            }
+            UpdateTime(hour, minute, second);
+            TransitionWeather();
 
             //if (debug) Utils.Log("OnSecondPassed");
             CheckPlayerSpawned();
@@ -349,6 +509,8 @@ namespace MPEventFramework
             CheckPlayerWearingHelmet();
             CheckPlayerMainMenu();
             CheckPlayerParachuteFreefall();
+            CheckPlayerHealth();
+            CheckPlayerArmour();
 
             if (state_onFoot)
             {
@@ -380,6 +542,7 @@ namespace MPEventFramework
                 CheckPlayerInFlyingVehicle();
                 CheckPlayerOnBike();
                 CheckPlayerBurnouting();
+                CheckVehicleHealth();
             }
 
             if(state_swimming)
@@ -411,6 +574,76 @@ namespace MPEventFramework
             }
 
             OnHundredSecondPassed?.Invoke();
+        }
+
+        public void UpdateVehicleHealth(int vHealth, float vBodyHealth, float vEngineHealth, float vPetrolTankHealth)
+        {
+            vehicleHealth = vHealth;
+            vehicleBodyHealth = vBodyHealth;
+            vehicleEngineHealth = vEngineHealth;
+            vehiclePetrolTankHealth = vPetrolTankHealth;
+        }
+
+        public void CheckVehicleHealth()
+        {
+            int vHealth = API.GetEntityHealth(state_lastVehicleHandle);
+            float vBodyHealth = API.GetVehicleBodyHealth(state_lastVehicleHandle);
+            float vEngineHealth = API.GetVehicleEngineHealth(state_lastVehicleHandle);
+            float vPetrolTankHealth = API.GetVehiclePetrolTankHealth(state_lastVehicleHandle);
+
+            if (vHealth > vehicleHealth || vBodyHealth > vehicleBodyHealth || vEngineHealth > vehicleEngineHealth || vPetrolTankHealth > vehiclePetrolTankHealth)
+            {
+                UpdateVehicleHealth(vHealth, vBodyHealth, vEngineHealth, vPetrolTankHealth);
+                OnVehicleHealthGain?.Invoke(vehicleHealth, vehicleBodyHealth, vehicleEngineHealth, vehiclePetrolTankHealth);
+            }
+            if (vHealth < vehicleHealth || vBodyHealth < vehicleBodyHealth || vEngineHealth < vehicleEngineHealth || vPetrolTankHealth < vehiclePetrolTankHealth)
+            {
+                UpdateVehicleHealth(vHealth, vBodyHealth, vEngineHealth, vPetrolTankHealth);
+
+                float speed = MEF_Vehicle.GetSpeedInKmh(state_lastVehicleHandle);
+                float speedQuanfitsent = vehicleSpeed / 2;
+
+                if(speed < speedQuanfitsent)
+                {
+                    OnVehicleCrash?.Invoke();
+                    vehicleSpeed = speed;
+                }
+
+                OnVehicleHealthLoss?.Invoke(vehicleHealth, vehicleBodyHealth, vehicleEngineHealth, vehiclePetrolTankHealth);
+            }
+        }
+        public void CheckPlayerHealth()
+        {
+            int pHealth = API.GetEntityHealth(pedHandle);
+
+            if (pHealth > pedHealth)
+            {
+                OnPlayerHealthGain?.Invoke();
+                pedHealth = pHealth;
+            }
+            else if (pHealth < pedHealth)
+            {
+                // TODO GetPedLastDamageBone
+                OnPlayerHealthLoss?.Invoke();
+                pedHealth = pHealth;
+            }
+        }
+
+        public void CheckPlayerArmour()
+        {
+            int pArmour = API.GetPedArmour(pedHandle);
+
+            if (pArmour > pedArmour)
+            {
+                OnPlayerArmourGain?.Invoke();
+                pedArmour = pArmour;
+            }
+            else if (pArmour < pedArmour)
+            {
+                // TODO GetPedLastDamageBone
+                OnPlayerArmourLoss?.Invoke();
+                pedArmour = pArmour;
+            }
         }
 
         public void ResetPlayerRelatedStates()
@@ -588,9 +821,6 @@ namespace MPEventFramework
         // HELPER FUNCTIONS
 
         /*
-         OnPlayerDamage healthiga mängida GetEntityHealth GetPedArmour GetPedLastDamageBone
-         OnVehicleDamage healthiga mängida GetEntityHealth GetVehicleBodyHealth GetVehicleEngineHealth GetVehiclePetrolTankHealth GetVehicleWheelHealth
-         OnPlayerShootPlayer healthiga mängida ja raytrace
          OnVehicleCrash healthiga mängida ja kiirust ka arvestada
 
          IsControlPressed
@@ -877,12 +1107,12 @@ namespace MPEventFramework
             if (state && !state_onBike)
             {
                 state_onBike = state;
-                OnPlayerStartedOnFoot?.Invoke();
+                OnPlayerStartedOnBike?.Invoke();
             }
             else if (!state && state_onBike)
             {
                 state_onBike = state;
-                OnPlayerStoppedOnFoot?.Invoke();
+                OnPlayerStoppedOnBike?.Invoke();
             }
         }
         public void CheckPlayerOnFoot()
@@ -1289,6 +1519,9 @@ namespace MPEventFramework
                 pedHandle = pHandle;
                 pedNetworkId = pNetId;
                 OnPlayerSpawned?.Invoke();
+
+                pedHealth = API.GetEntityHealth(pedHandle);
+                pedArmour = API.GetPedArmour(pedHandle);
             }
         }
 
@@ -1307,7 +1540,12 @@ namespace MPEventFramework
                 if (debug) Utils.Log("OnPlayerEnteredVehicle " + vHandle);
 
                 state_tryingToEnterVehicle = false;
-                OnPlayerEnteredVehicle?.Invoke(vHandle, state_vehicleSeat);
+                OnPlayerEnteredVehicle?.Invoke(state_lastVehicleHandle, state_vehicleSeat);
+                vehicleSpeed = MEF_Vehicle.GetSpeedInKmh(state_lastVehicleHandle);
+                vehicleHealth = API.GetEntityHealth(state_lastVehicleHandle);
+                vehicleBodyHealth = API.GetVehicleBodyHealth(state_lastVehicleHandle);
+                vehicleEngineHealth = API.GetVehicleEngineHealth(state_lastVehicleHandle);
+                vehiclePetrolTankHealth = API.GetVehiclePetrolTankHealth(state_lastVehicleHandle);
             }
             else if (!isInVehicle && state_inVehicle)
             {

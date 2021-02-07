@@ -10,6 +10,7 @@ namespace MPEventFramework
 {
     class MEF_Vehicle : BaseScript
     {
+        public const int HEALTH_NONE = -1;
         public const int HANDLE_NONE = -1;
 
         public const int SEAT_NONE = -2;
@@ -26,6 +27,19 @@ namespace MPEventFramework
         public static int GetMaxNumberOfSeats(int vehicleHandle)
         {
             return GetVehicleMaxNumberOfPassengers(vehicleHandle) + 1; // NOTE(Caupo 06.02.2021): +1 because the functions returns only passengers and does not include driver seat.
+        }
+
+        public static float GetSpeedInKmh(int vehicleHandle)
+        {
+            return (GetEntitySpeed(vehicleHandle) * 3.6f);
+        }
+        public static float GetSpeedInMph(int vehicleHandle)
+        {
+            return (GetEntitySpeed(vehicleHandle) * 2.236936f);
+        }
+        public static float GetSpeedInMeterPerSecond(int vehicleHandle)
+        {
+            return GetEntitySpeed(vehicleHandle);
         }
     }
 }
