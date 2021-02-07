@@ -32,8 +32,10 @@ namespace MPEventFramework
         bool state_jumping = false;
         bool state_cuffed = false;
         bool state_gettingUp = false;
+        bool state_aiming = false;
         bool state_aimingFromCover = false;
         bool state_jacked = false;
+        bool state_jacking = false;
         bool state_beingStealthKilled = false;
         bool state_stunned = false;
         bool state_climbing = false;
@@ -43,11 +45,41 @@ namespace MPEventFramework
         bool state_ducking = false;
         bool state_falling = false;
         bool state_inBoat = false;
+        bool state_inHeli = false;
+        bool state_inPlane = false;
+        bool state_inPoliceVehicle = false;
+        bool state_inSub = false;
+        bool state_inTaxi = false;
+        bool state_inTrain = false;
+        bool state_inFlyingVehicle = false;
+        bool state_onFoot = false;
+        bool state_onBike = false;
+        bool state_onVehicle = false;
+        bool state_inCombat = false;
+        bool state_inCover = false;
+        bool state_parachuteFreefall = false;
+        bool state_reloading = false;
+        bool state_shooting = false;
+        bool state_swimming = false;
+        bool state_swimmingUnderwater = false;
+        bool state_stealthKilling = false;
+        bool state_vaulting = false;
+        bool state_jumpingOutOfVehicle = false;
+        bool state_wearingHelmet = false;
+        bool state_mainMenu = false;
+        bool state_readyToShoot = false;
+        bool state_vehicleStopped = false;
+        bool state_vehicleBurnouting = false;
         // STATES END
 
         bool getNewPed = true;
         int previouseSecond = 0;
         int previouseMilliSecond = 0;
+
+        public event SecondPassed OnSecondPassed; // TEST
+        public event HundredSecondPassed OnHundredSecondPassed; // TEST
+        public delegate void SecondPassed();
+        public delegate void HundredSecondPassed();
 
         // PLAYER RELATED EVENTS
         public event PlayerSpawned OnPlayerSpawned; // TEST
@@ -67,6 +99,8 @@ namespace MPEventFramework
         public event PlayerStoppedToAimFromCover OnPlayerStoppedToAimFromCover; // TEST
         public event PlayerStartedGettingJacked OnPlayerStartedGettingJacked; // TEST
         public event PlayerStoppedGettingJacked OnPlayerStoppedGettingJacked; // TEST
+        public event PlayerStartedJacking OnPlayerStartedJacking; // TEST
+        public event PlayerStoppedJacking OnPlayerStoppedJacking; // TEST
         public event PlayerStartedGettingStunned OnPlayerStartedGettingStunned; // TEST
         public event PlayerStoppedGettingStunned OnPlayerStoppedGettingStunned; // TEST
         public event PlayerStartedClimbing OnPlayerStartedClimbing; // TEST
@@ -81,6 +115,34 @@ namespace MPEventFramework
         public event PlayerStoppedDucking OnPlayerStoppedDucking; // TEST
         public event PlayerStartedFalling OnPlayerStartedFalling; // TEST
         public event PlayerStoppedFalling OnPlayerStoppedFalling; // TEST
+        public event PlayerStartedOnFoot OnPlayerStartedOnFoot; // TEST
+        public event PlayerStoppedOnFoot OnPlayerStoppedOnFoot; // TEST
+        public event PlayerEnteredMeleeCombat OnPlayerEnteredMeleeCombat; // TEST
+        public event PlayerLeftMeleeCombat OnPlayerLeftMeleeCombat; // TEST
+        public event PlayerEnteredCover OnPlayerEnteredCover; // TEST
+        public event PlayerLeftCover OnPlayerLeftCover; // TEST
+        public event PlayerEnteredParachuteFreefall OnPlayerEnteredParachuteFreefall; // TEST
+        public event PlayerLeftParachuteFreefall OnPlayerLeftParachuteFreefall; // TEST
+        public event PlayerStartedReloading OnPlayerStartedReloading; // TEST
+        public event PlayerStoppedReloading OnPlayerStoppedReloading; // TEST
+        public event PlayerStartedShooting OnPlayerStartedShooting; // TEST
+        public event PlayerStoppedShooting OnPlayerStoppedShooting; // TEST
+        public event PlayerStartedSwimming OnPlayerStartedSwimming; // TEST
+        public event PlayerStoppedSwimming OnPlayerStoppedSwimming; // TEST
+        public event PlayerStartedSwimmingUnderwater OnPlayerStartedSwimmingUnderwater; // TEST
+        public event PlayerStoppedSwimmingUnderwater OnPlayerStoppedSwimmingUnderwater; // TEST
+        public event PlayerStartedStealthKill OnPlayerStartedStealthKill; // TEST
+        public event PlayerStoppedStealthKill OnPlayerStoppedStealthKill; // TEST
+        public event PlayerStartedVaulting OnPlayerStartedVaulting; // TEST
+        public event PlayerStoppedVaulting OnPlayerStoppedVaulting; // TEST
+        public event PlayerStartedWearingHelmet OnPlayerStartedWearingHelmet; // TEST
+        public event PlayerStoppedWearingHelmet OnPlayerStoppedWearingHelmet; // TEST
+        public event PlayerEnteredMainMenu OnPlayerEnteredMainMenu; // TEST
+        public event PlayerLeftMainMenu OnPlayerLeftMainMenu; // TEST
+        public event PlayerReadyToShoot OnPlayerReadyToShoot; // TEST
+        public event PlayerNotReadyToShoot OnPlayerNotReadyToShoot; // TEST
+        public event PlayerStartedAiming OnPlayerStartedAiming; // TEST
+        public event PlayerStoppedAiming OnPlayerStoppedAiming; // TEST
 
         // VEHICLE RELATED EVENTS
         public event PlayerTryingToEnterVehicle OnPlayerTryingToEnterVehicle;
@@ -90,8 +152,38 @@ namespace MPEventFramework
         public event PlayerSpawnIntoVehicle OnPlayerSpawnIntoVehicle;
         public event PlayerEnteredBoat OnPlayerEnteredBoat; // TEST
         public event PlayerLeftBoat OnPlayerLeftBoat; // TEST
+        public event PlayerEnteredHeli OnPlayerEnteredHeli; // TEST
+        public event PlayerLeftHeli OnPlayerLeftHeli; // TEST
+        public event PlayerEnteredPlane OnPlayerEnteredPlane; // TEST
+        public event PlayerLeftPlane OnPlayerLeftPlane; // TEST
+        public event PlayerEnteredPoliceVehicle OnPlayerEnteredPoliceVehicle; // TEST
+        public event PlayerLeftPoliceVehicle OnPlayerLeftPoliceVehicle; // TEST
+        public event PlayerEnteredSub OnPlayerEnteredSub; // TEST
+        public event PlayerLeftSub OnPlayerLeftSub; // TEST
+        public event PlayerEnteredTaxi OnPlayerEnteredTaxi; // TEST
+        public event PlayerLeftTaxi OnPlayerLeftTaxi; // TEST
+        public event PlayerEnteredTrain OnPlayerEnteredTrain; // TEST
+        public event PlayerLeftTrain OnPlayerLeftTrain; // TEST
+        public event PlayerEnteredFlyingVehicle OnPlayerEnteredFlyingVehicle; // TEST
+        public event PlayerLeftFlyingVehicle OnPlayerLeftFlyingVehicle; // TEST
+        public event PlayerStartedOnBike OnPlayerStartedOnBike; // TEST
+        public event PlayerStoppedOnBike OnPlayerStoppedOnBike; // TEST
+        public event PlayerStartedOnVehicle OnPlayerStartedOnVehicle; // TEST
+        public event PlayerStoppedOnVehicle OnPlayerStoppedOnVehicle; // TEST
+        public event PlayerStartedJumpingOutOfVehicle OnPlayerStartedJumpingOutOfVehicle; // TEST
+        public event PlayerStoppedJumpingOutOfVehicle OnPlayerStoppedJumpingOutOfVehicle; // TEST
+        public event PlayerStartedMovingVehicle OnPlayerStartedMovingVehicle; // TEST
+        public event PlayerStoppedVehicle OnPlayerStoppedVehicle; // TEST
+        public event PlayerStartedBurnouting OnPlayerStartedBurnouting; // TEST
+        public event PlayerStoppedBurnouting OnPlayerStoppedBurnouting; // TEST
 
         // VEHICLE RELATED DELEGATES
+        public delegate void PlayerStartedBurnouting();
+        public delegate void PlayerStoppedBurnouting();
+        public delegate void PlayerStartedMovingVehicle();
+        public delegate void PlayerStoppedVehicle();
+        public delegate void PlayerStartedJumpingOutOfVehicle();
+        public delegate void PlayerStoppedJumpingOutOfVehicle();
         public delegate void PlayerTryingToEnterVehicle(int vehicleHandle, int vehicleSeat);
         public delegate void PlayerEnteredVehicle(int vehicleHandle, int vehicleSeat);
         public delegate void PlayerLeaveVehicle(int vehicleHandle, int vehicleSeat);
@@ -99,11 +191,49 @@ namespace MPEventFramework
         public delegate void PlayerSpawnIntoVehicle(int vehicleHandle);
         public delegate void PlayerEnteredBoat();
         public delegate void PlayerLeftBoat();
+        public delegate void PlayerEnteredHeli();
+        public delegate void PlayerLeftHeli();
+        public delegate void PlayerEnteredPlane();
+        public delegate void PlayerLeftPlane();
+        public delegate void PlayerEnteredPoliceVehicle();
+        public delegate void PlayerLeftPoliceVehicle();
+        public delegate void PlayerEnteredSub();
+        public delegate void PlayerLeftSub();
+        public delegate void PlayerEnteredTaxi();
+        public delegate void PlayerLeftTaxi();
+        public delegate void PlayerEnteredTrain();
+        public delegate void PlayerLeftTrain();
+        public delegate void PlayerEnteredFlyingVehicle();
+        public delegate void PlayerLeftFlyingVehicle();
+        public delegate void PlayerStartedOnBike();
+        public delegate void PlayerStoppedOnBike();
+        public delegate void PlayerStartedOnVehicle();
+        public delegate void PlayerStoppedOnVehicle();
 
         // PLAYER RELATED DELEGATES
-        public delegate void PlayerSpawned();
+        public delegate void PlayerStartedAiming();
+        public delegate void PlayerStoppedAiming();
+        public delegate void PlayerReadyToShoot();
+        public delegate void PlayerNotReadyToShoot();
+        public delegate void PlayerEnteredMainMenu();
+        public delegate void PlayerLeftMainMenu();
+        public delegate void PlayerStartedWearingHelmet();
+        public delegate void PlayerStoppedWearingHelmet();
+        public delegate void PlayerStartedVaulting();
+        public delegate void PlayerStoppedVaulting();
+        public delegate void PlayerStartedStealthKill();
+        public delegate void PlayerStoppedStealthKill();
+        public delegate void PlayerStartedSwimmingUnderwater();
+        public delegate void PlayerStoppedSwimmingUnderwater();
+        public delegate void PlayerStartedSwimming();
+        public delegate void PlayerStoppedSwimming();
+        public delegate void PlayerStartedShooting();
+        public delegate void PlayerStoppedShooting();
         public delegate void PlayerStartedWalking();
         public delegate void PlayerStoppedWalking();
+        public delegate void PlayerSpawned();
+        public delegate void PlayerStartedReloading();
+        public delegate void PlayerStoppedReloading();
         public delegate void PlayerStartedRunning();
         public delegate void PlayerStoppedRunning();
         public delegate void PlayerStartedSprinting();
@@ -132,6 +262,16 @@ namespace MPEventFramework
         public delegate void PlayerStoppedDucking();
         public delegate void PlayerStartedFalling();
         public delegate void PlayerStoppedFalling();
+        public delegate void PlayerStartedOnFoot();
+        public delegate void PlayerStoppedOnFoot();
+        public delegate void PlayerEnteredMeleeCombat();
+        public delegate void PlayerLeftMeleeCombat();
+        public delegate void PlayerEnteredCover();
+        public delegate void PlayerLeftCover();
+        public delegate void PlayerEnteredParachuteFreefall();
+        public delegate void PlayerLeftParachuteFreefall();
+        public delegate void PlayerStartedJacking();
+        public delegate void PlayerStoppedJacking();
 
         public Base()
         {
@@ -163,101 +303,544 @@ namespace MPEventFramework
             if (previouseSecond != dt.Second)
             {
                 previouseSecond = dt.Second;
-                OnSecondPassed();
+                CallbackOnSecondPassed();
             }
 
             if(Math.Abs(previouseMilliSecond - dt.Millisecond) >= 100)
             {
                 previouseMilliSecond = dt.Millisecond;
-                OnHundredMilliSecondPassed();
+                CallbackOnHundredMilliSecondPassed();
             }
         }
 
         // TIMING EVENTS
 
-        public void OnSecondPassed()
+        public void CallbackOnSecondPassed()
         {
             //if (debug) Utils.Log("OnSecondPassed");
             CheckPlayerSpawned();
             CheckVehicleEvents();
+            CheckPlayerOnFoot();
             CheckPlayerCuffed();
-            CheckPlayerJumping(); // TODO liigutada on foot
-            CheckPlayerSprinting(); // TODO liigutada on foot
-            CheckPlayerRunning(); // TODO liigutada on foot
-            CheckPlayerWalking(); // TODO liigutada on foot
-            CheckPlayerGettingUp(); // TODO liigutada on foot
-            CheckPlayerAimFromCover(); // TODO liigutada on foot
-            CheckPlayerGettingJacked(); // TODO liigutada sõiduki
+            CheckPlayerGettingJacked();
             CheckPlayerStunned();
-            CheckPlayerClimbing(); // TODO liigutada on foot
             CheckPlayerDead();
             CheckPlayerDiving();
-            CheckPlayerDriveBy(); // TODO liigutada sõiduki
-            CheckPlayerDucking();
             CheckPlayerFalling();
+            CheckPlayerWearingHelmet();
+            CheckPlayerMainMenu();
+
+            if (state_onFoot)
+            {
+                CheckPlayerJumping();
+                CheckPlayerSprinting();
+                CheckPlayerRunning();
+                CheckPlayerWalking();
+                CheckPlayerGettingUp();
+                CheckPlayerAimFromCover();
+                CheckPlayerClimbing();
+                CheckPlayerOnVehicle();
+                CheckPlayerMeleeCombat();
+                CheckPlayerCover();
+                CheckPlayerJacking();
+                CheckPlayerSwimming();
+                CheckPlayerParachuteFreefall();
+            }
+            else
+            {
+                // tegelikult liigutada see resettimine seal kus on foot left, kuna seda kutsutakse muidu kogu aeg välja
+                    // resettida kõik stated mis ülemises on olemas.
+                    // on event triggerdada kõik mis ülemises
+            }
+
+            if (state_inVehicle)
+            {
+                CheckPlayerDriveBy();
+                CheckPlayerDucking();
+                CheckPlayerInAnyBoat();
+                CheckPlayerInAnyHeli();
+                CheckPlayerInAnyPlane();
+                CheckPlayerInAnyPoliceVehicle();
+                CheckPlayerInAnySub();
+                CheckPlayerInAnyTaxi();
+                CheckPlayerInAnyTrain();
+                CheckPlayerInFlyingVehicle();
+                CheckPlayerOnBike();
+                CheckPlayerBurnouting();
+            }
+            else
+            {
+                // tegelikult liigutada see resettimine seal kus on vehicle left, kuna seda kutsutakse muidu kogu aeg välja
+                    // resettida kõik stated mis ülemises on olemas.
+                    // on event triggerdada kõik mis ülemises
+            }
+
+            if(state_swimming)
+            {
+                CheckPlayerSwimmingUnderwater();
+            }
+
+            OnSecondPassed?.Invoke();
         }
 
-        public void OnHundredMilliSecondPassed()
+        public void CallbackOnHundredMilliSecondPassed()
         {
             CheckVehicleEnteringEvents();
+            CheckPlayerReloading();
+            CheckPlayerShooting();
+            CheckPlayerJumpingOutOfVehicle();
+            CheckPlayerReadyToShoot();
+            CheckPlayerAiming();
+
+            if (state_inVehicle)
+            {
+                CheckPlayerStoppingVehicle();
+            }
+
+            if(state_onFoot)
+            {
+                CheckPlayerStealthKilling();
+                CheckPlayerVaulting();
+            }
+
+            OnHundredSecondPassed?.Invoke();
         }
 
         // HELPER FUNCTIONS
 
         /*
-         IsPedInAnyBoat
-         IsPedInAnyHeli
-         IsPedInAnyPlane
-         IsPedInAnyPoliceVehicle
-         IsPedInAnySub
-         IsPedInAnyTaxi
-         IsPedInAnyTrain
-         IsPedInAnyVehicle JUBA OLEMAS JU?
-         IsPedInCombat IsPedInMeleeCombat
-         IsPedInCover IsPedInCoverFacingLeft IsPedInHighCover
-         IsPedInFlyingVehicle
-         IsPedInParachuteFreeFall
-         IsPedInjured
-         IsPedJacking
-         IsPedJumpingOutOfVehicle
-         IsPedOnAnyBike
-         IsPedOnFoot
-         IsPedOnVehicle
-         IsPedOpeningADoor
-         IsPedPerformingStealthKill
-         IsPedPlantingBomb
-         IsPedRagdoll
-         IsPedReloading
-         IsPedShooting
-         IsPedSwimming
-         IsPedSwimmingUnderWater
-         IsPedTryingToEnterALockedVehicle
-         IsPedVaulting
-         IsPedWearingHelmet
-         IsPedArmed
-         IsPedWeaponReadyToShoot
-         IsPauseMenuActive
+         OnPlayerDamage healthiga mängida GetEntityHealth GetPedArmour GetPedLastDamageBone
+         OnVehicleDamage healthiga mängida GetEntityHealth GetVehicleBodyHealth GetVehicleEngineHealth GetVehiclePetrolTankHealth GetVehicleWheelHealth
+         OnPlayerShootPlayer healthiga mängida ja raytrace
+         OnVehicleCrash healthiga mängida ja kiirust ka arvestada
 
-            IsVehicleTyreBurst
-            IsVehicleAlarmActivated
-            IsVehicleAttachedToTowTruck
-            IsVehicleAttachedToTrailer
-            IsVehicleDamaged
-            IsVehicleEngineOnFire
-            IsVehicleInBurnout
-            IsVehicleOnAllWheels
-            IsVehicleStopped
-
-            OnPlayerDamage
-            OnVehicleDamage
-            OnPlayerShootPlayer
-            OnVehicleCrash
-
-        IsControlPressed
-        IsControlJustPressed
-        IsControlReleased
+         IsControlPressed
+         IsControlJustPressed
+         IsControlReleased
              */
 
+        public void CheckPlayerAiming()
+        {
+            bool state = API.GetPedConfigFlag(pedHandle, 78, true);
+
+            if (state && !state_aiming)
+            {
+                state_aiming = state;
+                OnPlayerStartedAiming?.Invoke();
+            }
+            else if (!state && state_aiming)
+            {
+                state_aiming = state;
+                OnPlayerStoppedAiming?.Invoke();
+            }
+        }
+        public void CheckPlayerBurnouting()
+        {
+            bool state = API.IsVehicleInBurnout(state_lastVehicleHandle);
+
+            if (state && !state_vehicleBurnouting)
+            {
+                state_vehicleBurnouting = state;
+                OnPlayerStartedBurnouting?.Invoke();
+            }
+            else if (!state && state_vehicleBurnouting)
+            {
+                state_vehicleBurnouting = state;
+                OnPlayerStoppedBurnouting?.Invoke();
+            }
+        }
+        public void CheckPlayerStoppingVehicle()
+        {
+            bool state = API.IsVehicleStopped(pedHandle);
+
+            if (state && !state_vehicleStopped)
+            {
+                state_vehicleStopped = state;
+                OnPlayerStoppedVehicle?.Invoke();
+            }
+            else if (!state && state_vehicleStopped)
+            {
+                state_vehicleStopped = state;
+                OnPlayerStartedMovingVehicle?.Invoke();
+            }
+        }
+        public void CheckPlayerReadyToShoot()
+        {
+            bool state = API.IsPedWeaponReadyToShoot(pedHandle);
+
+            if (state && !state_readyToShoot)
+            {
+                state_readyToShoot = state;
+                OnPlayerReadyToShoot?.Invoke();
+            }
+            else if (!state && state_readyToShoot)
+            {
+                state_readyToShoot = state;
+                OnPlayerNotReadyToShoot?.Invoke();
+            }
+        }
+        public void CheckPlayerMainMenu()
+        {
+            bool state = API.IsPauseMenuActive();
+
+            if (state && !state_mainMenu)
+            {
+                state_mainMenu = state;
+                OnPlayerEnteredMainMenu?.Invoke();
+            }
+            else if (!state && state_mainMenu)
+            {
+                state_mainMenu = state;
+                OnPlayerLeftMainMenu?.Invoke();
+            }
+        }
+        public void CheckPlayerWearingHelmet()
+        {
+            bool state = API.IsPedWearingHelmet(pedHandle);
+
+            if (state && !state_wearingHelmet)
+            {
+                state_wearingHelmet = state;
+                OnPlayerStartedWearingHelmet?.Invoke();
+            }
+            else if (!state && state_wearingHelmet)
+            {
+                state_wearingHelmet = state;
+                OnPlayerStoppedWearingHelmet?.Invoke();
+            }
+        }
+        public void CheckPlayerJumpingOutOfVehicle()
+        {
+            bool state = API.IsPedJumpingOutOfVehicle(pedHandle);
+
+            if (state && !state_jumpingOutOfVehicle)
+            {
+                state_jumpingOutOfVehicle = state;
+                OnPlayerStartedJumpingOutOfVehicle?.Invoke();
+            }
+            else if (!state && state_jumpingOutOfVehicle)
+            {
+                state_jumpingOutOfVehicle = state;
+                OnPlayerStoppedJumpingOutOfVehicle?.Invoke();
+            }
+        }
+        public void CheckPlayerVaulting()
+        {
+            bool state = API.IsPedVaulting(pedHandle);
+
+            if (state && !state_vaulting)
+            {
+                state_vaulting = state;
+                OnPlayerStartedVaulting?.Invoke();
+            }
+            else if (!state && state_vaulting)
+            {
+                state_vaulting = state;
+                OnPlayerStoppedVaulting?.Invoke();
+            }
+        }
+        public void CheckPlayerStealthKilling()
+        {
+            bool state = API.IsPedPerformingStealthKill(pedHandle);
+
+            if (state && !state_stealthKilling)
+            {
+                state_stealthKilling = state;
+                OnPlayerStartedStealthKill?.Invoke();
+            }
+            else if (!state && state_stealthKilling)
+            {
+                state_stealthKilling = state;
+                OnPlayerStoppedStealthKill?.Invoke();
+            }
+        }
+        public void CheckPlayerSwimmingUnderwater()
+        {
+            bool state = API.IsPedSwimmingUnderWater(pedHandle);
+
+            if (state && !state_swimmingUnderwater)
+            {
+                state_swimmingUnderwater = state;
+                OnPlayerStartedSwimmingUnderwater?.Invoke();
+            }
+            else if (!state && state_swimmingUnderwater)
+            {
+                state_swimmingUnderwater = state;
+                OnPlayerStoppedSwimmingUnderwater?.Invoke();
+            }
+        }
+        public void CheckPlayerSwimming()
+        {
+            bool state = API.IsPedSwimming(pedHandle);
+
+            if (state && !state_swimming)
+            {
+                state_swimming = state;
+                OnPlayerStartedSwimming?.Invoke();
+            }
+            else if (!state && state_swimming)
+            {
+                state_swimming = state;
+                OnPlayerStoppedSwimming?.Invoke();
+            }
+        }
+        public void CheckPlayerShooting()
+        {
+            bool state = API.IsPedShooting(pedHandle);
+
+            if (state && !state_shooting)
+            {
+                CheckPlayerReadyToShoot();
+                state_shooting = state;
+                OnPlayerStartedShooting?.Invoke();
+            }
+            else if (!state && state_shooting)
+            {
+                state_shooting = state;
+                OnPlayerStoppedShooting?.Invoke();
+            }
+        }
+        public void CheckPlayerReloading()
+        {
+            bool state = API.IsPedReloading(pedHandle);
+
+            if (state && !state_reloading)
+            {
+                state_reloading = state;
+                OnPlayerStartedReloading?.Invoke();
+            }
+            else if (!state && state_reloading)
+            {
+                state_reloading = state;
+                OnPlayerStoppedReloading?.Invoke();
+            }
+        }
+        public void CheckPlayerJacking()
+        {
+            bool state = API.IsPedJacking(pedHandle);
+
+            if (state && !state_jacking)
+            {
+                state_jacking = state;
+                OnPlayerStartedJacking?.Invoke();
+            }
+            else if (!state && state_jacking)
+            {
+                state_jacking = state;
+                OnPlayerStoppedJacking?.Invoke();
+            }
+        }
+        public void CheckPlayerParachuteFreefall()
+        {
+            bool state = API.IsPedInParachuteFreeFall(pedHandle);
+
+            if (state && !state_parachuteFreefall)
+            {
+                state_parachuteFreefall = state;
+                OnPlayerEnteredParachuteFreefall?.Invoke();
+            }
+            else if (!state && state_parachuteFreefall)
+            {
+                state_parachuteFreefall = state;
+                OnPlayerLeftParachuteFreefall?.Invoke();
+            }
+        }
+        public void CheckPlayerCover()
+        {
+            bool state = API.IsPedInCover(pedHandle, false);
+            if (!state) state = API.IsPedInCover(pedHandle, true);
+
+            if (state && !state_inCover)
+            {
+                state_inCover = state;
+                OnPlayerEnteredCover?.Invoke();
+            }
+            else if (!state && state_inCover)
+            {
+                state_inCover = state;
+                OnPlayerLeftCover?.Invoke();
+            }
+        }
+        public void CheckPlayerMeleeCombat()
+        {
+            bool state = API.IsPedInMeleeCombat(pedHandle);
+
+            if (state && !state_inCombat)
+            {
+                state_inCombat = state;
+                OnPlayerEnteredMeleeCombat?.Invoke();
+            }
+            else if (!state && state_inCombat)
+            {
+                state_inCombat = state;
+                OnPlayerLeftMeleeCombat?.Invoke();
+            }
+        }
+        public void CheckPlayerOnVehicle()
+        {
+            bool state = API.IsPedOnVehicle(pedHandle);
+
+            if (state && !state_onVehicle)
+            {
+                state_onVehicle = state;
+                OnPlayerStartedOnVehicle?.Invoke();
+            }
+            else if (!state && state_onVehicle)
+            {
+                state_onVehicle = state;
+                OnPlayerStoppedOnVehicle?.Invoke();
+            }
+        }
+        public void CheckPlayerOnBike()
+        {
+            bool state = API.IsPedOnAnyBike(pedHandle);
+
+            if (state && !state_onBike)
+            {
+                state_onBike = state;
+                OnPlayerStartedOnFoot?.Invoke();
+            }
+            else if (!state && state_onBike)
+            {
+                state_onBike = state;
+                OnPlayerStoppedOnFoot?.Invoke();
+            }
+        }
+        public void CheckPlayerOnFoot()
+        {
+            bool state = API.IsPedOnFoot(pedHandle);
+
+            if (state && !state_onFoot)
+            {
+                state_onFoot = state;
+                OnPlayerStartedOnFoot?.Invoke();
+            }
+            else if (!state && state_onFoot)
+            {
+                state_onFoot = state;
+                OnPlayerStoppedOnFoot?.Invoke();
+            }
+        }
+        public void CheckPlayerInFlyingVehicle()
+        {
+            bool state = API.IsPedInFlyingVehicle(pedHandle);
+
+            if (state && !state_inFlyingVehicle)
+            {
+                state_inFlyingVehicle = state;
+                OnPlayerEnteredFlyingVehicle?.Invoke();
+            }
+            else if (!state && state_inFlyingVehicle)
+            {
+                state_inFlyingVehicle = state;
+                OnPlayerLeftFlyingVehicle?.Invoke();
+            }
+        }
+        public void CheckPlayerInAnyHeli()
+        {
+            bool state = API.IsPedInAnyHeli(pedHandle);
+
+            if (state && !state_inHeli)
+            {
+                state_inHeli = state;
+                OnPlayerEnteredHeli?.Invoke();
+            }
+            else if (!state && state_inHeli)
+            {
+                state_inHeli = state;
+                OnPlayerLeftHeli?.Invoke();
+            }
+        }
+        public void CheckPlayerInAnyPlane()
+        {
+            bool state = API.IsPedInAnyPlane(pedHandle);
+
+            if (state && !state_inPlane)
+            {
+                state_inPlane = state;
+                OnPlayerEnteredPlane?.Invoke();
+            }
+            else if (!state && state_inPlane)
+            {
+                state_inPlane = state;
+                OnPlayerLeftPlane?.Invoke();
+            }
+        }
+        public void CheckPlayerInAnyPoliceVehicle()
+        {
+            bool state = API.IsPedInAnyPoliceVehicle(pedHandle);
+
+            if (state && !state_inPoliceVehicle)
+            {
+                state_inPoliceVehicle = state;
+                OnPlayerEnteredPoliceVehicle?.Invoke();
+            }
+            else if (!state && state_inPoliceVehicle)
+            {
+                state_inPoliceVehicle = state;
+                OnPlayerLeftPoliceVehicle?.Invoke();
+            }
+        }
+        public void CheckPlayerInAnySub()
+        {
+            bool state = API.IsPedInAnySub(pedHandle);
+
+            if (state && !state_inSub)
+            {
+                state_inSub = state;
+                OnPlayerEnteredSub?.Invoke();
+            }
+            else if (!state && state_inSub)
+            {
+                state_inSub = state;
+                OnPlayerLeftSub?.Invoke();
+            }
+        }
+        public void CheckPlayerInAnyTaxi()
+        {
+            bool state = API.IsPedInAnyTaxi(pedHandle);
+
+            if (state && !state_inTaxi)
+            {
+                state_inTaxi = state;
+                OnPlayerEnteredTaxi?.Invoke();
+            }
+            else if (!state && state_inTaxi)
+            {
+                state_inTaxi = state;
+                OnPlayerLeftTaxi?.Invoke();
+            }
+        }
+        public void CheckPlayerInAnyTrain()
+        {
+            bool state = API.IsPedInAnyTrain(pedHandle);
+
+            if (state && !state_inTrain)
+            {
+                state_inTrain = state;
+                OnPlayerEnteredTrain?.Invoke();
+            }
+            else if (!state && state_inTrain)
+            {
+                state_inTrain = state;
+                OnPlayerLeftTrain?.Invoke();
+            }
+        }
+        public void CheckPlayerInAnyBoat()
+        {
+            bool state = API.IsPedInAnyBoat(pedHandle);
+
+            if (state && !state_inBoat)
+            {
+                state_inBoat = state;
+                OnPlayerEnteredBoat?.Invoke();
+            }
+            else if (!state && state_inBoat)
+            {
+                state_inBoat = state;
+                OnPlayerLeftBoat?.Invoke();
+            }
+        }
         public void CheckPlayerFalling()
         {
             bool state = API.IsPedFalling(pedHandle);
@@ -329,6 +912,7 @@ namespace MPEventFramework
             if (state && !state_dead)
             {
                 state_dead = state;
+                // TODO GetPedCauseOfDeath Returns the hash of the weapon/model/object that killed the ped.
                 OnPlayerDied?.Invoke();
             }
             else if (!state && state_dead)
