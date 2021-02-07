@@ -11,6 +11,7 @@ namespace MPEventFramework
 {
     public class Base : BaseScript
     {
+        public bool enableRealtimeGametime = false;
         const bool debug = true;
 
         // PLAYER IDS
@@ -74,6 +75,7 @@ namespace MPEventFramework
 
         bool getNewPed = true;
         int previouseSecond = 0;
+        int previouseMinute = 0;
         int previouseMilliSecond = 0;
 
         public event SecondPassed OnSecondPassed; // TEST
@@ -281,8 +283,10 @@ namespace MPEventFramework
 
         public void InitSystemVariables()
         {
-            previouseSecond = DateTime.Now.Second;
-            previouseMilliSecond = DateTime.Now.Millisecond;
+            DateTime dt = DateTime.Now;
+            previouseMinute = dt.Minute;
+            previouseSecond = dt.Second;
+            previouseMilliSecond = dt.Millisecond;
         }
 
         public void InitPlayerIds()
@@ -303,7 +307,14 @@ namespace MPEventFramework
             if (previouseSecond != dt.Second)
             {
                 previouseSecond = dt.Second;
-                CallbackOnSecondPassed();
+
+                if (previouseMinute != dt.Minute)
+                {
+                    CallbackOnMinutePassed(dt.Hour, dt.Minute);
+                    previouseMinute = dt.Minute;
+                }
+
+                CallbackOnSecondPassed(dt.Hour, dt.Minute, dt.Second);
             }
 
             if(Math.Abs(previouseMilliSecond - dt.Millisecond) >= 100)
@@ -315,8 +326,17 @@ namespace MPEventFramework
 
         // TIMING EVENTS
 
-        public void CallbackOnSecondPassed()
+        public void CallbackOnMinutePassed(int hour, int minute)
         {
+        }
+
+        public void CallbackOnSecondPassed(int hour, int minute, int second)
+        {
+            if(enableRealtimeGametime)
+            {
+                API.SetClockTime(hour, minute, second);
+            }
+
             //if (debug) Utils.Log("OnSecondPassed");
             CheckPlayerSpawned();
             CheckVehicleEvents();
@@ -329,6 +349,7 @@ namespace MPEventFramework
             CheckPlayerFalling();
             CheckPlayerWearingHelmet();
             CheckPlayerMainMenu();
+            CheckPlayerParachuteFreefall();
 
             if (state_onFoot)
             {
@@ -344,13 +365,6 @@ namespace MPEventFramework
                 CheckPlayerCover();
                 CheckPlayerJacking();
                 CheckPlayerSwimming();
-                CheckPlayerParachuteFreefall();
-            }
-            else
-            {
-                // tegelikult liigutada see resettimine seal kus on foot left, kuna seda kutsutakse muidu kogu aeg välja
-                    // resettida kõik stated mis ülemises on olemas.
-                    // on event triggerdada kõik mis ülemises
             }
 
             if (state_inVehicle)
@@ -367,12 +381,6 @@ namespace MPEventFramework
                 CheckPlayerInFlyingVehicle();
                 CheckPlayerOnBike();
                 CheckPlayerBurnouting();
-            }
-            else
-            {
-                // tegelikult liigutada see resettimine seal kus on vehicle left, kuna seda kutsutakse muidu kogu aeg välja
-                    // resettida kõik stated mis ülemises on olemas.
-                    // on event triggerdada kõik mis ülemises
             }
 
             if(state_swimming)
@@ -404,6 +412,178 @@ namespace MPEventFramework
             }
 
             OnHundredSecondPassed?.Invoke();
+        }
+
+        public void ResetPlayerRelatedStates()
+        {
+            if (state_swimmingUnderwater)
+            {
+                state_swimmingUnderwater = false;
+                OnPlayerStoppedSwimmingUnderwater();
+            }
+            if (state_inCombat)
+            {
+                state_inCombat = false;
+                OnPlayerLeftMeleeCombat();
+            }
+            if (state_swimming)
+            {
+                state_swimming = false;
+                OnPlayerStoppedSwimming();
+            }
+            if (state_jacking)
+            {
+                state_jacking = false;
+                OnPlayerStoppedJacking();
+            }
+            if (state_inCover)
+            {
+                state_inCover = false;
+                OnPlayerLeftCover();
+            }
+
+            if (state_inCombat)
+            {
+                state_inCombat = false;
+                OnPlayerLeftMeleeCombat();
+            }
+
+            if (state_onVehicle)
+            {
+                state_onVehicle = false;
+                OnPlayerStoppedOnVehicle?.Invoke();
+            }
+
+            if (state_climbing)
+            {
+                state_climbing = false;
+                OnPlayerStoppedClimbing?.Invoke();
+            }
+
+            if (state_aimingFromCover)
+            {
+                state_aimingFromCover = false;
+                OnPlayerStoppedToAimFromCover?.Invoke();
+            }
+
+            if (state_gettingUp)
+            {
+                state_gettingUp = false;
+                OnPlayerStoppedToGetUp?.Invoke();
+            }
+
+            if (state_walking)
+            {
+                state_walking = false;
+                OnPlayerStoppedWalking?.Invoke();
+            }
+
+            if (state_running)
+            {
+                state_running = false;
+                OnPlayerStoppedRunning?.Invoke();
+            }
+
+            if (state_sprinting)
+            {
+                state_sprinting = false;
+                OnPlayerStoppedSprinting?.Invoke();
+            }
+
+            if(state_jumping)
+            {
+                state_jumping = false;
+                OnPlayerStartedJumping?.Invoke();
+            }
+
+            if (state_vaulting)
+            {
+                state_vaulting = false;
+                OnPlayerStoppedVaulting?.Invoke();
+            }
+
+            if(state_stealthKilling)
+            {
+                state_stealthKilling = false;
+                OnPlayerStoppedStealthKill?.Invoke();
+            }
+        }
+
+        public void ResetVehicleRelatedStates()
+        {
+            state_vehicleStopped = false;
+
+            if(state_vehicleBurnouting)
+            {
+                state_vehicleBurnouting = false;
+                OnPlayerStoppedBurnouting();
+            }
+
+            if(state_onBike)
+            {
+                state_onBike = false;
+                OnPlayerStoppedOnBike();
+            }
+
+            if(state_inTrain)
+            {
+                state_inTrain = false;
+                OnPlayerLeftTrain?.Invoke();
+            }
+
+            if(state_inTaxi)
+            {
+                state_inTaxi = false;
+                OnPlayerLeftTaxi?.Invoke();
+            }
+
+            if(state_inSub)
+            {
+                state_inSub = false;
+                OnPlayerLeftSub?.Invoke();
+            }
+
+            if(state_inPoliceVehicle)
+            {
+                state_inPoliceVehicle = false;
+                OnPlayerLeftPoliceVehicle?.Invoke();
+            }
+
+            if(state_inPlane)
+            {
+                state_inPlane = false;
+                OnPlayerLeftPlane?.Invoke();
+            }
+
+            if(state_inHeli)
+            {
+                state_inHeli = false;
+                OnPlayerLeftHeli?.Invoke();
+            }
+
+            if(state_inFlyingVehicle)
+            {
+                state_inFlyingVehicle = false;
+                OnPlayerLeftFlyingVehicle?.Invoke();
+            }
+
+            if(state_driveBying)
+            {
+                state_driveBying = false;
+                OnPlayerStoppedDriveBy?.Invoke();
+            }
+
+            if(state_ducking)
+            {
+                state_ducking = false;
+                OnPlayerStoppedDucking?.Invoke();
+            }
+
+            if(state_inBoat)
+            {
+                state_inBoat = false;
+                OnPlayerLeftBoat();
+            }
         }
 
         // HELPER FUNCTIONS
@@ -719,6 +899,7 @@ namespace MPEventFramework
             {
                 state_onFoot = state;
                 OnPlayerStoppedOnFoot?.Invoke();
+                ResetPlayerRelatedStates();
             }
         }
         public void CheckPlayerInFlyingVehicle()
@@ -1135,6 +1316,7 @@ namespace MPEventFramework
                 if (debug) Utils.Log("OnPlayerLeaveVehicle");
                 OnPlayerLeaveVehicle?.Invoke(state_lastVehicleHandle, state_vehicleSeat);
                 state_vehicleSeat = MEF_Vehicle.SEAT_NONE;
+                ResetVehicleRelatedStates();
             }
         }
 
