@@ -73,7 +73,6 @@ namespace MPEventFramework
         bool state_vehicleBurnouting = false;
         // STATES END
 
-        bool getNewPed = true;
         int previouseSecond = 0;
         int previouseMinute = 0;
         int previouseMilliSecond = 0;
