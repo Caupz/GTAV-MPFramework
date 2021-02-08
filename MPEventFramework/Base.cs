@@ -135,12 +135,12 @@ namespace MPEventFramework
         public event PlayerStoppedSprinting OnPlayerStoppedSprinting;
         public event PlayerStartedJumping OnPlayerStartedJumping;
         public event PlayerStoppedJumping OnPlayerStoppedJumping;
-        public event PlayerCuffed OnPlayerCuffed; // TEST CMD vaja mis cuffib
-        public event PlayerUnCuffed OnPlayerUnCuffed; // TEST CMD vaja mis uncuffib
+        public event PlayerCuffed OnPlayerCuffed;
+        public event PlayerUnCuffed OnPlayerUnCuffed;
         public event PlayerStartedToGetUp OnPlayerStartedToGetUp;
         public event PlayerStoppedToGetUp OnPlayerStoppedToGetUp;
-        public event PlayerStartedToAimFromCover OnPlayerStartedToAimFromCover; // TEST CMD vaja teha mis relva annab
-        public event PlayerStoppedToAimFromCover OnPlayerStoppedToAimFromCover; // TEST CMD vaja teha mis relva annab
+        public event PlayerStartedToAimFromCover OnPlayerStartedToAimFromCover;
+        public event PlayerStoppedToAimFromCover OnPlayerStoppedToAimFromCover;
         public event PlayerStartedGettingJacked OnPlayerStartedGettingJacked; // TEST teist inimest vaja
         public event PlayerStoppedGettingJacked OnPlayerStoppedGettingJacked; // TEST teist inimest vaja
         public event PlayerStartedJacking OnPlayerStartedJacking; // TEST ei tööta?
@@ -169,29 +169,29 @@ namespace MPEventFramework
         public event PlayerLeftParachuteFreefall OnPlayerLeftParachuteFreefall; // TEST CMD vaja teha mis relva annab
         public event PlayerStartedReloading OnPlayerStartedReloading; // TEST CMD vaja teha mis relva annab
         public event PlayerStoppedReloading OnPlayerStoppedReloading; // TEST CMD vaja teha mis relva annab
-        public event PlayerStartedShooting OnPlayerStartedShooting; // TEST CMD vaja teha mis relva annab
-        public event PlayerStoppedShooting OnPlayerStoppedShooting; // TEST CMD vaja teha mis relva annab
+        public event PlayerStartedShooting OnPlayerStartedShooting;
+        public event PlayerStoppedShooting OnPlayerStoppedShooting; // TEST vaja mingit pikemat delayd.
         public event PlayerStartedSwimming OnPlayerStartedSwimming;
         public event PlayerStoppedSwimming OnPlayerStoppedSwimming;
         public event PlayerStartedSwimmingUnderwater OnPlayerStartedSwimmingUnderwater;
         public event PlayerStoppedSwimmingUnderwater OnPlayerStoppedSwimmingUnderwater;
-        public event PlayerStartedStealthKill OnPlayerStartedStealthKill; // TEST CMD vaja teha mis relva annab
-        public event PlayerStoppedStealthKill OnPlayerStoppedStealthKill; // TEST CMD vaja teha mis relva annab
+        public event PlayerStartedStealthKill OnPlayerStartedStealthKill;
+        public event PlayerStoppedStealthKill OnPlayerStoppedStealthKill;
         public event PlayerStartedVaulting OnPlayerStartedVaulting;
         public event PlayerStoppedVaulting OnPlayerStoppedVaulting;
         public event PlayerStartedWearingHelmet OnPlayerStartedWearingHelmet; // TEST motikas ei hakanud kiivrit kandma
         public event PlayerStoppedWearingHelmet OnPlayerStoppedWearingHelmet; // TEST motikas ei hakanud kiivrit kandma
         public event PlayerEnteredMainMenu OnPlayerEnteredMainMenu;
         public event PlayerLeftMainMenu OnPlayerLeftMainMenu;
-        public event PlayerReadyToShoot OnPlayerReadyToShoot; // TEST CMD vaja teha mis relva annab
-        public event PlayerNotReadyToShoot OnPlayerNotReadyToShoot; // TEST CMD vaja teha mis relva annab
-        public event PlayerStartedAiming OnPlayerStartedAiming; // TEST CMD vaja teha mis relva annab
-        public event PlayerStoppedAiming OnPlayerStoppedAiming; // TEST CMD vaja teha mis relva annab
+        public event PlayerReadyToShoot OnPlayerReadyToShoot;
+        public event PlayerNotReadyToShoot OnPlayerNotReadyToShoot;
+        public event PlayerStartedAiming OnPlayerStartedAiming;
+        public event PlayerStoppedAiming OnPlayerStoppedAiming;
 
         public event PlayerHealthGain OnPlayerHealthGain;
         public event PlayerHealthLoss OnPlayerHealthLoss;
-        public event PlayerArmourGain OnPlayerArmourGain; // TEST CMD vaja teha mis armi annab
-        public event PlayerArmourLoss OnPlayerArmourLoss; // TEST CMD vaja teha mis armi annab
+        public event PlayerArmourGain OnPlayerArmourGain;
+        public event PlayerArmourLoss OnPlayerArmourLoss;
 
         // VEHICLE RELATED EVENTS
         public event PlayerTryingToEnterVehicle OnPlayerTryingToEnterVehicle;
@@ -406,7 +406,7 @@ namespace MPEventFramework
         {
             weatherTransition = weatherTransitionPerSecond;
             previouseWeather = currentWeather;
-            currentWeather = Utils.GetRandom(0, selectedWeathers.Count);
+            currentWeather = Utils.GetRandom(0, selectedWeathers.Count - 1);
             currentWeatherUpdateInMinutes = weatherUpdateIntervalInMinutes;
         }
 
@@ -551,7 +551,6 @@ namespace MPEventFramework
                 CheckPlayerInFlyingVehicle();
                 CheckPlayerOnBike();
                 CheckPlayerBurnouting();
-                CheckVehicleHealth();
             }
 
             if(state_swimming)
@@ -576,6 +575,7 @@ namespace MPEventFramework
             if (state_inVehicle)
             {
                 CheckPlayerStoppingVehicle();
+                CheckVehicleHealth();
             }
 
             if(state_onFoot)
@@ -615,7 +615,9 @@ namespace MPEventFramework
                 float speed = MEF_Vehicle.GetSpeedInKmh(state_lastVehicleHandle);
                 float speedQuanfitsent = vehicleSpeed / 2;
 
-                if(speed < speedQuanfitsent)
+                Utils.Log("vHealth: " + vHealth + " speed:" + speed + " speedQuanfitsent: " + speedQuanfitsent);
+
+                if (speed < speedQuanfitsent)
                 {
                     if (debug) Utils.Log("OnVehicleCrash");
                     OnVehicleCrash?.Invoke();
