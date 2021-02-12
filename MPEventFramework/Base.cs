@@ -169,8 +169,8 @@ namespace MPEventFramework
         public event PlayerLeftParachuteFreefall OnPlayerLeftParachuteFreefall;
         public event PlayerStartedReloading OnPlayerStartedReloading;
         public event PlayerStoppedReloading OnPlayerStoppedReloading;
-        public event PlayerStartedShooting OnPlayerStartedShooting; // TODO ringi teha et kui relv on käes ja isAiming ja left mouse btn pressed
-        public event PlayerStoppedShooting OnPlayerStoppedShooting; // TODO ringi teha et kui relv on käes ja isAiming ja left mouse btn released
+        public event PlayerStartedShooting OnPlayerStartedShooting;
+        public event PlayerStoppedShooting OnPlayerStoppedShooting;
         public event PlayerStartedSwimming OnPlayerStartedSwimming;
         public event PlayerStoppedSwimming OnPlayerStoppedSwimming;
         public event PlayerStartedSwimmingUnderwater OnPlayerStartedSwimmingUnderwater;
