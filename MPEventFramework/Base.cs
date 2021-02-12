@@ -19,7 +19,7 @@ namespace MPEventFramework
         IsControlReleased
         */
 
-        const bool debug = true;
+        public bool debug = true;
 
         // TIME SYSTEM
         public bool enableRealtimeGametime = true;
