@@ -81,7 +81,6 @@ namespace MPEventFramework
         bool state_dead = false;
         bool state_diving = false;
         bool state_driveBying = false;
-        bool state_ducking = false;
         bool state_falling = false;
         bool state_inBoat = false;
         bool state_inHeli = false;
@@ -155,8 +154,6 @@ namespace MPEventFramework
         public event PlayerStoppedDiving OnPlayerStoppedDiving; // TEST ei tööta?
         public event PlayerStartedDriveBy OnPlayerStartedDriveBy;
         public event PlayerStoppedDriveBy OnPlayerStoppedDriveBy;
-        public event PlayerStartedDucking OnPlayerStartedDucking; // TEST EI TOIMI
-        public event PlayerStoppedDucking OnPlayerStoppedDucking; // TEST EI TOIMI
         public event PlayerStartedFalling OnPlayerStartedFalling;
         public event PlayerStoppedFalling OnPlayerStoppedFalling;
         public event PlayerStartedOnFoot OnPlayerStartedOnFoot;
@@ -313,8 +310,6 @@ namespace MPEventFramework
         public delegate void PlayerStoppedDiving();
         public delegate void PlayerStartedDriveBy();
         public delegate void PlayerStoppedDriveBy();
-        public delegate void PlayerStartedDucking();
-        public delegate void PlayerStoppedDucking();
         public delegate void PlayerStartedFalling();
         public delegate void PlayerStoppedFalling();
         public delegate void PlayerStartedOnFoot();
@@ -540,7 +535,6 @@ namespace MPEventFramework
             if (state_inVehicle)
             {
                 CheckPlayerDriveBy();
-                CheckPlayerDucking();
                 CheckPlayerInAnyBoat();
                 CheckPlayerInAnyHeli();
                 CheckPlayerInAnyPlane();
@@ -847,13 +841,6 @@ namespace MPEventFramework
                 state_driveBying = false;
                 if (debug) Utils.Log("OnPlayerStoppedDriveBy");
                 OnPlayerStoppedDriveBy?.Invoke();
-            }
-
-            if(state_ducking)
-            {
-                state_ducking = false;
-                if (debug) Utils.Log("OnPlayerStoppedDucking");
-                OnPlayerStoppedDucking?.Invoke();
             }
 
             if(state_inBoat)
@@ -1360,24 +1347,6 @@ namespace MPEventFramework
                 state_falling = state;
                 if (debug) Utils.Log("OnPlayerStoppedFalling");
                 OnPlayerStoppedFalling?.Invoke();
-            }
-        }
-
-        public void CheckPlayerDucking()
-        {
-            bool state = API.IsPedDucking(pedHandle);
-
-            if (state && !state_ducking)
-            {
-                state_ducking = state;
-                if (debug) Utils.Log("OnPlayerStartedDucking");
-                OnPlayerStartedDucking?.Invoke();
-            }
-            else if (!state && state_ducking)
-            {
-                state_ducking = state;
-                if (debug) Utils.Log("OnPlayerStoppedDucking");
-                OnPlayerStoppedDucking?.Invoke();
             }
         }
 
