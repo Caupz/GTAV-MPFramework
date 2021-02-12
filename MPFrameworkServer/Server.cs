@@ -210,6 +210,7 @@ namespace MPFrameworkServer
 
         public Server()
         {
+            Debug.WriteLine("MP FRAMEWORK SERVER INITED");
             EventHandlers["OnPlayerSpawned"] += new Action<Player>(RemoteOnPlayerSpawned);
             EventHandlers["OnPlayerStartedWalking"] += new Action<Player>(RemoteOnPlayerStartedWalking);
             EventHandlers["OnPlayerStoppedWalking"] += new Action<Player>(RemoteOnPlayerStoppedWalking);
@@ -307,6 +308,7 @@ namespace MPFrameworkServer
             EventHandlers["OnVehicleHealthGain"] += new Action<Player, int, int, float, float, float>(RemoteOnVehicleHealthGain);
             EventHandlers["OnVehicleHealthLoss"] += new Action<Player, int, int, float, float, float>(RemoteOnVehicleHealthLoss);
             EventHandlers["OnVehicleCrash"] += new Action<Player>(RemoteOnVehicleCrash);
+            Debug.WriteLine("MP FRAMEWORK SERVER INITED - END");
         }
 
         public void RemoteOnPlayerSpawned([FromSource]Player client) { OnPlayerSpawned?.Invoke(client); }
