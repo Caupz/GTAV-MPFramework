@@ -150,8 +150,8 @@ namespace MPEventFramework
         public event PlayerStoppedClimbing OnPlayerStoppedClimbing;
         public event PlayerDied OnPlayerDied;
         public event PlayerRevived OnPlayerRevived;
-        public event PlayerStartedDiving OnPlayerStartedDiving; // TEST ei tööta?
-        public event PlayerStoppedDiving OnPlayerStoppedDiving; // TEST ei tööta?
+        public event PlayerStartedDiving OnPlayerStartedDiving;
+        public event PlayerStoppedDiving OnPlayerStoppedDiving;
         public event PlayerStartedDriveBy OnPlayerStartedDriveBy;
         public event PlayerStoppedDriveBy OnPlayerStoppedDriveBy;
         public event PlayerStartedFalling OnPlayerStartedFalling;
@@ -162,8 +162,8 @@ namespace MPEventFramework
         public event PlayerLeftMeleeCombat OnPlayerLeftMeleeCombat;
         public event PlayerEnteredCover OnPlayerEnteredCover;
         public event PlayerLeftCover OnPlayerLeftCover;
-        public event PlayerEnteredParachuteFreefall OnPlayerEnteredParachuteFreefall; // TEST CMD vaja teha mis relva annab
-        public event PlayerLeftParachuteFreefall OnPlayerLeftParachuteFreefall; // TEST CMD vaja teha mis relva annab
+        public event PlayerEnteredParachuteFreefall OnPlayerEnteredParachuteFreefall;
+        public event PlayerLeftParachuteFreefall OnPlayerLeftParachuteFreefall;
         public event PlayerStartedReloading OnPlayerStartedReloading;
         public event PlayerStoppedReloading OnPlayerStoppedReloading;
         public event PlayerStartedShooting OnPlayerStartedShooting; // TODO ringi teha et kui relv on käes ja isAiming ja left mouse btn pressed
