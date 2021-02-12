@@ -65,6 +65,9 @@ namespace MPEventFramework
         int state_vehicleSeat = MEF_Vehicle.SEAT_NONE;
         bool state_tryingToEnterVehicle = false;
 
+        bool state_btn_lmb = false;
+        bool state_btn_rmb = false;
+
         bool state_running = false;
         bool state_sprinting = false;
         bool state_walking = false;
@@ -560,12 +563,16 @@ namespace MPEventFramework
         {
             CheckVehicleEnteringEvents();
             CheckPlayerReloading();
-            CheckPlayerShooting();
             CheckPlayerJumpingOutOfVehicle();
-            CheckPlayerReadyToShoot();
             CheckPlayerAiming();
             CheckPlayerDiving();
             CheckPlayerJacking();
+            CheckPlayerShooting();
+
+            if (!state_shooting)
+            {
+                CheckPlayerReadyToShoot();
+            }
 
             if (state_inVehicle)
             {
@@ -1041,18 +1048,17 @@ namespace MPEventFramework
         }
         public void CheckPlayerShooting()
         {
-            bool state = API.IsPedShooting(pedHandle);
+            bool state_btn_lmb = API.IsControlPressed(0, 24);
 
-            if (state && !state_shooting)
+            if (state_btn_lmb && !state_shooting && !state_reloading)
             {
-                CheckPlayerReadyToShoot();
-                state_shooting = state;
+                state_shooting = state_btn_lmb;
                 if (debug) Utils.Log("OnPlayerStartedShooting");
                 OnPlayerStartedShooting?.Invoke();
             }
-            else if (!state && state_shooting)
+            else if (state_shooting && (!state_btn_lmb || state_reloading))
             {
-                state_shooting = state;
+                state_shooting = false;
                 if (debug) Utils.Log("OnPlayerStoppedShooting");
                 OnPlayerStoppedShooting?.Invoke();
             }
