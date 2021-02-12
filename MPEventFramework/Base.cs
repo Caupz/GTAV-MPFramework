@@ -1764,7 +1764,7 @@ namespace MPEventFramework
 
                 state_tryingToEnterVehicle = false;
                 OnPlayerEnteredVehicle?.Invoke(state_lastVehicleHandle, state_vehicleSeat);
-                TriggerServerEvent("OnPlayerEnteredVehicle");
+                TriggerServerEvent("OnPlayerEnteredVehicle", state_lastVehicleNetworkId, state_vehicleSeat);
                 UpdateVehicleSpeed();
                 vehicleHealth = API.GetEntityHealth(state_lastVehicleHandle);
                 vehicleBodyHealth = API.GetVehicleBodyHealth(state_lastVehicleHandle);
@@ -1776,7 +1776,7 @@ namespace MPEventFramework
                 state_inVehicle = false;
                 if (debug) Utils.Log("OnPlayerLeaveVehicle");
                 OnPlayerLeaveVehicle?.Invoke(state_lastVehicleHandle, state_vehicleSeat);
-                TriggerServerEvent("OnPlayerLeaveVehicle");
+                TriggerServerEvent("OnPlayerLeaveVehicle", state_lastVehicleNetworkId, state_vehicleSeat);
                 state_vehicleSeat = MEF_Vehicle.SEAT_NONE;
                 ResetVehicleRelatedStates();
             }
@@ -1803,7 +1803,7 @@ namespace MPEventFramework
                     state_vehicleSeat = seatTryingtoEnter;
                     if (debug) Utils.Log("OnPlayerSeatChange");
                     OnPlayerSeatChange?.Invoke(veh, state_vehicleSeat);
-                    TriggerServerEvent("OnPlayerSeatChange");
+                    TriggerServerEvent("OnPlayerSeatChange", state_lastVehicleNetworkId, state_vehicleSeat);
                 }
 
                 if (veh == 0)
@@ -1811,13 +1811,13 @@ namespace MPEventFramework
                     veh = API.GetVehiclePedIsIn(PedHandle, false);
                     Utils.Log("BASE OnPlayerSpawnIntoVehicle]VEH: [" + veh + "] SEAT: [" + seatTryingtoEnter + "] vHandle: " + veh);
                     OnPlayerSpawnIntoVehicle?.Invoke(veh);
-                    TriggerServerEvent("OnPlayerSpawnIntoVehicle");
+                    TriggerServerEvent("OnPlayerSpawnIntoVehicle", state_lastVehicleNetworkId);
                 }
                 else
                 {
                     Utils.Log("BASE OnTryingToEnterVehicle]VEH: [" + veh + "] SEAT: [" + seatTryingtoEnter + "]");
                     OnPlayerTryingToEnterVehicle?.Invoke(veh, state_vehicleSeat);
-                    TriggerServerEvent("OnPlayerTryingToEnterVehicle");
+                    TriggerServerEvent("OnPlayerTryingToEnterVehicle", state_lastVehicleNetworkId, state_vehicleSeat);
                 }
             }
         }
