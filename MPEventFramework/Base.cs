@@ -164,10 +164,10 @@ namespace MPEventFramework
         public event PlayerLeftCover OnPlayerLeftCover;
         public event PlayerEnteredParachuteFreefall OnPlayerEnteredParachuteFreefall; // TEST CMD vaja teha mis relva annab
         public event PlayerLeftParachuteFreefall OnPlayerLeftParachuteFreefall; // TEST CMD vaja teha mis relva annab
-        public event PlayerStartedReloading OnPlayerStartedReloading; // TEST CMD vaja teha mis relva annab
-        public event PlayerStoppedReloading OnPlayerStoppedReloading; // TEST CMD vaja teha mis relva annab
-        public event PlayerStartedShooting OnPlayerStartedShooting;
-        public event PlayerStoppedShooting OnPlayerStoppedShooting; // TEST vaja mingit pikemat delayd.
+        public event PlayerStartedReloading OnPlayerStartedReloading;
+        public event PlayerStoppedReloading OnPlayerStoppedReloading;
+        public event PlayerStartedShooting OnPlayerStartedShooting; // TODO ringi teha et kui relv on käes ja isAiming ja left mouse btn pressed
+        public event PlayerStoppedShooting OnPlayerStoppedShooting; // TODO ringi teha et kui relv on käes ja isAiming ja left mouse btn released
         public event PlayerStartedSwimming OnPlayerStartedSwimming;
         public event PlayerStoppedSwimming OnPlayerStoppedSwimming;
         public event PlayerStartedSwimmingUnderwater OnPlayerStartedSwimmingUnderwater;
@@ -176,8 +176,8 @@ namespace MPEventFramework
         public event PlayerStoppedStealthKill OnPlayerStoppedStealthKill;
         public event PlayerStartedVaulting OnPlayerStartedVaulting;
         public event PlayerStoppedVaulting OnPlayerStoppedVaulting;
-        public event PlayerStartedWearingHelmet OnPlayerStartedWearingHelmet; // TEST motikas ei hakanud kiivrit kandma
-        public event PlayerStoppedWearingHelmet OnPlayerStoppedWearingHelmet; // TEST motikas ei hakanud kiivrit kandma
+        public event PlayerStartedWearingHelmet OnPlayerStartedWearingHelmet;
+        public event PlayerStoppedWearingHelmet OnPlayerStoppedWearingHelmet;
         public event PlayerEnteredMainMenu OnPlayerEnteredMainMenu;
         public event PlayerLeftMainMenu OnPlayerLeftMainMenu;
         public event PlayerReadyToShoot OnPlayerReadyToShoot;
@@ -218,13 +218,13 @@ namespace MPEventFramework
         public event PlayerStoppedOnVehicle OnPlayerStoppedOnVehicle;
         public event PlayerStartedJumpingOutOfVehicle OnPlayerStartedJumpingOutOfVehicle;
         public event PlayerStoppedJumpingOutOfVehicle OnPlayerStoppedJumpingOutOfVehicle;
-        public event PlayerStartedMovingVehicle OnPlayerStartedMovingVehicle; // TEST EI TÖÖTA
-        public event PlayerStoppedVehicle OnPlayerStoppedVehicle; // TEST EI TÖÖTA
+        public event PlayerStartedMovingVehicle OnPlayerStartedMovingVehicle;
+        public event PlayerStoppedVehicle OnPlayerStoppedVehicle;
         public event PlayerStartedBurnouting OnPlayerStartedBurnouting;
         public event PlayerStoppedBurnouting OnPlayerStoppedBurnouting;
         public event VehicleHealthGain OnVehicleHealthGain;
         public event VehicleHealthLoss OnVehicleHealthLoss;
-        public event VehicleCrash OnVehicleCrash; // TEST. Peab logima mis kiirused ja healthi muutused.
+        public event VehicleCrash OnVehicleCrash;
 
         // VEHICLE RELATED DELEGATES
         public delegate void PlayerStartedBurnouting();
@@ -545,6 +545,7 @@ namespace MPEventFramework
                 CheckPlayerInFlyingVehicle();
                 CheckPlayerOnBike();
                 CheckPlayerBurnouting();
+                UpdateVehicleSpeed();
             }
 
             if(state_swimming)
@@ -607,9 +608,9 @@ namespace MPEventFramework
                 UpdateVehicleHealth(vHealth, vBodyHealth, vEngineHealth, vPetrolTankHealth);
 
                 float speed = MEF_Vehicle.GetSpeedInKmh(state_lastVehicleHandle);
-                float speedQuanfitsent = vehicleSpeed / 2;
+                float speedQuanfitsent = vehicleSpeed / 1.33f;
 
-                Utils.Log("vHealth: " + vHealth + " speed:" + speed + " speedQuanfitsent: " + speedQuanfitsent);
+                //Utils.Log("vHealth: " + vHealth + " speed:" + speed + " speedQuanfitsent: " + speedQuanfitsent);
 
                 if (speed < speedQuanfitsent)
                 {
@@ -889,17 +890,15 @@ namespace MPEventFramework
         }
         public void CheckPlayerStoppingVehicle()
         {
-            bool state = API.IsVehicleStopped(pedHandle);
-
-            if (state && !state_vehicleStopped)
+            if (vehicleSpeed == 0 && !state_vehicleStopped)
             {
-                state_vehicleStopped = state;
+                state_vehicleStopped = true;
                 if (debug) Utils.Log("OnPlayerStoppedVehicle");
                 OnPlayerStoppedVehicle?.Invoke();
             }
-            else if (!state && state_vehicleStopped)
+            else if ((vehicleSpeed > 0 || vehicleSpeed < 0) && state_vehicleStopped)
             {
-                state_vehicleStopped = state;
+                state_vehicleStopped = false;
                 if (debug) Utils.Log("OnPlayerStartedMovingVehicle");
                 OnPlayerStartedMovingVehicle?.Invoke();
             }
@@ -1636,7 +1635,7 @@ namespace MPEventFramework
 
                 state_tryingToEnterVehicle = false;
                 OnPlayerEnteredVehicle?.Invoke(state_lastVehicleHandle, state_vehicleSeat);
-                vehicleSpeed = MEF_Vehicle.GetSpeedInKmh(state_lastVehicleHandle);
+                UpdateVehicleSpeed();
                 vehicleHealth = API.GetEntityHealth(state_lastVehicleHandle);
                 vehicleBodyHealth = API.GetVehicleBodyHealth(state_lastVehicleHandle);
                 vehicleEngineHealth = API.GetVehicleEngineHealth(state_lastVehicleHandle);
@@ -1650,6 +1649,11 @@ namespace MPEventFramework
                 state_vehicleSeat = MEF_Vehicle.SEAT_NONE;
                 ResetVehicleRelatedStates();
             }
+        }
+
+        public void UpdateVehicleSpeed()
+        {
+            vehicleSpeed = MEF_Vehicle.GetSpeedInKmh(state_lastVehicleHandle);
         }
 
         public void CheckVehicleEnteringEvents()
