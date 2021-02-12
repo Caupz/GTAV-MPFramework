@@ -1,9 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using CitizenFX.Core;
+using Newtonsoft.Json;
 using static CitizenFX.Core.Native.API;
 
 namespace MPEventFramework
@@ -22,7 +19,7 @@ namespace MPEventFramework
         }
         public static void TriggerClientEvent(string eventName, params object[] args)
         {
-            BaseScript.TriggerEvent(eventName, args);
+            TriggerEvent(eventName, args);
         }
         public static void SendChatMessage(string message)
         {

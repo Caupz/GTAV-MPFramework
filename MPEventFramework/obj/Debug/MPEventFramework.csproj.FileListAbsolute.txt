@@ -6,3 +6,4 @@ D:\_PROJEKTID\_MPEventFramework\MPEventFramework\obj\Debug\MPEventFramework.cspr
 D:\_PROJEKTID\_MPEventFramework\MPEventFramework\obj\Debug\MPEventFramework.dll
 D:\_PROJEKTID\_MPEventFramework\MPEventFramework\obj\Debug\MPEventFramework.pdb
 D:\_PROJEKTID\_MPEventFramework\MPEventFramework\obj\Debug\MPEventFramework.csprojAssemblyReference.cache
+D:\_PROJEKTID\_MPEventFramework\MPEventFramework\bin\Debug\Newtonsoft.Json.dll
