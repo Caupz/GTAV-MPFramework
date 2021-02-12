@@ -45,10 +45,10 @@ namespace MPEventFramework
         const float weatherTransitionPerSecond = 0.0167f;
 
         // PLAYER IDS
-        public int playerHandle { get; protected set; }
-        public int playerNetworkId { get; protected set; }
-        public int pedHandle { get; protected set; }
-        public int pedNetworkId { get; protected set; }
+        public static int PlayerHandle { get; protected set; }
+        public static int PlayerNetworkId { get; protected set; }
+        public static int PedHandle { get; protected set; }
+        public static int PedNetworkId { get; protected set; }
         // PLAYER IDS END
 
         // STATES
@@ -444,12 +444,12 @@ namespace MPEventFramework
 
         public void InitPlayerIds()
         {
-            playerHandle = API.PlayerId();
-            playerNetworkId = API.NetworkGetNetworkIdFromEntity(playerHandle);
-            pedHandle = API.GetPlayerPed(playerHandle);
-            pedNetworkId = API.NetworkGetNetworkIdFromEntity(pedHandle);
+            PlayerHandle = API.PlayerId();
+            PlayerNetworkId = API.NetworkGetNetworkIdFromEntity(PlayerHandle);
+            PedHandle = API.GetPlayerPed(PlayerHandle);
+            PedNetworkId = API.NetworkGetNetworkIdFromEntity(PedHandle);
 
-            Utils.Log("InitPlayerIds pedHandle [" + pedHandle + "] pedNetworkId [" + pedNetworkId + "]");
+            Utils.Log("InitPlayerIds pedHandle [" + PedHandle + "] pedNetworkId [" + PedNetworkId + "]");
         }
 
         public void Process() // MAIN LOOP
@@ -632,7 +632,7 @@ namespace MPEventFramework
         }
         public void CheckPlayerHealth()
         {
-            int pHealth = API.GetEntityHealth(pedHandle);
+            int pHealth = API.GetEntityHealth(PedHandle);
 
             if (pHealth > pedHealth)
             {
@@ -650,7 +650,7 @@ namespace MPEventFramework
 
         public void CheckPlayerArmour()
         {
-            int pArmour = API.GetPedArmour(pedHandle);
+            int pArmour = API.GetPedArmour(PedHandle);
 
             if (pArmour > pedArmour)
             {
@@ -863,7 +863,7 @@ namespace MPEventFramework
 
         public void CheckPlayerAiming()
         {
-            bool state = API.GetPedConfigFlag(pedHandle, 78, true);
+            bool state = API.GetPedConfigFlag(PedHandle, 78, true);
 
             if (state && !state_aiming)
             {
@@ -912,7 +912,7 @@ namespace MPEventFramework
         }
         public void CheckPlayerReadyToShoot()
         {
-            bool state = API.IsPedWeaponReadyToShoot(pedHandle);
+            bool state = API.IsPedWeaponReadyToShoot(PedHandle);
 
             if (state && !state_readyToShoot)
             {
@@ -946,7 +946,7 @@ namespace MPEventFramework
         }
         public void CheckPlayerWearingHelmet()
         {
-            bool state = API.IsPedWearingHelmet(pedHandle);
+            bool state = API.IsPedWearingHelmet(PedHandle);
 
             if (state && !state_wearingHelmet)
             {
@@ -963,7 +963,7 @@ namespace MPEventFramework
         }
         public void CheckPlayerJumpingOutOfVehicle()
         {
-            bool state = API.IsPedJumpingOutOfVehicle(pedHandle);
+            bool state = API.IsPedJumpingOutOfVehicle(PedHandle);
 
             if (state && !state_jumpingOutOfVehicle)
             {
@@ -980,7 +980,7 @@ namespace MPEventFramework
         }
         public void CheckPlayerVaulting()
         {
-            bool state = API.IsPedVaulting(pedHandle);
+            bool state = API.IsPedVaulting(PedHandle);
 
             if (state && !state_vaulting)
             {
@@ -997,7 +997,7 @@ namespace MPEventFramework
         }
         public void CheckPlayerStealthKilling()
         {
-            bool state = API.IsPedPerformingStealthKill(pedHandle);
+            bool state = API.IsPedPerformingStealthKill(PedHandle);
 
             if (state && !state_stealthKilling)
             {
@@ -1014,7 +1014,7 @@ namespace MPEventFramework
         }
         public void CheckPlayerSwimmingUnderwater()
         {
-            bool state = API.IsPedSwimmingUnderWater(pedHandle);
+            bool state = API.IsPedSwimmingUnderWater(PedHandle);
 
             if (state && !state_swimmingUnderwater)
             {
@@ -1031,7 +1031,7 @@ namespace MPEventFramework
         }
         public void CheckPlayerSwimming()
         {
-            bool state = API.IsPedSwimming(pedHandle);
+            bool state = API.IsPedSwimming(PedHandle);
 
             if (state && !state_swimming)
             {
@@ -1065,7 +1065,7 @@ namespace MPEventFramework
         }
         public void CheckPlayerReloading()
         {
-            bool state = API.IsPedReloading(pedHandle);
+            bool state = API.IsPedReloading(PedHandle);
 
             if (state && !state_reloading)
             {
@@ -1082,7 +1082,7 @@ namespace MPEventFramework
         }
         public void CheckPlayerJacking()
         {
-            bool state = API.IsPedJacking(pedHandle);
+            bool state = API.IsPedJacking(PedHandle);
 
             if (state && !state_jacking)
             {
@@ -1099,7 +1099,7 @@ namespace MPEventFramework
         }
         public void CheckPlayerParachuteFreefall()
         {
-            bool state = API.IsPedInParachuteFreeFall(pedHandle);
+            bool state = API.IsPedInParachuteFreeFall(PedHandle);
 
             if (state && !state_parachuteFreefall)
             {
@@ -1116,8 +1116,8 @@ namespace MPEventFramework
         }
         public void CheckPlayerCover()
         {
-            bool state = API.IsPedInCover(pedHandle, false);
-            if (!state) state = API.IsPedInCover(pedHandle, true);
+            bool state = API.IsPedInCover(PedHandle, false);
+            if (!state) state = API.IsPedInCover(PedHandle, true);
 
             if (state && !state_inCover)
             {
@@ -1134,7 +1134,7 @@ namespace MPEventFramework
         }
         public void CheckPlayerMeleeCombat()
         {
-            bool state = API.IsPedInMeleeCombat(pedHandle);
+            bool state = API.IsPedInMeleeCombat(PedHandle);
 
             if (state && !state_inCombat)
             {
@@ -1151,7 +1151,7 @@ namespace MPEventFramework
         }
         public void CheckPlayerOnVehicle()
         {
-            bool state = API.IsPedOnVehicle(pedHandle);
+            bool state = API.IsPedOnVehicle(PedHandle);
 
             if (state && !state_onVehicle)
             {
@@ -1168,7 +1168,7 @@ namespace MPEventFramework
         }
         public void CheckPlayerOnBike()
         {
-            bool state = API.IsPedOnAnyBike(pedHandle);
+            bool state = API.IsPedOnAnyBike(PedHandle);
 
             if (state && !state_onBike)
             {
@@ -1185,7 +1185,7 @@ namespace MPEventFramework
         }
         public void CheckPlayerOnFoot()
         {
-            bool state = API.IsPedOnFoot(pedHandle);
+            bool state = API.IsPedOnFoot(PedHandle);
 
             if (state && !state_onFoot)
             {
@@ -1203,7 +1203,7 @@ namespace MPEventFramework
         }
         public void CheckPlayerInFlyingVehicle()
         {
-            bool state = API.IsPedInFlyingVehicle(pedHandle);
+            bool state = API.IsPedInFlyingVehicle(PedHandle);
 
             if (state && !state_inFlyingVehicle)
             {
@@ -1220,7 +1220,7 @@ namespace MPEventFramework
         }
         public void CheckPlayerInAnyHeli()
         {
-            bool state = API.IsPedInAnyHeli(pedHandle);
+            bool state = API.IsPedInAnyHeli(PedHandle);
 
             if (state && !state_inHeli)
             {
@@ -1237,7 +1237,7 @@ namespace MPEventFramework
         }
         public void CheckPlayerInAnyPlane()
         {
-            bool state = API.IsPedInAnyPlane(pedHandle);
+            bool state = API.IsPedInAnyPlane(PedHandle);
 
             if (state && !state_inPlane)
             {
@@ -1254,7 +1254,7 @@ namespace MPEventFramework
         }
         public void CheckPlayerInAnyPoliceVehicle()
         {
-            bool state = API.IsPedInAnyPoliceVehicle(pedHandle);
+            bool state = API.IsPedInAnyPoliceVehicle(PedHandle);
 
             if (state && !state_inPoliceVehicle)
             {
@@ -1271,7 +1271,7 @@ namespace MPEventFramework
         }
         public void CheckPlayerInAnySub()
         {
-            bool state = API.IsPedInAnySub(pedHandle);
+            bool state = API.IsPedInAnySub(PedHandle);
 
             if (state && !state_inSub)
             {
@@ -1288,7 +1288,7 @@ namespace MPEventFramework
         }
         public void CheckPlayerInAnyTaxi()
         {
-            bool state = API.IsPedInAnyTaxi(pedHandle);
+            bool state = API.IsPedInAnyTaxi(PedHandle);
 
             if (state && !state_inTaxi)
             {
@@ -1305,7 +1305,7 @@ namespace MPEventFramework
         }
         public void CheckPlayerInAnyTrain()
         {
-            bool state = API.IsPedInAnyTrain(pedHandle);
+            bool state = API.IsPedInAnyTrain(PedHandle);
 
             if (state && !state_inTrain)
             {
@@ -1322,7 +1322,7 @@ namespace MPEventFramework
         }
         public void CheckPlayerInAnyBoat()
         {
-            bool state = API.IsPedInAnyBoat(pedHandle);
+            bool state = API.IsPedInAnyBoat(PedHandle);
 
             if (state && !state_inBoat)
             {
@@ -1339,7 +1339,7 @@ namespace MPEventFramework
         }
         public void CheckPlayerFalling()
         {
-            bool state = API.IsPedFalling(pedHandle);
+            bool state = API.IsPedFalling(PedHandle);
 
             if (state && !state_falling)
             {
@@ -1357,7 +1357,7 @@ namespace MPEventFramework
 
         public void CheckPlayerDriveBy()
         {
-            bool state = API.IsPedDoingDriveby(pedHandle);
+            bool state = API.IsPedDoingDriveby(PedHandle);
 
             if (state && !state_driveBying)
             {
@@ -1375,7 +1375,7 @@ namespace MPEventFramework
 
         public void CheckPlayerDiving()
         {
-            bool state = API.IsPedDiving(pedHandle);
+            bool state = API.IsPedDiving(PedHandle);
 
             if (state && !state_diving)
             {
@@ -1393,7 +1393,7 @@ namespace MPEventFramework
 
         public void CheckPlayerDead()
         {
-            bool state = API.IsPedDeadOrDying(pedHandle, true);
+            bool state = API.IsPedDeadOrDying(PedHandle, true);
 
             if (state && !state_dead)
             {
@@ -1412,7 +1412,7 @@ namespace MPEventFramework
 
         public void CheckPlayerClimbing()
         {
-            bool state = API.IsPedClimbing(pedHandle);
+            bool state = API.IsPedClimbing(PedHandle);
 
             if (state && !state_climbing)
             {
@@ -1430,7 +1430,7 @@ namespace MPEventFramework
 
         public void CheckPlayerStunned()
         {
-            bool state = API.IsPedBeingStunned(pedHandle, 0);
+            bool state = API.IsPedBeingStunned(PedHandle, 0);
 
             if (state && !state_stunned)
             {
@@ -1448,7 +1448,7 @@ namespace MPEventFramework
 
         public void CheckPlayerBeingStealthKilled()
         {
-            bool state = API.IsPedBeingStealthKilled(pedHandle);
+            bool state = API.IsPedBeingStealthKilled(PedHandle);
 
             if (state && !state_beingStealthKilled)
             {
@@ -1466,7 +1466,7 @@ namespace MPEventFramework
 
         public void CheckPlayerGettingJacked()
         {
-            bool state = API.IsPedBeingJacked(pedHandle);
+            bool state = API.IsPedBeingJacked(PedHandle);
 
             if (state && !state_jacked)
             {
@@ -1484,7 +1484,7 @@ namespace MPEventFramework
 
         public void CheckPlayerAimFromCover()
         {
-            bool state = API.IsPedAimingFromCover(pedHandle);
+            bool state = API.IsPedAimingFromCover(PedHandle);
 
             if (state && !state_aimingFromCover)
             {
@@ -1502,7 +1502,7 @@ namespace MPEventFramework
 
         public void CheckPlayerWalking()
         {
-            bool state = API.IsPedWalking(pedHandle);
+            bool state = API.IsPedWalking(PedHandle);
 
             if (state && !state_walking)
             {
@@ -1520,7 +1520,7 @@ namespace MPEventFramework
 
         public void CheckPlayerRunning()
         {
-            bool state = API.IsPedRunning(pedHandle);
+            bool state = API.IsPedRunning(PedHandle);
 
             if (state && !state_running)
             {
@@ -1538,7 +1538,7 @@ namespace MPEventFramework
 
         public void CheckPlayerGettingUp()
         {
-            bool state = API.IsPedGettingUp(pedHandle);
+            bool state = API.IsPedGettingUp(PedHandle);
 
             if (state && !state_gettingUp)
             {
@@ -1556,7 +1556,7 @@ namespace MPEventFramework
 
         public void CheckPlayerCuffed()
         {
-            bool state = API.IsPedCuffed(pedHandle);
+            bool state = API.IsPedCuffed(PedHandle);
 
             if (state && !state_cuffed)
             {
@@ -1574,7 +1574,7 @@ namespace MPEventFramework
 
         public void CheckPlayerJumping()
         {
-            bool state = API.IsPedJumping(pedHandle);
+            bool state = API.IsPedJumping(PedHandle);
 
             if (state && !state_jumping)
             {
@@ -1592,7 +1592,7 @@ namespace MPEventFramework
 
         public void CheckPlayerSprinting()
         {
-            bool sprinting = API.IsPedSprinting(pedHandle);
+            bool sprinting = API.IsPedSprinting(PedHandle);
 
             if (sprinting && !state_sprinting)
             {
@@ -1610,28 +1610,28 @@ namespace MPEventFramework
 
         public void CheckPlayerSpawned()
         {
-            int pHandle = API.GetPlayerPed(playerHandle);
+            int pHandle = API.GetPlayerPed(PlayerHandle);
 
-            if (pHandle != pedHandle)
+            if (pHandle != PedHandle)
             {
                 int pNetId = API.NetworkGetNetworkIdFromEntity(pHandle);
-                pedHandle = pHandle;
-                pedNetworkId = pNetId;
+                PedHandle = pHandle;
+                PedNetworkId = pNetId;
                 if (debug) Utils.Log("OnPlayerSpawned");
                 OnPlayerSpawned?.Invoke();
 
-                pedHealth = API.GetEntityHealth(pedHandle);
-                pedArmour = API.GetPedArmour(pedHandle);
+                pedHealth = API.GetEntityHealth(PedHandle);
+                pedArmour = API.GetPedArmour(PedHandle);
             }
         }
 
         public void CheckVehicleEvents()
         {
-            bool isInVehicle = API.IsPedInAnyVehicle(pedHandle, false);
+            bool isInVehicle = API.IsPedInAnyVehicle(PedHandle, false);
 
             if (isInVehicle && !state_inVehicle)
             {
-                int vHandle = API.GetVehiclePedIsIn(pedHandle, false);
+                int vHandle = API.GetVehiclePedIsIn(PedHandle, false);
                 state_lastVehicleHandle = vHandle;
                 state_inVehicle = true;
                 state_tryingToEnterVehicle = false;
@@ -1664,14 +1664,14 @@ namespace MPEventFramework
 
         public void CheckVehicleEnteringEvents()
         {
-            bool isTryingToEnter = API.IsPedInAnyVehicle(pedHandle, true);
+            bool isTryingToEnter = API.IsPedInAnyVehicle(PedHandle, true);
 
             if (isTryingToEnter && !state_tryingToEnterVehicle && !state_inVehicle)
             {
                 state_tryingToEnterVehicle = isTryingToEnter;
-                int veh = API.GetVehiclePedIsEntering(pedHandle);
+                int veh = API.GetVehiclePedIsEntering(PedHandle);
                 // int veh2 = API.GetVehiclePedIsTryingToEnter(pedHandle); // NOTE(Caupo 06.02.2021): This is giving value 0 when almost in vehicle, so it is not so reliable.
-                int seatTryingtoEnter = API.GetSeatPedIsTryingToEnter(pedHandle);
+                int seatTryingtoEnter = API.GetSeatPedIsTryingToEnter(PedHandle);
 
                 if (seatTryingtoEnter != state_vehicleSeat)
                 {
@@ -1682,7 +1682,7 @@ namespace MPEventFramework
 
                 if (veh == 0)
                 {
-                    veh = API.GetVehiclePedIsIn(pedHandle, false);
+                    veh = API.GetVehiclePedIsIn(PedHandle, false);
                     Utils.Log("BASE OnPlayerSpawnIntoVehicle]VEH: [" + veh + "] SEAT: [" + seatTryingtoEnter + "] vHandle: " + veh);
                     OnPlayerSpawnIntoVehicle?.Invoke(veh);
                 }
@@ -1705,7 +1705,7 @@ namespace MPEventFramework
                 int ped = API.GetPedInVehicleSeat(state_lastVehicleHandle, seatIdx);
                 //Utils.Log("SEAT CHECKED " + i);
 
-                if (ped == pedHandle)
+                if (ped == PedHandle)
                 {
                     if (seatIdx != state_vehicleSeat)
                     {
@@ -1730,7 +1730,7 @@ namespace MPEventFramework
 
                     int ped = API.GetPedInVehicleSeat(state_lastVehicleHandle, seat);
 
-                    if (ped == pedHandle)
+                    if (ped == PedHandle)
                     {
                         if (seat != state_vehicleSeat)
                         {
