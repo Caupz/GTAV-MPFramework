@@ -6,106 +6,106 @@ namespace MPFrameworkServer
     public class Server : BaseScript
     {
         // PLAYER RELATED EVENTS
-        public event PlayerSpawned OnPlayerSpawned;
-        public event PlayerStartedWalking OnPlayerStartedWalking;
-        public event PlayerStoppedWalking OnPlayerStoppedWalking;
-        public event PlayerStartedRunning OnPlayerStartedRunning;
-        public event PlayerStoppedRunning OnPlayerStoppedRunning;
-        public event PlayerStartedSprinting OnPlayerStartedSprinting;
-        public event PlayerStoppedSprinting OnPlayerStoppedSprinting;
-        public event PlayerStartedJumping OnPlayerStartedJumping;
-        public event PlayerStoppedJumping OnPlayerStoppedJumping;
-        public event PlayerCuffed OnPlayerCuffed;
-        public event PlayerUnCuffed OnPlayerUnCuffed;
-        public event PlayerStartedToGetUp OnPlayerStartedToGetUp;
-        public event PlayerStoppedToGetUp OnPlayerStoppedToGetUp;
-        public event PlayerStartedToAimFromCover OnPlayerStartedToAimFromCover;
-        public event PlayerStoppedToAimFromCover OnPlayerStoppedToAimFromCover;
-        public event PlayerStartedGettingJacked OnPlayerStartedGettingJacked; // TEST teist inimest vaja
-        public event PlayerStoppedGettingJacked OnPlayerStoppedGettingJacked; // TEST teist inimest vaja
-        public event PlayerStartedJacking OnPlayerStartedJacking; // TEST ei tööta?
-        public event PlayerStoppedJacking OnPlayerStoppedJacking; // TEST ei tööta?
-        public event PlayerStartedGettingStunned OnPlayerStartedGettingStunned; // TEST teist inimest vaja
-        public event PlayerStoppedGettingStunned OnPlayerStoppedGettingStunned; // TEST teist inimest vaja
-        public event PlayerStartedClimbing OnPlayerStartedClimbing;
-        public event PlayerStoppedClimbing OnPlayerStoppedClimbing;
-        public event PlayerDied OnPlayerDied;
-        public event PlayerRevived OnPlayerRevived;
-        public event PlayerStartedDiving OnPlayerStartedDiving;
-        public event PlayerStoppedDiving OnPlayerStoppedDiving;
-        public event PlayerStartedDriveBy OnPlayerStartedDriveBy;
-        public event PlayerStoppedDriveBy OnPlayerStoppedDriveBy;
-        public event PlayerStartedFalling OnPlayerStartedFalling;
-        public event PlayerStoppedFalling OnPlayerStoppedFalling;
-        public event PlayerStartedOnFoot OnPlayerStartedOnFoot;
-        public event PlayerStoppedOnFoot OnPlayerStoppedOnFoot;
-        public event PlayerEnteredMeleeCombat OnPlayerEnteredMeleeCombat;
-        public event PlayerLeftMeleeCombat OnPlayerLeftMeleeCombat;
-        public event PlayerEnteredCover OnPlayerEnteredCover;
-        public event PlayerLeftCover OnPlayerLeftCover;
-        public event PlayerEnteredParachuteFreefall OnPlayerEnteredParachuteFreefall;
-        public event PlayerLeftParachuteFreefall OnPlayerLeftParachuteFreefall;
-        public event PlayerStartedReloading OnPlayerStartedReloading;
-        public event PlayerStoppedReloading OnPlayerStoppedReloading;
-        public event PlayerStartedShooting OnPlayerStartedShooting;
-        public event PlayerStoppedShooting OnPlayerStoppedShooting;
-        public event PlayerStartedSwimming OnPlayerStartedSwimming;
-        public event PlayerStoppedSwimming OnPlayerStoppedSwimming;
-        public event PlayerStartedSwimmingUnderwater OnPlayerStartedSwimmingUnderwater;
-        public event PlayerStoppedSwimmingUnderwater OnPlayerStoppedSwimmingUnderwater;
-        public event PlayerStartedStealthKill OnPlayerStartedStealthKill;
-        public event PlayerStoppedStealthKill OnPlayerStoppedStealthKill;
-        public event PlayerStartedVaulting OnPlayerStartedVaulting;
-        public event PlayerStoppedVaulting OnPlayerStoppedVaulting;
-        public event PlayerStartedWearingHelmet OnPlayerStartedWearingHelmet;
-        public event PlayerStoppedWearingHelmet OnPlayerStoppedWearingHelmet;
-        public event PlayerEnteredMainMenu OnPlayerEnteredMainMenu;
-        public event PlayerLeftMainMenu OnPlayerLeftMainMenu;
-        public event PlayerReadyToShoot OnPlayerReadyToShoot;
-        public event PlayerNotReadyToShoot OnPlayerNotReadyToShoot;
-        public event PlayerStartedAiming OnPlayerStartedAiming;
-        public event PlayerStoppedAiming OnPlayerStoppedAiming;
+        public static event PlayerSpawned OnPlayerSpawned;
+        public static event PlayerStartedWalking OnPlayerStartedWalking;
+        public static event PlayerStoppedWalking OnPlayerStoppedWalking;
+        public static event PlayerStartedRunning OnPlayerStartedRunning;
+        public static event PlayerStoppedRunning OnPlayerStoppedRunning;
+        public static event PlayerStartedSprinting OnPlayerStartedSprinting;
+        public static event PlayerStoppedSprinting OnPlayerStoppedSprinting;
+        public static event PlayerStartedJumping OnPlayerStartedJumping;
+        public static event PlayerStoppedJumping OnPlayerStoppedJumping;
+        public static event PlayerCuffed OnPlayerCuffed;
+        public static event PlayerUnCuffed OnPlayerUnCuffed;
+        public static event PlayerStartedToGetUp OnPlayerStartedToGetUp;
+        public static event PlayerStoppedToGetUp OnPlayerStoppedToGetUp;
+        public static event PlayerStartedToAimFromCover OnPlayerStartedToAimFromCover;
+        public static event PlayerStoppedToAimFromCover OnPlayerStoppedToAimFromCover;
+        public static event PlayerStartedGettingJacked OnPlayerStartedGettingJacked; // TEST teist inimest vaja
+        public static event PlayerStoppedGettingJacked OnPlayerStoppedGettingJacked; // TEST teist inimest vaja
+        public static event PlayerStartedJacking OnPlayerStartedJacking; // TEST ei tööta?
+        public static event PlayerStoppedJacking OnPlayerStoppedJacking; // TEST ei tööta?
+        public static event PlayerStartedGettingStunned OnPlayerStartedGettingStunned; // TEST teist inimest vaja
+        public static event PlayerStoppedGettingStunned OnPlayerStoppedGettingStunned; // TEST teist inimest vaja
+        public static event PlayerStartedClimbing OnPlayerStartedClimbing;
+        public static event PlayerStoppedClimbing OnPlayerStoppedClimbing;
+        public static event PlayerDied OnPlayerDied;
+        public static event PlayerRevived OnPlayerRevived;
+        public static event PlayerStartedDiving OnPlayerStartedDiving;
+        public static event PlayerStoppedDiving OnPlayerStoppedDiving;
+        public static event PlayerStartedDriveBy OnPlayerStartedDriveBy;
+        public static event PlayerStoppedDriveBy OnPlayerStoppedDriveBy;
+        public static event PlayerStartedFalling OnPlayerStartedFalling;
+        public static event PlayerStoppedFalling OnPlayerStoppedFalling;
+        public static event PlayerStartedOnFoot OnPlayerStartedOnFoot;
+        public static event PlayerStoppedOnFoot OnPlayerStoppedOnFoot;
+        public static event PlayerEnteredMeleeCombat OnPlayerEnteredMeleeCombat;
+        public static event PlayerLeftMeleeCombat OnPlayerLeftMeleeCombat;
+        public static event PlayerEnteredCover OnPlayerEnteredCover;
+        public static event PlayerLeftCover OnPlayerLeftCover;
+        public static event PlayerEnteredParachuteFreefall OnPlayerEnteredParachuteFreefall;
+        public static event PlayerLeftParachuteFreefall OnPlayerLeftParachuteFreefall;
+        public static event PlayerStartedReloading OnPlayerStartedReloading;
+        public static event PlayerStoppedReloading OnPlayerStoppedReloading;
+        public static event PlayerStartedShooting OnPlayerStartedShooting;
+        public static event PlayerStoppedShooting OnPlayerStoppedShooting;
+        public static event PlayerStartedSwimming OnPlayerStartedSwimming;
+        public static event PlayerStoppedSwimming OnPlayerStoppedSwimming;
+        public static event PlayerStartedSwimmingUnderwater OnPlayerStartedSwimmingUnderwater;
+        public static event PlayerStoppedSwimmingUnderwater OnPlayerStoppedSwimmingUnderwater;
+        public static event PlayerStartedStealthKill OnPlayerStartedStealthKill;
+        public static event PlayerStoppedStealthKill OnPlayerStoppedStealthKill;
+        public static event PlayerStartedVaulting OnPlayerStartedVaulting;
+        public static event PlayerStoppedVaulting OnPlayerStoppedVaulting;
+        public static event PlayerStartedWearingHelmet OnPlayerStartedWearingHelmet;
+        public static event PlayerStoppedWearingHelmet OnPlayerStoppedWearingHelmet;
+        public static event PlayerEnteredMainMenu OnPlayerEnteredMainMenu;
+        public static event PlayerLeftMainMenu OnPlayerLeftMainMenu;
+        public static event PlayerReadyToShoot OnPlayerReadyToShoot;
+        public static event PlayerNotReadyToShoot OnPlayerNotReadyToShoot;
+        public static event PlayerStartedAiming OnPlayerStartedAiming;
+        public static event PlayerStoppedAiming OnPlayerStoppedAiming;
 
-        public event PlayerHealthGain OnPlayerHealthGain;
-        public event PlayerHealthLoss OnPlayerHealthLoss;
-        public event PlayerArmourGain OnPlayerArmourGain;
-        public event PlayerArmourLoss OnPlayerArmourLoss;
+        public static event PlayerHealthGain OnPlayerHealthGain;
+        public static event PlayerHealthLoss OnPlayerHealthLoss;
+        public static event PlayerArmourGain OnPlayerArmourGain;
+        public static event PlayerArmourLoss OnPlayerArmourLoss;
 
         // VEHICLE RELATED EVENTS
-        public event PlayerTryingToEnterVehicle OnPlayerTryingToEnterVehicle;
-        public event PlayerEnteredVehicle OnPlayerEnteredVehicle;
-        public event PlayerLeaveVehicle OnPlayerLeaveVehicle;
-        public event PlayerSeatChange OnPlayerSeatChange;
-        public event PlayerSpawnIntoVehicle OnPlayerSpawnIntoVehicle;
-        public event PlayerEnteredBoat OnPlayerEnteredBoat;
-        public event PlayerLeftBoat OnPlayerLeftBoat;
-        public event PlayerEnteredHeli OnPlayerEnteredHeli;
-        public event PlayerLeftHeli OnPlayerLeftHeli;
-        public event PlayerEnteredPlane OnPlayerEnteredPlane;
-        public event PlayerLeftPlane OnPlayerLeftPlane;
-        public event PlayerEnteredPoliceVehicle OnPlayerEnteredPoliceVehicle;
-        public event PlayerLeftPoliceVehicle OnPlayerLeftPoliceVehicle;
-        public event PlayerEnteredSub OnPlayerEnteredSub;
-        public event PlayerLeftSub OnPlayerLeftSub;
-        public event PlayerEnteredTaxi OnPlayerEnteredTaxi;
-        public event PlayerLeftTaxi OnPlayerLeftTaxi;
-        public event PlayerEnteredTrain OnPlayerEnteredTrain;
-        public event PlayerLeftTrain OnPlayerLeftTrain;
-        public event PlayerEnteredFlyingVehicle OnPlayerEnteredFlyingVehicle;
-        public event PlayerLeftFlyingVehicle OnPlayerLeftFlyingVehicle;
-        public event PlayerStartedOnBike OnPlayerStartedOnBike;
-        public event PlayerStoppedOnBike OnPlayerStoppedOnBike;
-        public event PlayerStartedOnVehicle OnPlayerStartedOnVehicle;
-        public event PlayerStoppedOnVehicle OnPlayerStoppedOnVehicle;
-        public event PlayerStartedJumpingOutOfVehicle OnPlayerStartedJumpingOutOfVehicle;
-        public event PlayerStoppedJumpingOutOfVehicle OnPlayerStoppedJumpingOutOfVehicle;
-        public event PlayerStartedMovingVehicle OnPlayerStartedMovingVehicle;
-        public event PlayerStoppedVehicle OnPlayerStoppedVehicle;
-        public event PlayerStartedBurnouting OnPlayerStartedBurnouting;
-        public event PlayerStoppedBurnouting OnPlayerStoppedBurnouting;
-        public event VehicleHealthGain OnVehicleHealthGain;
-        public event VehicleHealthLoss OnVehicleHealthLoss;
-        public event VehicleCrash OnVehicleCrash;
+        public static event PlayerTryingToEnterVehicle OnPlayerTryingToEnterVehicle;
+        public static event PlayerEnteredVehicle OnPlayerEnteredVehicle;
+        public static event PlayerLeaveVehicle OnPlayerLeaveVehicle;
+        public static event PlayerSeatChange OnPlayerSeatChange;
+        public static event PlayerSpawnIntoVehicle OnPlayerSpawnIntoVehicle;
+        public static event PlayerEnteredBoat OnPlayerEnteredBoat;
+        public static event PlayerLeftBoat OnPlayerLeftBoat;
+        public static event PlayerEnteredHeli OnPlayerEnteredHeli;
+        public static event PlayerLeftHeli OnPlayerLeftHeli;
+        public static event PlayerEnteredPlane OnPlayerEnteredPlane;
+        public static event PlayerLeftPlane OnPlayerLeftPlane;
+        public static event PlayerEnteredPoliceVehicle OnPlayerEnteredPoliceVehicle;
+        public static event PlayerLeftPoliceVehicle OnPlayerLeftPoliceVehicle;
+        public static event PlayerEnteredSub OnPlayerEnteredSub;
+        public static event PlayerLeftSub OnPlayerLeftSub;
+        public static event PlayerEnteredTaxi OnPlayerEnteredTaxi;
+        public static event PlayerLeftTaxi OnPlayerLeftTaxi;
+        public static event PlayerEnteredTrain OnPlayerEnteredTrain;
+        public static event PlayerLeftTrain OnPlayerLeftTrain;
+        public static event PlayerEnteredFlyingVehicle OnPlayerEnteredFlyingVehicle;
+        public static event PlayerLeftFlyingVehicle OnPlayerLeftFlyingVehicle;
+        public static event PlayerStartedOnBike OnPlayerStartedOnBike;
+        public static event PlayerStoppedOnBike OnPlayerStoppedOnBike;
+        public static event PlayerStartedOnVehicle OnPlayerStartedOnVehicle;
+        public static event PlayerStoppedOnVehicle OnPlayerStoppedOnVehicle;
+        public static event PlayerStartedJumpingOutOfVehicle OnPlayerStartedJumpingOutOfVehicle;
+        public static event PlayerStoppedJumpingOutOfVehicle OnPlayerStoppedJumpingOutOfVehicle;
+        public static event PlayerStartedMovingVehicle OnPlayerStartedMovingVehicle;
+        public static event PlayerStoppedVehicle OnPlayerStoppedVehicle;
+        public static event PlayerStartedBurnouting OnPlayerStartedBurnouting;
+        public static event PlayerStoppedBurnouting OnPlayerStoppedBurnouting;
+        public static event VehicleHealthGain OnVehicleHealthGain;
+        public static event VehicleHealthLoss OnVehicleHealthLoss;
+        public static event VehicleCrash OnVehicleCrash;
 
         // VEHICLE RELATED DELEGATES
         public delegate void PlayerStartedBurnouting(Player player);
@@ -311,7 +311,11 @@ namespace MPFrameworkServer
             Debug.WriteLine("MP FRAMEWORK SERVER INITED - END");
         }
 
-        public void RemoteOnPlayerSpawned([FromSource]Player client) { OnPlayerSpawned?.Invoke(client); }
+        public void RemoteOnPlayerSpawned([FromSource]Player client) {
+            Utils.Log("RemoteOnPlayerSpawned");
+            OnPlayerSpawned?.Invoke(client);
+            Utils.Log("RemoteOnPlayerSpawned 2");
+        }
         public void RemoteOnPlayerStartedWalking([FromSource]Player client) { OnPlayerStartedWalking?.Invoke(client); }
         public void RemoteOnPlayerStoppedWalking([FromSource]Player client) { OnPlayerStoppedWalking?.Invoke(client); }
         public void RemoteOnPlayerStartedRunning([FromSource]Player client) { OnPlayerStartedRunning?.Invoke(client); }
