@@ -44,12 +44,15 @@ namespace MPEventFramework
         List<string> selectedWeathers = MEF_Weathers.weathersWithSnow;
         const float weatherTransitionPerSecond = 0.0167f;
 
-        // PLAYER IDS
+        // IDS
         public static int PlayerHandle { get; protected set; }
         public static int PlayerNetworkId { get; protected set; }
         public static int PedHandle { get; protected set; }
         public static int PedNetworkId { get; protected set; }
-        // PLAYER IDS END
+
+        public static int VehicleHandle { get; protected set; }
+        public static int VehicleNetworkId { get; protected set; }
+        // IDS END
 
         // STATES
         int pedHealth = MEF_Player.HEALTH_NONE;
@@ -60,8 +63,6 @@ namespace MPEventFramework
         float vehiclePetrolTankHealth = MEF_Vehicle.HEALTH_NONE;
         float vehicleSpeed = 0;
 
-        int state_lastVehicleHandle = MEF_Vehicle.HANDLE_NONE;
-        int state_lastVehicleNetworkId = MEF_Vehicle.HANDLE_NONE;
         bool state_inVehicle = false;
         int state_vehicleSeat = MEF_Vehicle.SEAT_NONE;
         bool state_tryingToEnterVehicle = false;
@@ -600,23 +601,23 @@ namespace MPEventFramework
 
         public void CheckVehicleHealth()
         {
-            int vHealth = API.GetEntityHealth(state_lastVehicleHandle);
-            float vBodyHealth = API.GetVehicleBodyHealth(state_lastVehicleHandle);
-            float vEngineHealth = API.GetVehicleEngineHealth(state_lastVehicleHandle);
-            float vPetrolTankHealth = API.GetVehiclePetrolTankHealth(state_lastVehicleHandle);
+            int vHealth = API.GetEntityHealth(VehicleHandle);
+            float vBodyHealth = API.GetVehicleBodyHealth(VehicleHandle);
+            float vEngineHealth = API.GetVehicleEngineHealth(VehicleHandle);
+            float vPetrolTankHealth = API.GetVehiclePetrolTankHealth(VehicleHandle);
 
             if (vHealth > vehicleHealth || vBodyHealth > vehicleBodyHealth || vEngineHealth > vehicleEngineHealth || vPetrolTankHealth > vehiclePetrolTankHealth)
             {
                 if(debug) Utils.Log("OnVehicleHealthGain");
                 UpdateVehicleHealth(vHealth, vBodyHealth, vEngineHealth, vPetrolTankHealth);
                 OnVehicleHealthGain?.Invoke(vehicleHealth, vehicleBodyHealth, vehicleEngineHealth, vehiclePetrolTankHealth);
-                TriggerServerEvent("OnVehicleHealthGain", state_lastVehicleNetworkId, vehicleHealth, vehicleBodyHealth, vehicleEngineHealth, vehiclePetrolTankHealth);
+                TriggerServerEvent("OnVehicleHealthGain", VehicleNetworkId, vehicleHealth, vehicleBodyHealth, vehicleEngineHealth, vehiclePetrolTankHealth);
             }
             if (vHealth < vehicleHealth || vBodyHealth < vehicleBodyHealth || vEngineHealth < vehicleEngineHealth || vPetrolTankHealth < vehiclePetrolTankHealth)
             {
                 UpdateVehicleHealth(vHealth, vBodyHealth, vEngineHealth, vPetrolTankHealth);
 
-                float speed = MEF_Vehicle.GetSpeedInKmh(state_lastVehicleHandle);
+                float speed = MEF_Vehicle.GetSpeedInKmh(VehicleHandle);
                 float speedQuanfitsent = vehicleSpeed / 1.33f;
 
                 //Utils.Log("vHealth: " + vHealth + " speed:" + speed + " speedQuanfitsent: " + speedQuanfitsent);
@@ -631,7 +632,7 @@ namespace MPEventFramework
 
                 if (debug) Utils.Log("OnVehicleHealthLoss");
                 OnVehicleHealthLoss?.Invoke(vehicleHealth, vehicleBodyHealth, vehicleEngineHealth, vehiclePetrolTankHealth);
-                TriggerServerEvent("OnVehicleHealthLoss", state_lastVehicleNetworkId, vehicleHealth, vehicleBodyHealth, vehicleEngineHealth, vehiclePetrolTankHealth);
+                TriggerServerEvent("OnVehicleHealthLoss", VehicleNetworkId, vehicleHealth, vehicleBodyHealth, vehicleEngineHealth, vehiclePetrolTankHealth);
             }
         }
         public void CheckPlayerHealth()
@@ -917,7 +918,7 @@ namespace MPEventFramework
         }
         public void CheckPlayerBurnouting()
         {
-            bool state = API.IsVehicleInBurnout(state_lastVehicleHandle);
+            bool state = API.IsVehicleInBurnout(VehicleHandle);
 
             if (state && !state_vehicleBurnouting)
             {
@@ -1754,8 +1755,8 @@ namespace MPEventFramework
             if (isInVehicle && !state_inVehicle)
             {
                 int vHandle = API.GetVehiclePedIsIn(PedHandle, false);
-                state_lastVehicleHandle = vHandle;
-                state_lastVehicleNetworkId = API.NetworkGetNetworkIdFromEntity(vHandle);
+                VehicleHandle = vHandle;
+                VehicleNetworkId = API.NetworkGetNetworkIdFromEntity(vHandle);
                 state_inVehicle = true;
                 state_tryingToEnterVehicle = false;
                 CheckSeat();
@@ -1763,20 +1764,20 @@ namespace MPEventFramework
                 if (debug) Utils.Log("OnPlayerEnteredVehicle " + vHandle);
 
                 state_tryingToEnterVehicle = false;
-                OnPlayerEnteredVehicle?.Invoke(state_lastVehicleHandle, state_vehicleSeat);
-                TriggerServerEvent("OnPlayerEnteredVehicle", state_lastVehicleNetworkId, state_vehicleSeat);
+                OnPlayerEnteredVehicle?.Invoke(VehicleHandle, state_vehicleSeat);
+                TriggerServerEvent("OnPlayerEnteredVehicle", VehicleNetworkId, state_vehicleSeat);
                 UpdateVehicleSpeed();
-                vehicleHealth = API.GetEntityHealth(state_lastVehicleHandle);
-                vehicleBodyHealth = API.GetVehicleBodyHealth(state_lastVehicleHandle);
-                vehicleEngineHealth = API.GetVehicleEngineHealth(state_lastVehicleHandle);
-                vehiclePetrolTankHealth = API.GetVehiclePetrolTankHealth(state_lastVehicleHandle);
+                vehicleHealth = API.GetEntityHealth(VehicleHandle);
+                vehicleBodyHealth = API.GetVehicleBodyHealth(VehicleHandle);
+                vehicleEngineHealth = API.GetVehicleEngineHealth(VehicleHandle);
+                vehiclePetrolTankHealth = API.GetVehiclePetrolTankHealth(VehicleHandle);
             }
             else if (!isInVehicle && state_inVehicle)
             {
                 state_inVehicle = false;
                 if (debug) Utils.Log("OnPlayerLeaveVehicle");
-                OnPlayerLeaveVehicle?.Invoke(state_lastVehicleHandle, state_vehicleSeat);
-                TriggerServerEvent("OnPlayerLeaveVehicle", state_lastVehicleNetworkId, state_vehicleSeat);
+                OnPlayerLeaveVehicle?.Invoke(VehicleHandle, state_vehicleSeat);
+                TriggerServerEvent("OnPlayerLeaveVehicle", VehicleNetworkId, state_vehicleSeat);
                 state_vehicleSeat = MEF_Vehicle.SEAT_NONE;
                 ResetVehicleRelatedStates();
             }
@@ -1784,7 +1785,7 @@ namespace MPEventFramework
 
         public void UpdateVehicleSpeed()
         {
-            vehicleSpeed = MEF_Vehicle.GetSpeedInKmh(state_lastVehicleHandle);
+            vehicleSpeed = MEF_Vehicle.GetSpeedInKmh(VehicleHandle);
         }
 
         public void CheckVehicleEnteringEvents()
@@ -1803,7 +1804,7 @@ namespace MPEventFramework
                     state_vehicleSeat = seatTryingtoEnter;
                     if (debug) Utils.Log("OnPlayerSeatChange");
                     OnPlayerSeatChange?.Invoke(veh, state_vehicleSeat);
-                    TriggerServerEvent("OnPlayerSeatChange", state_lastVehicleNetworkId, state_vehicleSeat);
+                    TriggerServerEvent("OnPlayerSeatChange", VehicleNetworkId, state_vehicleSeat);
                 }
 
                 if (veh == 0)
@@ -1811,26 +1812,26 @@ namespace MPEventFramework
                     veh = API.GetVehiclePedIsIn(PedHandle, false);
                     Utils.Log("BASE OnPlayerSpawnIntoVehicle]VEH: [" + veh + "] SEAT: [" + seatTryingtoEnter + "] vHandle: " + veh);
                     OnPlayerSpawnIntoVehicle?.Invoke(veh);
-                    TriggerServerEvent("OnPlayerSpawnIntoVehicle", state_lastVehicleNetworkId);
+                    TriggerServerEvent("OnPlayerSpawnIntoVehicle", VehicleNetworkId);
                 }
                 else
                 {
                     Utils.Log("BASE OnTryingToEnterVehicle]VEH: [" + veh + "] SEAT: [" + seatTryingtoEnter + "]");
                     OnPlayerTryingToEnterVehicle?.Invoke(veh, state_vehicleSeat);
-                    TriggerServerEvent("OnPlayerTryingToEnterVehicle", state_lastVehicleNetworkId, state_vehicleSeat);
+                    TriggerServerEvent("OnPlayerTryingToEnterVehicle", VehicleNetworkId, state_vehicleSeat);
                 }
             }
         }
 
         public void CheckSeat()
         {
-            int seats = MEF_Vehicle.GetMaxNumberOfSeats(state_lastVehicleHandle);
+            int seats = MEF_Vehicle.GetMaxNumberOfSeats(VehicleHandle);
             //Utils.Log("CheckSeat seats " + seats);
 
             for (int i = 0; i < MEF_Vehicle.seats.Length; i++)
             {
                 int seatIdx = MEF_Vehicle.seats[i];
-                int ped = API.GetPedInVehicleSeat(state_lastVehicleHandle, seatIdx);
+                int ped = API.GetPedInVehicleSeat(VehicleHandle, seatIdx);
                 //Utils.Log("SEAT CHECKED " + i);
 
                 if (ped == PedHandle)
@@ -1839,7 +1840,7 @@ namespace MPEventFramework
                     {
                         state_vehicleSeat = seatIdx;
                         if (debug) Utils.Log("OnPlayerSeatChange " + state_vehicleSeat);
-                        OnPlayerSeatChange?.Invoke(state_lastVehicleHandle, state_vehicleSeat);
+                        OnPlayerSeatChange?.Invoke(VehicleHandle, state_vehicleSeat);
                         TriggerServerEvent("OnPlayerSeatChange");
                     }
                     //Utils.Log("SEAT BREAK " + i);
@@ -1857,7 +1858,7 @@ namespace MPEventFramework
                 {
                     //Utils.Log("SEAT CHECKED-2: " + seat);
 
-                    int ped = API.GetPedInVehicleSeat(state_lastVehicleHandle, seat);
+                    int ped = API.GetPedInVehicleSeat(VehicleHandle, seat);
 
                     if (ped == PedHandle)
                     {
@@ -1865,7 +1866,7 @@ namespace MPEventFramework
                         {
                             state_vehicleSeat = seat;
                             if (debug) Utils.Log("OnPlayerSeatChange " + state_vehicleSeat);
-                            OnPlayerSeatChange?.Invoke(state_lastVehicleHandle, state_vehicleSeat);
+                            OnPlayerSeatChange?.Invoke(VehicleHandle, state_vehicleSeat);
                             TriggerServerEvent("OnPlayerSeatChange");
                         }
                         //Utils.Log("SEAT BREAK-2: " + seat);
