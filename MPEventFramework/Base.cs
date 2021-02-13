@@ -1,13 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
 using CitizenFX.Core;
 using API = CitizenFX.Core.Native.API;
 
-namespace MPEventFramework
+namespace MPFrameworkClient
 {
     public class Base : BaseScript
     {

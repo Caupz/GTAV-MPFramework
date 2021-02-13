@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.28307.1300
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MPEventFramework", "MPEventFramework.csproj", "{901C6DB8-C0C0-4B2F-A7D0-9B5D9328A5CF}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MPFrameworkClient", "MPFrameworkClient.csproj", "{901C6DB8-C0C0-4B2F-A7D0-9B5D9328A5CF}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MPFrameworkServer", "..\MPFrameworkServer\MPFrameworkServer.csproj", "{B24FFA1B-A734-4DB6-917C-8BC7F75095BE}"
 EndProject

@@ -7,8 +7,8 @@
     <ProjectGuid>{901C6DB8-C0C0-4B2F-A7D0-9B5D9328A5CF}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>MPEventFramework</RootNamespace>
-    <AssemblyName>MPEventFramework</AssemblyName>
+    <RootNamespace>MPFrameworkClient</RootNamespace>
+    <AssemblyName>MPFrameworkClient</AssemblyName>
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <Deterministic>true</Deterministic>
