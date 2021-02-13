@@ -316,8 +316,8 @@ namespace MPEventFramework
         public delegate void PlayerRevived(float x, float y, float z);
         public delegate void PlayerStartedDiving();
         public delegate void PlayerStoppedDiving();
-        public delegate void PlayerStartedDriveBy(uint weapon);
-        public delegate void PlayerStoppedDriveBy(uint weapon);
+        public delegate void PlayerStartedDriveBy(int vehicleHandle, uint weapon);
+        public delegate void PlayerStoppedDriveBy(int vehicleHandle, uint weapon);
         public delegate void PlayerStartedFalling();
         public delegate void PlayerStoppedFalling();
         public delegate void PlayerStartedOnFoot();
@@ -889,7 +889,7 @@ namespace MPEventFramework
             {
                 state_driveBying = false;
                 if (debug) Utils.Log("OnPlayerStoppedDriveBy");
-                OnPlayerStoppedDriveBy?.Invoke(currentWeapon);
+                OnPlayerStoppedDriveBy?.Invoke(VehicleHandle, currentWeapon);
                 TriggerServerEvent("OnPlayerStoppedDriveBy");
             }
 
@@ -1468,14 +1468,14 @@ namespace MPEventFramework
             {
                 state_driveBying = state;
                 if (debug) Utils.Log("OnPlayerStartedDriveBy");
-                OnPlayerStartedDriveBy?.Invoke(currentWeapon);
+                OnPlayerStartedDriveBy?.Invoke(VehicleHandle, currentWeapon);
                 TriggerServerEvent("OnPlayerStartedDriveBy");
             }
             else if (!state && state_driveBying)
             {
                 state_driveBying = state;
                 if (debug) Utils.Log("OnPlayerStoppedDriveBy");
-                OnPlayerStoppedDriveBy?.Invoke(currentWeapon);
+                OnPlayerStoppedDriveBy?.Invoke(VehicleHandle, currentWeapon);
                 TriggerServerEvent("OnPlayerStoppedDriveBy");
             }
         }
