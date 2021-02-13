@@ -121,11 +121,11 @@ namespace MPEventFramework
         int previouseMilliSecond = 0;
 
         public event SecondPassed OnSecondPassed;
-        public event HundredSecondPassed OnHundredSecondPassed;
+        public event HundredMilliSecondPassed OnHundredMilliSecondPassed;
         public event MinutePassed OnMinutePassed;
         public event HourPassed OnHourPassed;
         public delegate void SecondPassed();
-        public delegate void HundredSecondPassed();
+        public delegate void HundredMilliSecondPassed();
         public delegate void MinutePassed();
         public delegate void HourPassed();
 
@@ -342,7 +342,7 @@ namespace MPEventFramework
             UpdateTime(dt.Hour, dt.Minute, dt.Second);
         }
 
-        public void TransitionWeather()
+        private void TransitionWeather()
         {
             if (enableRandomWeathers && weatherTransition > 0.0)
             {
@@ -361,7 +361,7 @@ namespace MPEventFramework
             }
         }
 
-        public void UpdateWeather()
+        private void UpdateWeather()
         {
             if(enableRandomWeathers)
             {
@@ -377,7 +377,7 @@ namespace MPEventFramework
             }
         }
 
-        public void GetNewSelectedWeathers()
+        private void GetNewSelectedWeathers()
         {
             if (enableSnowOnly)
             {
@@ -396,13 +396,13 @@ namespace MPEventFramework
             }
         }
 
-        public void SetCurrentWeatherState()
+        private void SetCurrentWeatherState()
         {
             Utils.Log("previouslySelectedWeathers.Count: "+ previouslySelectedWeathers.Count+ " previouseWeather" + previouseWeather+ " selectedWeathers.Count:"+ selectedWeathers.Count+ " currentWeather: "+ currentWeather+ " weatherTransition: "+ weatherTransition);
             API.SetWeatherTypeTransition((uint)API.GetHashKey(previouslySelectedWeathers[previouseWeather]), (uint)API.GetHashKey(selectedWeathers[currentWeather]), weatherTransition);
         }
 
-        public void GetNewWeatherUpdates()
+        private void GetNewWeatherUpdates()
         {
             weatherTransition = weatherTransitionPerSecond;
             previouseWeather = currentWeather;
@@ -410,7 +410,7 @@ namespace MPEventFramework
             currentWeatherUpdateInMinutes = weatherUpdateIntervalInMinutes;
         }
 
-        public void UpdateWind()
+        private void UpdateWind()
         {
             if(enableRandomWinds)
             {
@@ -420,7 +420,7 @@ namespace MPEventFramework
             }
         }
 
-        public void GetRandomWind()
+        private void GetRandomWind()
         {
             currentWind = Utils.GetRandom(minWindSpeed, maxWindSpeed);
         }
@@ -430,13 +430,13 @@ namespace MPEventFramework
             currentWindDirection = Utils.GetRandom(0, 8);
         }
 
-        public void ApplyCurrentWind()
+        private void ApplyCurrentWind()
         {
             API.SetWind(currentWind);
             API.SetWindDirection(currentWindDirection);
         }
 
-        public void InitSystemVariables()
+        private void InitSystemVariables()
         {
             DateTime dt = DateTime.Now;
             previouseMinute = dt.Minute;
@@ -444,7 +444,7 @@ namespace MPEventFramework
             previouseMilliSecond = dt.Millisecond;
         }
 
-        public void InitPlayerIds()
+        private void InitPlayerIds()
         {
             PlayerHandle = API.PlayerId();
             PlayerNetworkId = API.NetworkGetNetworkIdFromEntity(PlayerHandle);
@@ -487,7 +487,7 @@ namespace MPEventFramework
 
         // TIMING EVENTS
 
-        public void CallbackOnMinutePassed()
+        private void CallbackOnMinutePassed()
         {
             UpdateWind();
             UpdateWeather();
@@ -502,7 +502,7 @@ namespace MPEventFramework
             }
         }
 
-        public void CallbackOnSecondPassed(int hour, int minute, int second)
+        private void CallbackOnSecondPassed(int hour, int minute, int second)
         {
             UpdateTime(hour, minute, second);
             TransitionWeather();
@@ -561,7 +561,7 @@ namespace MPEventFramework
             OnSecondPassed?.Invoke();
         }
 
-        public void CallbackOnHundredMilliSecondPassed()
+        private void CallbackOnHundredMilliSecondPassed()
         {
             CheckVehicleEnteringEvents();
             CheckPlayerReloading();
@@ -588,10 +588,10 @@ namespace MPEventFramework
                 CheckPlayerVaulting();
             }
 
-            OnHundredSecondPassed?.Invoke();
+            OnHundredMilliSecondPassed?.Invoke();
         }
 
-        public void UpdateVehicleHealth(int vHealth, float vBodyHealth, float vEngineHealth, float vPetrolTankHealth)
+        private void UpdateVehicleHealth(int vHealth, float vBodyHealth, float vEngineHealth, float vPetrolTankHealth)
         {
             vehicleHealth = vHealth;
             vehicleBodyHealth = vBodyHealth;
@@ -599,7 +599,7 @@ namespace MPEventFramework
             vehiclePetrolTankHealth = vPetrolTankHealth;
         }
 
-        public void CheckVehicleHealth()
+        private void CheckVehicleHealth()
         {
             int vHealth = API.GetEntityHealth(VehicleHandle);
             float vBodyHealth = API.GetVehicleBodyHealth(VehicleHandle);
@@ -635,7 +635,7 @@ namespace MPEventFramework
                 TriggerServerEvent("OnVehicleHealthLoss", VehicleNetworkId, vehicleHealth, vehicleBodyHealth, vehicleEngineHealth, vehiclePetrolTankHealth);
             }
         }
-        public void CheckPlayerHealth()
+        private void CheckPlayerHealth()
         {
             int pHealth = API.GetEntityHealth(PedHandle);
 
@@ -655,7 +655,7 @@ namespace MPEventFramework
             }
         }
 
-        public void CheckPlayerArmour()
+        private void CheckPlayerArmour()
         {
             int pArmour = API.GetPedArmour(PedHandle);
 
@@ -675,7 +675,7 @@ namespace MPEventFramework
             }
         }
 
-        public void ResetPlayerRelatedStates()
+        private void ResetPlayerRelatedStates()
         {
             if (state_swimmingUnderwater)
             {
@@ -802,7 +802,7 @@ namespace MPEventFramework
             }
         }
 
-        public void ResetVehicleRelatedStates()
+        private void ResetVehicleRelatedStates()
         {
             state_vehicleStopped = false;
 
@@ -897,7 +897,7 @@ namespace MPEventFramework
 
         // HELPER FUNCTIONS
 
-        public void CheckPlayerAiming()
+        private void CheckPlayerAiming()
         {
             bool state = API.GetPedConfigFlag(PedHandle, 78, true);
 
@@ -916,7 +916,7 @@ namespace MPEventFramework
                 TriggerServerEvent("OnPlayerStoppedAiming");
             }
         }
-        public void CheckPlayerBurnouting()
+        private void CheckPlayerBurnouting()
         {
             bool state = API.IsVehicleInBurnout(VehicleHandle);
 
@@ -935,7 +935,7 @@ namespace MPEventFramework
                 TriggerServerEvent("OnPlayerStoppedBurnouting");
             }
         }
-        public void CheckPlayerStoppingVehicle()
+        private void CheckPlayerStoppingVehicle()
         {
             if (vehicleSpeed == 0 && !state_vehicleStopped)
             {
@@ -952,7 +952,7 @@ namespace MPEventFramework
                 TriggerServerEvent("OnPlayerStartedMovingVehicle");
             }
         }
-        public void CheckPlayerReadyToShoot()
+        private void CheckPlayerReadyToShoot()
         {
             bool state = API.IsPedWeaponReadyToShoot(PedHandle);
 
@@ -971,7 +971,7 @@ namespace MPEventFramework
                 TriggerServerEvent("OnPlayerNotReadyToShoot");
             }
         }
-        public void CheckPlayerMainMenu()
+        private void CheckPlayerMainMenu()
         {
             bool state = API.IsPauseMenuActive();
 
@@ -990,7 +990,7 @@ namespace MPEventFramework
                 TriggerServerEvent("OnPlayerLeftMainMenu");
             }
         }
-        public void CheckPlayerWearingHelmet()
+        private void CheckPlayerWearingHelmet()
         {
             bool state = API.IsPedWearingHelmet(PedHandle);
 
@@ -1009,7 +1009,7 @@ namespace MPEventFramework
                 TriggerServerEvent("OnPlayerStoppedWearingHelmet");
             }
         }
-        public void CheckPlayerJumpingOutOfVehicle()
+        private void CheckPlayerJumpingOutOfVehicle()
         {
             bool state = API.IsPedJumpingOutOfVehicle(PedHandle);
 
@@ -1028,7 +1028,7 @@ namespace MPEventFramework
                 TriggerServerEvent("OnPlayerStoppedJumpingOutOfVehicle");
             }
         }
-        public void CheckPlayerVaulting()
+        private void CheckPlayerVaulting()
         {
             bool state = API.IsPedVaulting(PedHandle);
 
@@ -1047,7 +1047,7 @@ namespace MPEventFramework
                 TriggerServerEvent("OnPlayerStoppedVaulting");
             }
         }
-        public void CheckPlayerStealthKilling()
+        private void CheckPlayerStealthKilling()
         {
             bool state = API.IsPedPerformingStealthKill(PedHandle);
 
@@ -1066,7 +1066,7 @@ namespace MPEventFramework
                 TriggerServerEvent("OnPlayerStoppedStealthKill");
             }
         }
-        public void CheckPlayerSwimmingUnderwater()
+        private void CheckPlayerSwimmingUnderwater()
         {
             bool state = API.IsPedSwimmingUnderWater(PedHandle);
 
@@ -1085,7 +1085,7 @@ namespace MPEventFramework
                 TriggerServerEvent("OnPlayerStoppedSwimmingUnderwater");
             }
         }
-        public void CheckPlayerSwimming()
+        private void CheckPlayerSwimming()
         {
             bool state = API.IsPedSwimming(PedHandle);
 
@@ -1104,7 +1104,7 @@ namespace MPEventFramework
                 TriggerServerEvent("OnPlayerStoppedSwimming");
             }
         }
-        public void CheckPlayerShooting()
+        private void CheckPlayerShooting()
         {
             bool state_btn_lmb = API.IsControlPressed(0, 24);
 
@@ -1123,7 +1123,7 @@ namespace MPEventFramework
                 TriggerServerEvent("OnPlayerStoppedShooting");
             }
         }
-        public void CheckPlayerReloading()
+        private void CheckPlayerReloading()
         {
             bool state = API.IsPedReloading(PedHandle);
 
@@ -1142,7 +1142,7 @@ namespace MPEventFramework
                 TriggerServerEvent("OnPlayerStoppedReloading");
             }
         }
-        public void CheckPlayerJacking()
+        private void CheckPlayerJacking()
         {
             bool state = API.IsPedJacking(PedHandle);
 
@@ -1161,7 +1161,7 @@ namespace MPEventFramework
                 TriggerServerEvent("OnPlayerStoppedJacking");
             }
         }
-        public void CheckPlayerParachuteFreefall()
+        private void CheckPlayerParachuteFreefall()
         {
             bool state = API.IsPedInParachuteFreeFall(PedHandle);
 
@@ -1180,7 +1180,7 @@ namespace MPEventFramework
                 TriggerServerEvent("OnPlayerLeftParachuteFreefall");
             }
         }
-        public void CheckPlayerCover()
+        private void CheckPlayerCover()
         {
             bool state = API.IsPedInCover(PedHandle, false);
             if (!state) state = API.IsPedInCover(PedHandle, true);
@@ -1200,7 +1200,7 @@ namespace MPEventFramework
                 TriggerServerEvent("OnPlayerLeftCover");
             }
         }
-        public void CheckPlayerMeleeCombat()
+        private void CheckPlayerMeleeCombat()
         {
             bool state = API.IsPedInMeleeCombat(PedHandle);
 
@@ -1219,7 +1219,7 @@ namespace MPEventFramework
                 TriggerServerEvent("OnPlayerLeftMeleeCombat");
             }
         }
-        public void CheckPlayerOnVehicle()
+        private void CheckPlayerOnVehicle()
         {
             bool state = API.IsPedOnVehicle(PedHandle);
 
@@ -1238,7 +1238,7 @@ namespace MPEventFramework
                 TriggerServerEvent("OnPlayerStoppedOnVehicle");
             }
         }
-        public void CheckPlayerOnBike()
+        private void CheckPlayerOnBike()
         {
             bool state = API.IsPedOnAnyBike(PedHandle);
 
@@ -1257,7 +1257,7 @@ namespace MPEventFramework
                 TriggerServerEvent("OnPlayerStoppedOnBike");
             }
         }
-        public void CheckPlayerOnFoot()
+        private void CheckPlayerOnFoot()
         {
             bool state = API.IsPedOnFoot(PedHandle);
 
@@ -1277,7 +1277,7 @@ namespace MPEventFramework
                 ResetPlayerRelatedStates();
             }
         }
-        public void CheckPlayerInFlyingVehicle()
+        private void CheckPlayerInFlyingVehicle()
         {
             bool state = API.IsPedInFlyingVehicle(PedHandle);
 
@@ -1296,7 +1296,7 @@ namespace MPEventFramework
                 TriggerServerEvent("OnPlayerLeftFlyingVehicle");
             }
         }
-        public void CheckPlayerInAnyHeli()
+        private void CheckPlayerInAnyHeli()
         {
             bool state = API.IsPedInAnyHeli(PedHandle);
 
@@ -1315,7 +1315,7 @@ namespace MPEventFramework
                 TriggerServerEvent("OnPlayerLeftHeli");
             }
         }
-        public void CheckPlayerInAnyPlane()
+        private void CheckPlayerInAnyPlane()
         {
             bool state = API.IsPedInAnyPlane(PedHandle);
 
@@ -1334,7 +1334,7 @@ namespace MPEventFramework
                 TriggerServerEvent("OnPlayerLeftPlane");
             }
         }
-        public void CheckPlayerInAnyPoliceVehicle()
+        private void CheckPlayerInAnyPoliceVehicle()
         {
             bool state = API.IsPedInAnyPoliceVehicle(PedHandle);
 
@@ -1353,7 +1353,7 @@ namespace MPEventFramework
                 TriggerServerEvent("OnPlayerLeftPoliceVehicle");
             }
         }
-        public void CheckPlayerInAnySub()
+        private void CheckPlayerInAnySub()
         {
             bool state = API.IsPedInAnySub(PedHandle);
 
@@ -1372,7 +1372,7 @@ namespace MPEventFramework
                 TriggerServerEvent("OnPlayerLeftSub");
             }
         }
-        public void CheckPlayerInAnyTaxi()
+        private void CheckPlayerInAnyTaxi()
         {
             bool state = API.IsPedInAnyTaxi(PedHandle);
 
@@ -1391,7 +1391,7 @@ namespace MPEventFramework
                 TriggerServerEvent("OnPlayerLeftTaxi");
             }
         }
-        public void CheckPlayerInAnyTrain()
+        private void CheckPlayerInAnyTrain()
         {
             bool state = API.IsPedInAnyTrain(PedHandle);
 
@@ -1410,7 +1410,7 @@ namespace MPEventFramework
                 TriggerServerEvent("OnPlayerLeftTrain");
             }
         }
-        public void CheckPlayerInAnyBoat()
+        private void CheckPlayerInAnyBoat()
         {
             bool state = API.IsPedInAnyBoat(PedHandle);
 
@@ -1429,7 +1429,7 @@ namespace MPEventFramework
                 TriggerServerEvent("OnPlayerLeftBoat");
             }
         }
-        public void CheckPlayerFalling()
+        private void CheckPlayerFalling()
         {
             bool state = API.IsPedFalling(PedHandle);
 
@@ -1449,7 +1449,7 @@ namespace MPEventFramework
             }
         }
 
-        public void CheckPlayerDriveBy()
+        private void CheckPlayerDriveBy()
         {
             bool state = API.IsPedDoingDriveby(PedHandle);
 
@@ -1469,7 +1469,7 @@ namespace MPEventFramework
             }
         }
 
-        public void CheckPlayerDiving()
+        private void CheckPlayerDiving()
         {
             bool state = API.IsPedDiving(PedHandle);
 
@@ -1489,7 +1489,7 @@ namespace MPEventFramework
             }
         }
 
-        public void CheckPlayerDead()
+        private void CheckPlayerDead()
         {
             bool state = API.IsPedDeadOrDying(PedHandle, true);
 
@@ -1510,7 +1510,7 @@ namespace MPEventFramework
             }
         }
 
-        public void CheckPlayerClimbing()
+        private void CheckPlayerClimbing()
         {
             bool state = API.IsPedClimbing(PedHandle);
 
@@ -1530,7 +1530,7 @@ namespace MPEventFramework
             }
         }
 
-        public void CheckPlayerStunned()
+        private void CheckPlayerStunned()
         {
             bool state = API.IsPedBeingStunned(PedHandle, 0);
 
@@ -1550,7 +1550,7 @@ namespace MPEventFramework
             }
         }
 
-        public void CheckPlayerBeingStealthKilled()
+        private void CheckPlayerBeingStealthKilled()
         {
             bool state = API.IsPedBeingStealthKilled(PedHandle);
 
@@ -1570,7 +1570,7 @@ namespace MPEventFramework
             }
         }
 
-        public void CheckPlayerGettingJacked()
+        private void CheckPlayerGettingJacked()
         {
             bool state = API.IsPedBeingJacked(PedHandle);
 
@@ -1590,7 +1590,7 @@ namespace MPEventFramework
             }
         }
 
-        public void CheckPlayerAimFromCover()
+        private void CheckPlayerAimFromCover()
         {
             bool state = API.IsPedAimingFromCover(PedHandle);
 
@@ -1610,7 +1610,7 @@ namespace MPEventFramework
             }
         }
 
-        public void CheckPlayerWalking()
+        private void CheckPlayerWalking()
         {
             bool state = API.IsPedWalking(PedHandle);
 
@@ -1630,7 +1630,7 @@ namespace MPEventFramework
             }
         }
 
-        public void CheckPlayerRunning()
+        private void CheckPlayerRunning()
         {
             bool state = API.IsPedRunning(PedHandle);
 
@@ -1650,7 +1650,7 @@ namespace MPEventFramework
             }
         }
 
-        public void CheckPlayerGettingUp()
+        private void CheckPlayerGettingUp()
         {
             bool state = API.IsPedGettingUp(PedHandle);
 
@@ -1670,7 +1670,7 @@ namespace MPEventFramework
             }
         }
 
-        public void CheckPlayerCuffed()
+        private void CheckPlayerCuffed()
         {
             bool state = API.IsPedCuffed(PedHandle);
 
@@ -1690,7 +1690,7 @@ namespace MPEventFramework
             }
         }
 
-        public void CheckPlayerJumping()
+        private void CheckPlayerJumping()
         {
             bool state = API.IsPedJumping(PedHandle);
 
@@ -1710,7 +1710,7 @@ namespace MPEventFramework
             }
         }
 
-        public void CheckPlayerSprinting()
+        private void CheckPlayerSprinting()
         {
             bool sprinting = API.IsPedSprinting(PedHandle);
 
@@ -1730,7 +1730,7 @@ namespace MPEventFramework
             }
         }
 
-        public void CheckPlayerSpawned()
+        private void CheckPlayerSpawned()
         {
             int pHandle = API.GetPlayerPed(PlayerHandle);
 
@@ -1748,7 +1748,7 @@ namespace MPEventFramework
             }
         }
 
-        public void CheckVehicleEvents()
+        private void CheckVehicleEvents()
         {
             bool isInVehicle = API.IsPedInAnyVehicle(PedHandle, false);
 
@@ -1783,12 +1783,12 @@ namespace MPEventFramework
             }
         }
 
-        public void UpdateVehicleSpeed()
+        private void UpdateVehicleSpeed()
         {
             vehicleSpeed = MEF_Vehicle.GetSpeedInKmh(VehicleHandle);
         }
 
-        public void CheckVehicleEnteringEvents()
+        private void CheckVehicleEnteringEvents()
         {
             bool isTryingToEnter = API.IsPedInAnyVehicle(PedHandle, true);
 
@@ -1823,7 +1823,7 @@ namespace MPEventFramework
             }
         }
 
-        public void CheckSeat()
+        private void CheckSeat()
         {
             int seats = MEF_Vehicle.GetMaxNumberOfSeats(VehicleHandle);
             //Utils.Log("CheckSeat seats " + seats);
