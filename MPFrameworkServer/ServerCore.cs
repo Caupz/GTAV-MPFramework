@@ -3,7 +3,7 @@ using CitizenFX.Core;
 
 namespace MPFrameworkServer
 {
-    public class Server : BaseScript
+    public class ServerCore : BaseScript
     {
         // PLAYER RELATED EVENTS
         public static event PlayerSpawned OnPlayerSpawned;
@@ -210,7 +210,7 @@ namespace MPFrameworkServer
         public delegate void PlayerArmourLoss(Player player, int oldArmour, int newArmour);
         public delegate void PlayerWeaponChange(Player player, uint oldWeapon, uint newWeapon);
 
-        public Server()
+        public ServerCore()
         {
             Debug.WriteLine("MP FRAMEWORK SERVER INITED");
             EventHandlers["OnPlayerSpawned"] += new Action<Player>(RemoteOnPlayerSpawned);

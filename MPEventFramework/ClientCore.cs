@@ -6,7 +6,7 @@ using API = CitizenFX.Core.Native.API;
 
 namespace MPFrameworkClient
 {
-    public class Base : BaseScript
+    public class ClientCore : BaseScript
     {
         // NOTE (07.02.2021): I know I could have used reflection to get code lesser rows longer but it uses more CPU time. But the goal here is to save CPU time as much as possible.
 
@@ -336,7 +336,7 @@ namespace MPFrameworkClient
         public delegate void PlayerArmourLoss(int oldArmour, int newArmour);
         public delegate void PlayerWeaponChange(uint oldWeapon, uint newWeapon);
 
-        public Base()
+        public ClientCore()
         {
             DateTime dt = DateTime.Now;
             InitPlayerIds();
