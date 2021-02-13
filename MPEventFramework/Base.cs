@@ -62,6 +62,8 @@ namespace MPEventFramework
         float vehicleEngineHealth = MEF_Vehicle.HEALTH_NONE;
         float vehiclePetrolTankHealth = MEF_Vehicle.HEALTH_NONE;
         float vehicleSpeed = 0;
+        Vector3 currentPos = new Vector3(0, 0, 0);
+        uint currentWeapon = 0;
 
         bool state_inVehicle = false;
         int state_vehicleSeat = MEF_Vehicle.SEAT_NONE;
@@ -194,6 +196,7 @@ namespace MPEventFramework
         public event PlayerHealthLoss OnPlayerHealthLoss;
         public event PlayerArmourGain OnPlayerArmourGain;
         public event PlayerArmourLoss OnPlayerArmourLoss;
+        public event PlayerWeaponChange OnPlayerWeaponChange;
 
         // VEHICLE RELATED EVENTS
         public event PlayerTryingToEnterVehicle OnPlayerTryingToEnterVehicle;
@@ -232,45 +235,45 @@ namespace MPEventFramework
         public event VehicleCrash OnVehicleCrash;
 
         // VEHICLE RELATED DELEGATES
-        public delegate void PlayerStartedBurnouting();
-        public delegate void PlayerStoppedBurnouting();
-        public delegate void PlayerStartedMovingVehicle();
-        public delegate void PlayerStoppedVehicle();
-        public delegate void PlayerStartedJumpingOutOfVehicle();
-        public delegate void PlayerStoppedJumpingOutOfVehicle();
+        public delegate void PlayerStartedBurnouting(int vehicleHandle);
+        public delegate void PlayerStoppedBurnouting(int vehicleHandle);
+        public delegate void PlayerStartedMovingVehicle(int vehicleHandle);
+        public delegate void PlayerStoppedVehicle(int vehicleHandle);
+        public delegate void PlayerStartedJumpingOutOfVehicle(int vehicleHandle, int vehicleSeat);
+        public delegate void PlayerStoppedJumpingOutOfVehicle(int vehicleHandle, int vehicleSeat);
         public delegate void PlayerTryingToEnterVehicle(int vehicleHandle, int vehicleSeat);
         public delegate void PlayerEnteredVehicle(int vehicleHandle, int vehicleSeat);
         public delegate void PlayerLeaveVehicle(int vehicleHandle, int vehicleSeat);
         public delegate void PlayerSeatChange(int vehicleHandle, int vehicleSeat);
         public delegate void PlayerSpawnIntoVehicle(int vehicleHandle);
-        public delegate void PlayerEnteredBoat();
-        public delegate void PlayerLeftBoat();
-        public delegate void PlayerEnteredHeli();
-        public delegate void PlayerLeftHeli();
-        public delegate void PlayerEnteredPlane();
-        public delegate void PlayerLeftPlane();
-        public delegate void PlayerEnteredPoliceVehicle();
-        public delegate void PlayerLeftPoliceVehicle();
-        public delegate void PlayerEnteredSub();
-        public delegate void PlayerLeftSub();
-        public delegate void PlayerEnteredTaxi();
-        public delegate void PlayerLeftTaxi();
-        public delegate void PlayerEnteredTrain();
-        public delegate void PlayerLeftTrain();
-        public delegate void PlayerEnteredFlyingVehicle();
-        public delegate void PlayerLeftFlyingVehicle();
-        public delegate void PlayerStartedOnBike();
-        public delegate void PlayerStoppedOnBike();
+        public delegate void PlayerEnteredBoat(int vehicleHandle, int vehicleSeat);
+        public delegate void PlayerLeftBoat(int vehicleHandle, int vehicleSeat);
+        public delegate void PlayerEnteredHeli(int vehicleHandle, int vehicleSeat);
+        public delegate void PlayerLeftHeli(int vehicleHandle, int vehicleSeat);
+        public delegate void PlayerEnteredPlane(int vehicleHandle, int vehicleSeat);
+        public delegate void PlayerLeftPlane(int vehicleHandle, int vehicleSeat);
+        public delegate void PlayerEnteredPoliceVehicle(int vehicleHandle, int vehicleSeat);
+        public delegate void PlayerLeftPoliceVehicle(int vehicleHandle, int vehicleSeat);
+        public delegate void PlayerEnteredSub(int vehicleHandle);
+        public delegate void PlayerLeftSub(int vehicleHandle);
+        public delegate void PlayerEnteredTaxi(int vehicleHandle, int vehicleSeat);
+        public delegate void PlayerLeftTaxi(int vehicleHandle, int vehicleSeat);
+        public delegate void PlayerEnteredTrain(int vehicleHandle, int vehicleSeat);
+        public delegate void PlayerLeftTrain(int vehicleHandle, int vehicleSeat);
+        public delegate void PlayerEnteredFlyingVehicle(int vehicleHandle, int vehicleSeat);
+        public delegate void PlayerLeftFlyingVehicle(int vehicleHandle, int vehicleSeat);
+        public delegate void PlayerStartedOnBike(int vehicleHandle, int vehicleSeat);
+        public delegate void PlayerStoppedOnBike(int vehicleHandle, int vehicleSeat);
         public delegate void PlayerStartedOnVehicle();
-        public delegate void PlayerStoppedOnVehicle();
-        public delegate void VehicleHealthGain(int vehicleHealth, float vehicleBodyHealth, float vehicleEngineHealth, float vehiclePetrolTankHealth);
-        public delegate void VehicleHealthLoss(int vehicleHealth, float vehicleBodyHealth, float vehicleEngineHealth, float vehiclePetrolTankHealth);
-        public delegate void VehicleCrash();
+        public delegate void PlayerStoppedOnVehicle(int vehicleHandle);
+        public delegate void VehicleHealthGain(int vehicleHandle, int vehicleHealth, float vehicleBodyHealth, float vehicleEngineHealth, float vehiclePetrolTankHealth);
+        public delegate void VehicleHealthLoss(int vehicleHandle, int vehicleHealth, float vehicleBodyHealth, float vehicleEngineHealth, float vehiclePetrolTankHealth);
+        public delegate void VehicleCrash(int vehicleHandle);
 
         // PLAYER RELATED DELEGATES
-        public delegate void PlayerStartedAiming();
-        public delegate void PlayerStoppedAiming();
-        public delegate void PlayerReadyToShoot();
+        public delegate void PlayerStartedAiming(uint weapon);
+        public delegate void PlayerStoppedAiming(uint weapon);
+        public delegate void PlayerReadyToShoot(uint weapon);
         public delegate void PlayerNotReadyToShoot();
         public delegate void PlayerEnteredMainMenu();
         public delegate void PlayerLeftMainMenu();
@@ -278,19 +281,19 @@ namespace MPEventFramework
         public delegate void PlayerStoppedWearingHelmet();
         public delegate void PlayerStartedVaulting();
         public delegate void PlayerStoppedVaulting();
-        public delegate void PlayerStartedStealthKill();
-        public delegate void PlayerStoppedStealthKill();
+        public delegate void PlayerStartedStealthKill(uint weapon);
+        public delegate void PlayerStoppedStealthKill(uint weapon);
         public delegate void PlayerStartedSwimmingUnderwater();
         public delegate void PlayerStoppedSwimmingUnderwater();
         public delegate void PlayerStartedSwimming();
         public delegate void PlayerStoppedSwimming();
-        public delegate void PlayerStartedShooting();
-        public delegate void PlayerStoppedShooting();
+        public delegate void PlayerStartedShooting(uint weapon, int ammo);
+        public delegate void PlayerStoppedShooting(uint weapon, int ammo);
         public delegate void PlayerStartedWalking();
         public delegate void PlayerStoppedWalking();
-        public delegate void PlayerSpawned();
-        public delegate void PlayerStartedReloading();
-        public delegate void PlayerStoppedReloading();
+        public delegate void PlayerSpawned(int newPedHandle, int newPedNetworkId, float x, float y, float z);
+        public delegate void PlayerStartedReloading(uint weapon);
+        public delegate void PlayerStoppedReloading(uint weapon);
         public delegate void PlayerStartedRunning();
         public delegate void PlayerStoppedRunning();
         public delegate void PlayerStartedSprinting();
@@ -301,20 +304,20 @@ namespace MPEventFramework
         public delegate void PlayerUnCuffed();
         public delegate void PlayerStartedToGetUp();
         public delegate void PlayerStoppedToGetUp();
-        public delegate void PlayerStartedToAimFromCover();
-        public delegate void PlayerStoppedToAimFromCover();
+        public delegate void PlayerStartedToAimFromCover(uint weapon);
+        public delegate void PlayerStoppedToAimFromCover(uint weapon);
         public delegate void PlayerStartedGettingJacked();
         public delegate void PlayerStoppedGettingJacked();
         public delegate void PlayerStartedGettingStunned();
         public delegate void PlayerStoppedGettingStunned();
         public delegate void PlayerStartedClimbing();
         public delegate void PlayerStoppedClimbing();
-        public delegate void PlayerDied();
-        public delegate void PlayerRevived();
+        public delegate void PlayerDied(float x, float y, float z);
+        public delegate void PlayerRevived(float x, float y, float z);
         public delegate void PlayerStartedDiving();
         public delegate void PlayerStoppedDiving();
-        public delegate void PlayerStartedDriveBy();
-        public delegate void PlayerStoppedDriveBy();
+        public delegate void PlayerStartedDriveBy(uint weapon);
+        public delegate void PlayerStoppedDriveBy(uint weapon);
         public delegate void PlayerStartedFalling();
         public delegate void PlayerStoppedFalling();
         public delegate void PlayerStartedOnFoot();
@@ -327,10 +330,11 @@ namespace MPEventFramework
         public delegate void PlayerLeftParachuteFreefall();
         public delegate void PlayerStartedJacking();
         public delegate void PlayerStoppedJacking();
-        public delegate void PlayerHealthGain();
-        public delegate void PlayerHealthLoss();
-        public delegate void PlayerArmourGain();
-        public delegate void PlayerArmourLoss();
+        public delegate void PlayerHealthGain(int oldHealth, int newHealth);
+        public delegate void PlayerHealthLoss(int oldHealth, int newHealth);
+        public delegate void PlayerArmourGain(int oldArmour, int newArmour);
+        public delegate void PlayerArmourLoss(int oldArmour, int newArmour);
+        public delegate void PlayerWeaponChange(uint oldWeapon, uint newWeapon);
 
         public Base()
         {
@@ -505,6 +509,8 @@ namespace MPEventFramework
         private void CallbackOnSecondPassed(int hour, int minute, int second)
         {
             UpdateTime(hour, minute, second);
+            UpdateCurrentPos();
+
             TransitionWeather();
 
             //if (debug) Utils.Log("OnSecondPassed");
@@ -564,6 +570,7 @@ namespace MPEventFramework
         private void CallbackOnHundredMilliSecondPassed()
         {
             CheckVehicleEnteringEvents();
+            UpdateCurrentWeapon();
             CheckPlayerReloading();
             CheckPlayerJumpingOutOfVehicle();
             CheckPlayerAiming();
@@ -610,7 +617,7 @@ namespace MPEventFramework
             {
                 if(debug) Utils.Log("OnVehicleHealthGain");
                 UpdateVehicleHealth(vHealth, vBodyHealth, vEngineHealth, vPetrolTankHealth);
-                OnVehicleHealthGain?.Invoke(vehicleHealth, vehicleBodyHealth, vehicleEngineHealth, vehiclePetrolTankHealth);
+                OnVehicleHealthGain?.Invoke(VehicleHandle, vehicleHealth, vehicleBodyHealth, vehicleEngineHealth, vehiclePetrolTankHealth);
                 TriggerServerEvent("OnVehicleHealthGain", VehicleNetworkId, vehicleHealth, vehicleBodyHealth, vehicleEngineHealth, vehiclePetrolTankHealth);
             }
             if (vHealth < vehicleHealth || vBodyHealth < vehicleBodyHealth || vEngineHealth < vehicleEngineHealth || vPetrolTankHealth < vehiclePetrolTankHealth)
@@ -625,13 +632,13 @@ namespace MPEventFramework
                 if (speed < speedQuanfitsent)
                 {
                     if (debug) Utils.Log("OnVehicleCrash");
-                    OnVehicleCrash?.Invoke();
+                    OnVehicleCrash?.Invoke(VehicleHandle);
                     TriggerServerEvent("OnVehicleCrash");
                     vehicleSpeed = speed;
                 }
 
                 if (debug) Utils.Log("OnVehicleHealthLoss");
-                OnVehicleHealthLoss?.Invoke(vehicleHealth, vehicleBodyHealth, vehicleEngineHealth, vehiclePetrolTankHealth);
+                OnVehicleHealthLoss?.Invoke(VehicleHandle, vehicleHealth, vehicleBodyHealth, vehicleEngineHealth, vehiclePetrolTankHealth);
                 TriggerServerEvent("OnVehicleHealthLoss", VehicleNetworkId, vehicleHealth, vehicleBodyHealth, vehicleEngineHealth, vehiclePetrolTankHealth);
             }
         }
@@ -642,14 +649,14 @@ namespace MPEventFramework
             if (pHealth > pedHealth)
             {
                 if (debug) Utils.Log("OnPlayerHealthGain");
-                OnPlayerHealthGain?.Invoke();
+                OnPlayerHealthGain?.Invoke(pedHealth, pHealth);
                 TriggerServerEvent("OnPlayerHealthGain");
                 pedHealth = pHealth;
             }
             else if (pHealth < pedHealth)
             {
                 if (debug) Utils.Log("OnPlayerHealthLoss");
-                OnPlayerHealthLoss?.Invoke();
+                OnPlayerHealthLoss?.Invoke(pedHealth, pHealth);
                 TriggerServerEvent("OnPlayerHealthLoss");
                 pedHealth = pHealth;
             }
@@ -662,14 +669,14 @@ namespace MPEventFramework
             if (pArmour > pedArmour)
             {
                 if (debug) Utils.Log("OnPlayerArmourGain");
-                OnPlayerArmourGain?.Invoke();
+                OnPlayerArmourGain?.Invoke(pedArmour, pArmour);
                 TriggerServerEvent("OnPlayerArmourGain");
                 pedArmour = pArmour;
             }
             else if (pArmour < pedArmour)
             {
                 if (debug) Utils.Log("OnPlayerArmourLoss");
-                OnPlayerArmourLoss?.Invoke();
+                OnPlayerArmourLoss?.Invoke(pedArmour, pArmour);
                 TriggerServerEvent("OnPlayerArmourLoss");
                 pedArmour = pArmour;
             }
@@ -725,7 +732,7 @@ namespace MPEventFramework
             {
                 state_onVehicle = false;
                 if (debug) Utils.Log("OnPlayerStoppedOnVehicle");
-                OnPlayerStoppedOnVehicle?.Invoke();
+                OnPlayerStoppedOnVehicle?.Invoke(VehicleHandle);
                 TriggerServerEvent("OnPlayerStoppedOnVehicle");
             }
 
@@ -741,7 +748,7 @@ namespace MPEventFramework
             {
                 state_aimingFromCover = false;
                 if (debug) Utils.Log("OnPlayerStoppedToAimFromCover");
-                OnPlayerStoppedToAimFromCover?.Invoke();
+                OnPlayerStoppedToAimFromCover?.Invoke(currentWeapon);
                 TriggerServerEvent("OnPlayerStoppedToAimFromCover");
             }
 
@@ -797,7 +804,7 @@ namespace MPEventFramework
             {
                 state_stealthKilling = false;
                 if (debug) Utils.Log("OnPlayerStoppedStealthKill");
-                OnPlayerStoppedStealthKill?.Invoke();
+                OnPlayerStoppedStealthKill?.Invoke(currentWeapon);
                 TriggerServerEvent("OnPlayerStoppedStealthKill");
             }
         }
@@ -810,7 +817,7 @@ namespace MPEventFramework
             {
                 state_vehicleBurnouting = false;
                 if (debug) Utils.Log("OnPlayerStoppedBurnouting");
-                OnPlayerStoppedBurnouting?.Invoke();
+                OnPlayerStoppedBurnouting?.Invoke(VehicleHandle);
                 TriggerServerEvent("OnPlayerStoppedBurnouting");
             }
 
@@ -818,7 +825,7 @@ namespace MPEventFramework
             {
                 state_onBike = false;
                 if (debug) Utils.Log("OnPlayerStoppedOnBike");
-                OnPlayerStoppedOnBike?.Invoke();
+                OnPlayerStoppedOnBike?.Invoke(VehicleHandle, state_vehicleSeat);
                 TriggerServerEvent("OnPlayerStoppedOnBike");
             }
 
@@ -826,7 +833,7 @@ namespace MPEventFramework
             {
                 state_inTrain = false;
                 if (debug) Utils.Log("OnPlayerLeftTrain");
-                OnPlayerLeftTrain?.Invoke();
+                OnPlayerLeftTrain?.Invoke(VehicleHandle, state_vehicleSeat);
                 TriggerServerEvent("OnPlayerLeftTrain");
             }
 
@@ -834,7 +841,7 @@ namespace MPEventFramework
             {
                 state_inTaxi = false;
                 if (debug) Utils.Log("OnPlayerLeftTaxi");
-                OnPlayerLeftTaxi?.Invoke();
+                OnPlayerLeftTaxi?.Invoke(VehicleHandle, state_vehicleSeat);
                 TriggerServerEvent("OnPlayerLeftTaxi");
             }
 
@@ -842,7 +849,7 @@ namespace MPEventFramework
             {
                 state_inSub = false;
                 if (debug) Utils.Log("OnPlayerLeftSub");
-                OnPlayerLeftSub?.Invoke();
+                OnPlayerLeftSub?.Invoke(VehicleHandle);
                 TriggerServerEvent("OnPlayerLeftSub");
             }
 
@@ -850,7 +857,7 @@ namespace MPEventFramework
             {
                 state_inPoliceVehicle = false;
                 if (debug) Utils.Log("OnPlayerLeftPoliceVehicle");
-                OnPlayerLeftPoliceVehicle?.Invoke();
+                OnPlayerLeftPoliceVehicle?.Invoke(VehicleHandle, state_vehicleSeat);
                 TriggerServerEvent("OnPlayerLeftPoliceVehicle");
             }
 
@@ -858,7 +865,7 @@ namespace MPEventFramework
             {
                 state_inPlane = false;
                 if (debug) Utils.Log("OnPlayerLeftPlane");
-                OnPlayerLeftPlane?.Invoke();
+                OnPlayerLeftPlane?.Invoke(VehicleHandle, state_vehicleSeat);
                 TriggerServerEvent("OnPlayerLeftPlane");
             }
 
@@ -866,7 +873,7 @@ namespace MPEventFramework
             {
                 state_inHeli = false;
                 if (debug) Utils.Log("OnPlayerLeftHeli");
-                OnPlayerLeftHeli?.Invoke();
+                OnPlayerLeftHeli?.Invoke(VehicleHandle, state_vehicleSeat);
                 TriggerServerEvent("OnPlayerLeftHeli");
             }
 
@@ -874,7 +881,7 @@ namespace MPEventFramework
             {
                 state_inFlyingVehicle = false;
                 if (debug) Utils.Log("OnPlayerLeftFlyingVehicle");
-                OnPlayerLeftFlyingVehicle?.Invoke();
+                OnPlayerLeftFlyingVehicle?.Invoke(VehicleHandle, state_vehicleSeat);
                 TriggerServerEvent("OnPlayerLeftFlyingVehicle");
             }
 
@@ -882,7 +889,7 @@ namespace MPEventFramework
             {
                 state_driveBying = false;
                 if (debug) Utils.Log("OnPlayerStoppedDriveBy");
-                OnPlayerStoppedDriveBy?.Invoke();
+                OnPlayerStoppedDriveBy?.Invoke(currentWeapon);
                 TriggerServerEvent("OnPlayerStoppedDriveBy");
             }
 
@@ -890,7 +897,7 @@ namespace MPEventFramework
             {
                 state_inBoat = false;
                 if(debug) Utils.Log("OnPlayerLeftBoat");
-                OnPlayerLeftBoat?.Invoke();
+                OnPlayerLeftBoat?.Invoke(VehicleHandle, state_vehicleSeat);
                 TriggerServerEvent("OnPlayerLeftBoat");
             }
         }
@@ -905,14 +912,14 @@ namespace MPEventFramework
             {
                 state_aiming = state;
                 if (debug) Utils.Log("OnPlayerStartedAiming");
-                OnPlayerStartedAiming?.Invoke();
+                OnPlayerStartedAiming?.Invoke(currentWeapon);
                 TriggerServerEvent("OnPlayerStartedAiming");
             }
             else if (!state && state_aiming)
             {
                 state_aiming = state;
                 if (debug) Utils.Log("OnPlayerStoppedAiming");
-                OnPlayerStoppedAiming?.Invoke();
+                OnPlayerStoppedAiming?.Invoke(currentWeapon);
                 TriggerServerEvent("OnPlayerStoppedAiming");
             }
         }
@@ -924,14 +931,14 @@ namespace MPEventFramework
             {
                 state_vehicleBurnouting = state;
                 if (debug) Utils.Log("OnPlayerStartedBurnouting");
-                OnPlayerStartedBurnouting?.Invoke();
+                OnPlayerStartedBurnouting?.Invoke(VehicleHandle);
                 TriggerServerEvent("OnPlayerStartedBurnouting");
             }
             else if (!state && state_vehicleBurnouting)
             {
                 state_vehicleBurnouting = state;
                 if (debug) Utils.Log("OnPlayerStoppedBurnouting");
-                OnPlayerStoppedBurnouting?.Invoke();
+                OnPlayerStoppedBurnouting?.Invoke(VehicleHandle);
                 TriggerServerEvent("OnPlayerStoppedBurnouting");
             }
         }
@@ -941,14 +948,14 @@ namespace MPEventFramework
             {
                 state_vehicleStopped = true;
                 if (debug) Utils.Log("OnPlayerStoppedVehicle");
-                OnPlayerStoppedVehicle?.Invoke();
+                OnPlayerStoppedVehicle?.Invoke(VehicleHandle);
                 TriggerServerEvent("OnPlayerStoppedVehicle");
             }
             else if ((vehicleSpeed > 0 || vehicleSpeed < 0) && state_vehicleStopped)
             {
                 state_vehicleStopped = false;
                 if (debug) Utils.Log("OnPlayerStartedMovingVehicle");
-                OnPlayerStartedMovingVehicle?.Invoke();
+                OnPlayerStartedMovingVehicle?.Invoke(VehicleHandle);
                 TriggerServerEvent("OnPlayerStartedMovingVehicle");
             }
         }
@@ -960,7 +967,7 @@ namespace MPEventFramework
             {
                 state_readyToShoot = state;
                 if (debug) Utils.Log("OnPlayerReadyToShoot");
-                OnPlayerReadyToShoot?.Invoke();
+                OnPlayerReadyToShoot?.Invoke(currentWeapon);
                 TriggerServerEvent("OnPlayerReadyToShoot");
             }
             else if (!state && state_readyToShoot)
@@ -1017,14 +1024,14 @@ namespace MPEventFramework
             {
                 state_jumpingOutOfVehicle = state;
                 if (debug) Utils.Log("OnPlayerStartedJumpingOutOfVehicle");
-                OnPlayerStartedJumpingOutOfVehicle?.Invoke();
+                OnPlayerStartedJumpingOutOfVehicle?.Invoke(VehicleHandle, state_vehicleSeat);
                 TriggerServerEvent("OnPlayerStartedJumpingOutOfVehicle");
             }
             else if (!state && state_jumpingOutOfVehicle)
             {
                 state_jumpingOutOfVehicle = state;
                 if (debug) Utils.Log("OnPlayerStoppedJumpingOutOfVehicle");
-                OnPlayerStoppedJumpingOutOfVehicle?.Invoke();
+                OnPlayerStoppedJumpingOutOfVehicle?.Invoke(VehicleHandle, state_vehicleSeat);
                 TriggerServerEvent("OnPlayerStoppedJumpingOutOfVehicle");
             }
         }
@@ -1055,14 +1062,14 @@ namespace MPEventFramework
             {
                 state_stealthKilling = state;
                 if (debug) Utils.Log("OnPlayerStartedStealthKill");
-                OnPlayerStartedStealthKill?.Invoke();
+                OnPlayerStartedStealthKill?.Invoke(currentWeapon);
                 TriggerServerEvent("OnPlayerStartedStealthKill");
             }
             else if (!state && state_stealthKilling)
             {
                 state_stealthKilling = state;
                 if (debug) Utils.Log("OnPlayerStoppedStealthKill");
-                OnPlayerStoppedStealthKill?.Invoke();
+                OnPlayerStoppedStealthKill?.Invoke(currentWeapon);
                 TriggerServerEvent("OnPlayerStoppedStealthKill");
             }
         }
@@ -1104,6 +1111,10 @@ namespace MPEventFramework
                 TriggerServerEvent("OnPlayerStoppedSwimming");
             }
         }
+        public int GetCurrentWeaponAmmo()
+        {
+            return API.GetAmmoInPedWeapon(PedHandle, currentWeapon);
+        }
         private void CheckPlayerShooting()
         {
             bool state_btn_lmb = API.IsControlPressed(0, 24);
@@ -1112,14 +1123,14 @@ namespace MPEventFramework
             {
                 state_shooting = state_btn_lmb;
                 if (debug) Utils.Log("OnPlayerStartedShooting");
-                OnPlayerStartedShooting?.Invoke();
+                OnPlayerStartedShooting?.Invoke(currentWeapon, GetCurrentWeaponAmmo());
                 TriggerServerEvent("OnPlayerStartedShooting");
             }
             else if (state_shooting && (!state_btn_lmb || state_reloading))
             {
                 state_shooting = false;
                 if (debug) Utils.Log("OnPlayerStoppedShooting");
-                OnPlayerStoppedShooting?.Invoke();
+                OnPlayerStoppedShooting?.Invoke(currentWeapon, GetCurrentWeaponAmmo());
                 TriggerServerEvent("OnPlayerStoppedShooting");
             }
         }
@@ -1131,14 +1142,14 @@ namespace MPEventFramework
             {
                 state_reloading = state;
                 if (debug) Utils.Log("OnPlayerStartedReloading");
-                OnPlayerStartedReloading?.Invoke();
+                OnPlayerStartedReloading?.Invoke(currentWeapon);
                 TriggerServerEvent("OnPlayerStartedReloading");
             }
             else if (!state && state_reloading)
             {
                 state_reloading = state;
                 if (debug) Utils.Log("OnPlayerStoppedReloading");
-                OnPlayerStoppedReloading?.Invoke();
+                OnPlayerStoppedReloading?.Invoke(currentWeapon);
                 TriggerServerEvent("OnPlayerStoppedReloading");
             }
         }
@@ -1234,7 +1245,7 @@ namespace MPEventFramework
             {
                 state_onVehicle = state;
                 if (debug) Utils.Log("OnPlayerStoppedOnVehicle");
-                OnPlayerStoppedOnVehicle?.Invoke();
+                OnPlayerStoppedOnVehicle?.Invoke(VehicleHandle);
                 TriggerServerEvent("OnPlayerStoppedOnVehicle");
             }
         }
@@ -1246,14 +1257,14 @@ namespace MPEventFramework
             {
                 state_onBike = state;
                 if (debug) Utils.Log("OnPlayerStartedOnBike");
-                OnPlayerStartedOnBike?.Invoke();
+                OnPlayerStartedOnBike?.Invoke(VehicleHandle, state_vehicleSeat);
                 TriggerServerEvent("OnPlayerStartedOnBike");
             }
             else if (!state && state_onBike)
             {
                 state_onBike = state;
                 if (debug) Utils.Log("OnPlayerStoppedOnBike");
-                OnPlayerStoppedOnBike?.Invoke();
+                OnPlayerStoppedOnBike?.Invoke(VehicleHandle, state_vehicleSeat);
                 TriggerServerEvent("OnPlayerStoppedOnBike");
             }
         }
@@ -1285,14 +1296,14 @@ namespace MPEventFramework
             {
                 state_inFlyingVehicle = state;
                 if (debug) Utils.Log("OnPlayerEnteredFlyingVehicle");
-                OnPlayerEnteredFlyingVehicle?.Invoke();
+                OnPlayerEnteredFlyingVehicle?.Invoke(VehicleHandle, state_vehicleSeat);
                 TriggerServerEvent("OnPlayerEnteredFlyingVehicle");
             }
             else if (!state && state_inFlyingVehicle)
             {
                 state_inFlyingVehicle = state;
                 if (debug) Utils.Log("OnPlayerLeftFlyingVehicle");
-                OnPlayerLeftFlyingVehicle?.Invoke();
+                OnPlayerLeftFlyingVehicle?.Invoke(VehicleHandle, state_vehicleSeat);
                 TriggerServerEvent("OnPlayerLeftFlyingVehicle");
             }
         }
@@ -1304,14 +1315,14 @@ namespace MPEventFramework
             {
                 state_inHeli = state;
                 if (debug) Utils.Log("OnPlayerEnteredHeli");
-                OnPlayerEnteredHeli?.Invoke();
+                OnPlayerEnteredHeli?.Invoke(VehicleHandle, state_vehicleSeat);
                 TriggerServerEvent("OnPlayerEnteredHeli");
             }
             else if (!state && state_inHeli)
             {
                 state_inHeli = state;
                 if (debug) Utils.Log("OnPlayerLeftHeli");
-                OnPlayerLeftHeli?.Invoke();
+                OnPlayerLeftHeli?.Invoke(VehicleHandle, state_vehicleSeat);
                 TriggerServerEvent("OnPlayerLeftHeli");
             }
         }
@@ -1323,14 +1334,14 @@ namespace MPEventFramework
             {
                 state_inPlane = state;
                 if (debug) Utils.Log("OnPlayerEnteredPlane");
-                OnPlayerEnteredPlane?.Invoke();
+                OnPlayerEnteredPlane?.Invoke(VehicleHandle, state_vehicleSeat);
                 TriggerServerEvent("OnPlayerEnteredPlane");
             }
             else if (!state && state_inPlane)
             {
                 state_inPlane = state;
                 if (debug) Utils.Log("OnPlayerLeftPlane");
-                OnPlayerLeftPlane?.Invoke();
+                OnPlayerLeftPlane?.Invoke(VehicleHandle, state_vehicleSeat);
                 TriggerServerEvent("OnPlayerLeftPlane");
             }
         }
@@ -1342,14 +1353,14 @@ namespace MPEventFramework
             {
                 state_inPoliceVehicle = state;
                 if (debug) Utils.Log("OnPlayerEnteredPoliceVehicle");
-                OnPlayerEnteredPoliceVehicle?.Invoke();
+                OnPlayerEnteredPoliceVehicle?.Invoke(VehicleHandle, state_vehicleSeat);
                 TriggerServerEvent("OnPlayerEnteredPoliceVehicle");
             }
             else if (!state && state_inPoliceVehicle)
             {
                 state_inPoliceVehicle = state;
                 if (debug) Utils.Log("OnPlayerLeftPoliceVehicle");
-                OnPlayerLeftPoliceVehicle?.Invoke();
+                OnPlayerLeftPoliceVehicle?.Invoke(VehicleHandle, state_vehicleSeat);
                 TriggerServerEvent("OnPlayerLeftPoliceVehicle");
             }
         }
@@ -1361,14 +1372,14 @@ namespace MPEventFramework
             {
                 state_inSub = state;
                 if (debug) Utils.Log("OnPlayerEnteredSub");
-                OnPlayerEnteredSub?.Invoke();
+                OnPlayerEnteredSub?.Invoke(VehicleHandle);
                 TriggerServerEvent("OnPlayerEnteredSub");
             }
             else if (!state && state_inSub)
             {
                 state_inSub = state;
                 if (debug) Utils.Log("OnPlayerLeftSub");
-                OnPlayerLeftSub?.Invoke();
+                OnPlayerLeftSub?.Invoke(VehicleHandle);
                 TriggerServerEvent("OnPlayerLeftSub");
             }
         }
@@ -1380,14 +1391,14 @@ namespace MPEventFramework
             {
                 state_inTaxi = state;
                 if (debug) Utils.Log("OnPlayerEnteredTaxi");
-                OnPlayerEnteredTaxi?.Invoke();
+                OnPlayerEnteredTaxi?.Invoke(VehicleHandle, state_vehicleSeat);
                 TriggerServerEvent("OnPlayerEnteredTaxi");
             }
             else if (!state && state_inTaxi)
             {
                 state_inTaxi = state;
                 if (debug) Utils.Log("OnPlayerLeftTaxi");
-                OnPlayerLeftTaxi?.Invoke();
+                OnPlayerLeftTaxi?.Invoke(VehicleHandle, state_vehicleSeat);
                 TriggerServerEvent("OnPlayerLeftTaxi");
             }
         }
@@ -1399,14 +1410,14 @@ namespace MPEventFramework
             {
                 state_inTrain = state;
                 if (debug) Utils.Log("OnPlayerEnteredTrain");
-                OnPlayerEnteredTrain?.Invoke();
+                OnPlayerEnteredTrain?.Invoke(VehicleHandle, state_vehicleSeat);
                 TriggerServerEvent("OnPlayerEnteredTrain");
             }
             else if (!state && state_inTrain)
             {
                 state_inTrain = state;
                 if (debug) Utils.Log("OnPlayerLeftTrain");
-                OnPlayerLeftTrain?.Invoke();
+                OnPlayerLeftTrain?.Invoke(VehicleHandle, state_vehicleSeat);
                 TriggerServerEvent("OnPlayerLeftTrain");
             }
         }
@@ -1418,14 +1429,14 @@ namespace MPEventFramework
             {
                 state_inBoat = state;
                 if (debug) Utils.Log("OnPlayerEnteredBoat");
-                OnPlayerEnteredBoat?.Invoke();
+                OnPlayerEnteredBoat?.Invoke(VehicleHandle, state_vehicleSeat);
                 TriggerServerEvent("OnPlayerEnteredBoat");
             }
             else if (!state && state_inBoat)
             {
                 state_inBoat = state;
                 if (debug) Utils.Log("OnPlayerLeftBoat");
-                OnPlayerLeftBoat?.Invoke();
+                OnPlayerLeftBoat?.Invoke(VehicleHandle, state_vehicleSeat);
                 TriggerServerEvent("OnPlayerLeftBoat");
             }
         }
@@ -1457,14 +1468,14 @@ namespace MPEventFramework
             {
                 state_driveBying = state;
                 if (debug) Utils.Log("OnPlayerStartedDriveBy");
-                OnPlayerStartedDriveBy?.Invoke();
+                OnPlayerStartedDriveBy?.Invoke(currentWeapon);
                 TriggerServerEvent("OnPlayerStartedDriveBy");
             }
             else if (!state && state_driveBying)
             {
                 state_driveBying = state;
                 if (debug) Utils.Log("OnPlayerStoppedDriveBy");
-                OnPlayerStoppedDriveBy?.Invoke();
+                OnPlayerStoppedDriveBy?.Invoke(currentWeapon);
                 TriggerServerEvent("OnPlayerStoppedDriveBy");
             }
         }
@@ -1498,16 +1509,48 @@ namespace MPEventFramework
                 state_dead = state;
                 // TODO GetPedCauseOfDeath Returns the hash of the weapon/model/object that killed the ped.
                 if (debug) Utils.Log("OnPlayerDied");
-                OnPlayerDied?.Invoke();
+                UpdateCurrentPos();
+                OnPlayerDied?.Invoke(currentPos.X, currentPos.Y, currentPos.Z);
                 TriggerServerEvent("OnPlayerDied");
             }
             else if (!state && state_dead)
             {
                 state_dead = state;
                 if (debug) Utils.Log("OnPlayerRevived");
-                OnPlayerRevived?.Invoke();
+                UpdateCurrentPos();
+                OnPlayerRevived?.Invoke(currentPos.X, currentPos.Y, currentPos.Z);
                 TriggerServerEvent("OnPlayerRevived");
             }
+        }
+
+        private void UpdateCurrentPos()
+        {
+            currentPos = GetCurrentPos();
+        }
+        private void UpdateCurrentWeapon()
+        {
+            uint newWeapon = GetCurrentWeaponHashUint();
+
+            if(newWeapon != currentWeapon)
+            {
+                OnPlayerWeaponChange?.Invoke(currentWeapon, newWeapon);
+                currentWeapon = newWeapon;
+            }
+        }
+
+        public static Vector3 GetCurrentPos()
+        {
+            return API.GetEntityCoords(PedHandle, true);
+        }
+
+        public static uint GetCurrentWeaponHashUint()
+        {
+            return (uint)API.HudWeaponWheelGetSelectedHash();
+        }
+
+        public int GetCurrentWeaponHash()
+        {
+            return API.HudWeaponWheelGetSelectedHash();
         }
 
         private void CheckPlayerClimbing()
@@ -1598,14 +1641,14 @@ namespace MPEventFramework
             {
                 state_aimingFromCover = state;
                 if (debug) Utils.Log("OnPlayerStartedToAimFromCover");
-                OnPlayerStartedToAimFromCover?.Invoke();
+                OnPlayerStartedToAimFromCover?.Invoke(currentWeapon);
                 TriggerServerEvent("OnPlayerStartedToAimFromCover");
             }
             else if (!state && state_aimingFromCover)
             {
                 state_aimingFromCover = state;
                 if (debug) Utils.Log("OnPlayerStoppedToAimFromCover");
-                OnPlayerStoppedToAimFromCover?.Invoke();
+                OnPlayerStoppedToAimFromCover?.Invoke(currentWeapon);
                 TriggerServerEvent("OnPlayerStoppedToAimFromCover");
             }
         }
@@ -1740,7 +1783,7 @@ namespace MPEventFramework
                 PedHandle = pHandle;
                 PedNetworkId = pNetId;
                 if (debug) Utils.Log("OnPlayerSpawned");
-                OnPlayerSpawned?.Invoke();
+                OnPlayerSpawned?.Invoke(PedHandle, PedNetworkId, currentPos.X, currentPos.Y, currentPos.Z);
                 TriggerServerEvent("OnPlayerSpawned");
 
                 pedHealth = API.GetEntityHealth(PedHandle);
