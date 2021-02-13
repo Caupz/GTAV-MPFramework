@@ -922,6 +922,11 @@ namespace MPFrameworkClient
         }
         private void CheckPlayerBurnouting()
         {
+            if (state_vehicleSeat != MEF_Vehicle.SEAT_DRIVER)
+            {
+                return;
+            }
+
             bool state = API.IsVehicleInBurnout(VehicleHandle);
 
             if (state && !state_vehicleBurnouting)
@@ -941,6 +946,11 @@ namespace MPFrameworkClient
         }
         private void CheckPlayerStoppingVehicle()
         {
+            if(state_vehicleSeat != MEF_Vehicle.SEAT_DRIVER)
+            {
+                return;
+            }
+
             if (vehicleSpeed == 0 && !state_vehicleStopped)
             {
                 state_vehicleStopped = true;
