@@ -10,7 +10,7 @@ namespace MPFrameworkClient
     {
         // NOTE (07.02.2021): I know I could have used reflection to get code lesser rows longer but it uses more CPU time. But the goal here is to save CPU time as much as possible.
 
-        public bool debug = true;
+        public bool debug = false;
         const int maxControls = 360;
 
         // TIME SYSTEM
