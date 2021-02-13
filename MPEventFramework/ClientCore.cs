@@ -338,6 +338,7 @@ namespace MPFrameworkClient
 
         public ClientCore()
         {
+            Utils.Log("MP FRAMEWORK: Created by Caupo Helvik (https://caupo.ee)");
             DateTime dt = DateTime.Now;
             InitPlayerIds();
             InitSystemVariables();

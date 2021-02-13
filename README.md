@@ -290,4 +290,6 @@ OnPlayerWeaponChange(Player player, uint oldWeapon, uint newWeapon);
 
 * All kinds of suggestions for changes and further developments
 
+Created by Caupo Helvik (https://caupo.ee)
+
 ## NB: This framework is not tested with OneSync! ##
