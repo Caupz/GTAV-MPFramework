@@ -262,7 +262,7 @@ namespace MPFrameworkClient
         public delegate void PlayerStartedOnBike(int vehicleHandle, int vehicleSeat);
         public delegate void PlayerStoppedOnBike(int vehicleHandle, int vehicleSeat);
         public delegate void PlayerStartedOnVehicle();
-        public delegate void PlayerStoppedOnVehicle(int vehicleHandle);
+        public delegate void PlayerStoppedOnVehicle();
         public delegate void VehicleHealthGain(int vehicleHandle, int vehicleHealth, float vehicleBodyHealth, float vehicleEngineHealth, float vehiclePetrolTankHealth);
         public delegate void VehicleHealthLoss(int vehicleHandle, int vehicleHealth, float vehicleBodyHealth, float vehicleEngineHealth, float vehiclePetrolTankHealth);
         public delegate void VehicleCrash(int vehicleHandle);
@@ -729,7 +729,7 @@ namespace MPFrameworkClient
             {
                 state_onVehicle = false;
                 if (debug) Utils.Log("OnPlayerStoppedOnVehicle");
-                OnPlayerStoppedOnVehicle?.Invoke(VehicleHandle);
+                OnPlayerStoppedOnVehicle?.Invoke();
                 TriggerServerEvent("OnPlayerStoppedOnVehicle");
             }
 
@@ -1252,7 +1252,7 @@ namespace MPFrameworkClient
             {
                 state_onVehicle = state;
                 if (debug) Utils.Log("OnPlayerStoppedOnVehicle");
-                OnPlayerStoppedOnVehicle?.Invoke(VehicleHandle);
+                OnPlayerStoppedOnVehicle?.Invoke();
                 TriggerServerEvent("OnPlayerStoppedOnVehicle");
             }
         }

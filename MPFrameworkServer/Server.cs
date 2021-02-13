@@ -113,8 +113,8 @@ namespace MPFrameworkServer
         public delegate void PlayerStoppedBurnouting(Player player, int vehicleNetworkId);
         public delegate void PlayerStartedMovingVehicle(Player player, int vehicleNetworkId);
         public delegate void PlayerStoppedVehicle(Player player, int vehicleNetworkId);
-        public delegate void PlayerStartedJumpingOutOfVehicle(Player player, int vehicleNetworkId);
-        public delegate void PlayerStoppedJumpingOutOfVehicle(Player player, int vehicleNetworkId);
+        public delegate void PlayerStartedJumpingOutOfVehicle(Player player, int vehicleNetworkId, int vehicleSeat);
+        public delegate void PlayerStoppedJumpingOutOfVehicle(Player player, int vehicleNetworkId, int vehicleSeat);
         public delegate void PlayerTryingToEnterVehicle(Player player, int vehicleNetworkId, int vehicleSeat);
         public delegate void PlayerEnteredVehicle(Player player, int vehicleNetworkId, int vehicleSeat);
         public delegate void PlayerLeaveVehicle(Player player, int vehicleNetworkId, int vehicleSeat);
@@ -405,8 +405,8 @@ namespace MPFrameworkServer
         public void RemoteOnPlayerStoppedOnBike([FromSource]Player client, int vehicleNetworkId, int seat) { OnPlayerStoppedOnBike?.Invoke(client, vehicleNetworkId, seat); }
         public void RemoteOnPlayerStartedOnVehicle([FromSource]Player client) { OnPlayerStartedOnVehicle?.Invoke(client); }
         public void RemoteOnPlayerStoppedOnVehicle([FromSource]Player client) { OnPlayerStoppedOnVehicle?.Invoke(client); }
-        public void RemoteOnPlayerStartedJumpingOutOfVehicle([FromSource]Player client, int vehicleNetworkId, int seat) { OnPlayerStartedJumpingOutOfVehicle?.Invoke(client, vehicleNetworkId); }
-        public void RemoteOnPlayerStoppedJumpingOutOfVehicle([FromSource]Player client, int vehicleNetworkId, int seat) { OnPlayerStoppedJumpingOutOfVehicle?.Invoke(client, vehicleNetworkId); }
+        public void RemoteOnPlayerStartedJumpingOutOfVehicle([FromSource]Player client, int vehicleNetworkId, int seat) { OnPlayerStartedJumpingOutOfVehicle?.Invoke(client, vehicleNetworkId, seat); }
+        public void RemoteOnPlayerStoppedJumpingOutOfVehicle([FromSource]Player client, int vehicleNetworkId, int seat) { OnPlayerStoppedJumpingOutOfVehicle?.Invoke(client, vehicleNetworkId, seat); }
         public void RemoteOnPlayerStartedMovingVehicle([FromSource]Player client, int vehicleNetworkId) { OnPlayerStartedMovingVehicle?.Invoke(client, vehicleNetworkId); }
         public void RemoteOnPlayerStoppedVehicle([FromSource]Player client, int vehicleNetworkId) { OnPlayerStoppedVehicle?.Invoke(client, vehicleNetworkId); }
         public void RemoteOnPlayerStartedBurnouting([FromSource]Player client, int vehicleNetworkId) { OnPlayerStartedBurnouting?.Invoke(client, vehicleNetworkId); }
