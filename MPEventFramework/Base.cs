@@ -10,13 +10,8 @@ namespace MPFrameworkClient
     {
         // NOTE (07.02.2021): I know I could have used reflection to get code lesser rows longer but it uses more CPU time. But the goal here is to save CPU time as much as possible.
 
-        /* TODO?
-        IsControlPressed
-        IsControlJustPressed
-        IsControlReleased
-        */
-
         public bool debug = true;
+        const int maxControls = 360;
 
         // TIME SYSTEM
         public bool enableRealtimeGametime = true;
@@ -52,6 +47,8 @@ namespace MPFrameworkClient
         // IDS END
 
         // STATES
+        public static Dictionary<int, bool> ControlsPressed { get; protected set; }
+
         int pedHealth = MEF_Player.HEALTH_NONE;
         int pedArmour = MEF_Player.ARMOUR_NONE;
         int vehicleHealth = MEF_Vehicle.HEALTH_NONE;
@@ -114,6 +111,7 @@ namespace MPFrameworkClient
         bool state_vehicleBurnouting = false;
         // STATES END
 
+        int previousControlMilliSecond = 0;
         int previouseSecond = 0;
         int previouseMinute = 0;
         int previouseHour = 0;
@@ -127,6 +125,11 @@ namespace MPFrameworkClient
         public delegate void HundredMilliSecondPassed();
         public delegate void MinutePassed();
         public delegate void HourPassed();
+
+        public event KeyPressed OnKeyPressed;
+        public delegate void KeyPressed(int key);
+        public event KeyReleased OnKeyReleased;
+        public delegate void KeyReleased(int key);
 
         // PLAYER RELATED EVENTS
         public event PlayerSpawned OnPlayerSpawned;
@@ -437,12 +440,22 @@ namespace MPFrameworkClient
             API.SetWindDirection(currentWindDirection);
         }
 
+        private void InitControls()
+        {
+            for(int i = 0; i <= maxControls; i++)
+            {
+                ControlsPressed.Add(i, false);
+            }
+        }
+
         private void InitSystemVariables()
         {
             DateTime dt = DateTime.Now;
             previouseMinute = dt.Minute;
             previouseSecond = dt.Second;
             previouseMilliSecond = dt.Millisecond;
+            previousControlMilliSecond = dt.Millisecond;
+            InitControls();
         }
 
         private void InitPlayerIds()
@@ -479,10 +492,41 @@ namespace MPFrameworkClient
                 CallbackOnSecondPassed(dt.Hour, dt.Minute, dt.Second);
             }
 
-            if(Math.Abs(previouseMilliSecond - dt.Millisecond) >= 100)
+            if (Math.Abs(previouseMilliSecond - dt.Millisecond) >= 100)
             {
                 previouseMilliSecond = dt.Millisecond;
                 CallbackOnHundredMilliSecondPassed();
+            }
+
+            if(OnKeyPressed != null || OnKeyReleased != null)
+            {
+                if (Math.Abs(previousControlMilliSecond - dt.Millisecond) >= 20)
+                {
+                    previousControlMilliSecond = dt.Millisecond;
+                    CallbackOnControlMillisecondUpdate();
+                }
+            }
+        }
+
+        private void CallbackOnControlMillisecondUpdate()
+        {
+            for (int i = 0; i <= maxControls; i++)
+            {
+                bool controlPressed = API.IsControlPressed(0, i);
+
+                if(ControlsPressed[i] != controlPressed)
+                {
+                    if(controlPressed)
+                    {
+                        OnKeyPressed?.Invoke(i);
+                    }
+                    else
+                    {
+                        OnKeyReleased?.Invoke(i);
+                    }
+
+                    ControlsPressed[i] = controlPressed;
+                }
             }
         }
 
