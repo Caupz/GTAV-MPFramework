@@ -186,8 +186,8 @@ namespace MPFrameworkServer
         public delegate void PlayerStoppedGettingStunned(Player player);
         public delegate void PlayerStartedClimbing(Player player);
         public delegate void PlayerStoppedClimbing(Player player);
-        public delegate void PlayerDied(Player player);
-        public delegate void PlayerRevived(Player player);
+        public delegate void PlayerDied(Player player, float x, float y, float z);
+        public delegate void PlayerRevived(Player player, float x, float y, float z);
         public delegate void PlayerStartedDiving(Player player);
         public delegate void PlayerStoppedDiving(Player player);
         public delegate void PlayerStartedDriveBy(Player player, uint weapon);
@@ -236,8 +236,8 @@ namespace MPFrameworkServer
             EventHandlers["OnPlayerStoppedGettingStunned"] += new Action<Player>(RemoteOnPlayerStoppedGettingStunned);
             EventHandlers["OnPlayerStartedClimbing"] += new Action<Player>(RemoteOnPlayerStartedClimbing);
             EventHandlers["OnPlayerStoppedClimbing"] += new Action<Player>(RemoteOnPlayerStoppedClimbing);
-            EventHandlers["OnPlayerDied"] += new Action<Player>(RemoteOnPlayerDied);
-            EventHandlers["OnPlayerRevived"] += new Action<Player>(RemoteOnPlayerRevived);
+            EventHandlers["OnPlayerDied"] += new Action<Player, float, float, float>(RemoteOnPlayerDied);
+            EventHandlers["OnPlayerRevived"] += new Action<Player, float, float, float>(RemoteOnPlayerRevived);
             EventHandlers["OnPlayerStartedDiving"] += new Action<Player>(RemoteOnPlayerStartedDiving);
             EventHandlers["OnPlayerStoppedDiving"] += new Action<Player>(RemoteOnPlayerStoppedDiving);
             EventHandlers["OnPlayerStartedDriveBy"] += new Action<Player, uint>(RemoteOnPlayerStartedDriveBy);
@@ -340,8 +340,8 @@ namespace MPFrameworkServer
         public void RemoteOnPlayerStoppedGettingStunned([FromSource]Player client) { OnPlayerStoppedGettingStunned?.Invoke(client); }
         public void RemoteOnPlayerStartedClimbing([FromSource]Player client) { OnPlayerStartedClimbing?.Invoke(client); }
         public void RemoteOnPlayerStoppedClimbing([FromSource]Player client) { OnPlayerStoppedClimbing?.Invoke(client); }
-        public void RemoteOnPlayerDied([FromSource]Player client) { OnPlayerDied?.Invoke(client); }
-        public void RemoteOnPlayerRevived([FromSource]Player client) { OnPlayerRevived?.Invoke(client); }
+        public void RemoteOnPlayerDied([FromSource]Player client, float x, float y, float z) { OnPlayerDied?.Invoke(client, x, y, z); }
+        public void RemoteOnPlayerRevived([FromSource]Player client, float x, float y, float z) { OnPlayerRevived?.Invoke(client, x, y, z); }
         public void RemoteOnPlayerStartedDiving([FromSource]Player client) { OnPlayerStartedDiving?.Invoke(client); }
         public void RemoteOnPlayerStoppedDiving([FromSource]Player client) { OnPlayerStoppedDiving?.Invoke(client); }
         public void RemoteOnPlayerStartedDriveBy([FromSource]Player client, uint weapon) { OnPlayerStartedDriveBy?.Invoke(client, weapon); }

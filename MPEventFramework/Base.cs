@@ -650,14 +650,14 @@ namespace MPEventFramework
             {
                 if (debug) Utils.Log("OnPlayerHealthGain");
                 OnPlayerHealthGain?.Invoke(pedHealth, pHealth);
-                TriggerServerEvent("OnPlayerHealthGain");
+                TriggerServerEvent("OnPlayerHealthGain", pedHealth, pHealth);
                 pedHealth = pHealth;
             }
             else if (pHealth < pedHealth)
             {
                 if (debug) Utils.Log("OnPlayerHealthLoss");
                 OnPlayerHealthLoss?.Invoke(pedHealth, pHealth);
-                TriggerServerEvent("OnPlayerHealthLoss");
+                TriggerServerEvent("OnPlayerHealthLoss", pedHealth, pHealth);
                 pedHealth = pHealth;
             }
         }
@@ -670,14 +670,14 @@ namespace MPEventFramework
             {
                 if (debug) Utils.Log("OnPlayerArmourGain");
                 OnPlayerArmourGain?.Invoke(pedArmour, pArmour);
-                TriggerServerEvent("OnPlayerArmourGain");
+                TriggerServerEvent("OnPlayerArmourGain", pedArmour, pArmour);
                 pedArmour = pArmour;
             }
             else if (pArmour < pedArmour)
             {
                 if (debug) Utils.Log("OnPlayerArmourLoss");
                 OnPlayerArmourLoss?.Invoke(pedArmour, pArmour);
-                TriggerServerEvent("OnPlayerArmourLoss");
+                TriggerServerEvent("OnPlayerArmourLoss", pedArmour, pArmour);
                 pedArmour = pArmour;
             }
         }
@@ -696,7 +696,7 @@ namespace MPEventFramework
                 state_inCombat = false;
                 if (debug) Utils.Log("OnPlayerLeftMeleeCombat");
                 OnPlayerLeftMeleeCombat?.Invoke();
-                TriggerServerEvent("OnPlayerLeftMeleeCombat");
+                TriggerServerEvent("OnPlayerLeftMeleeCombat", currentWeapon);
             }
             if (state_swimming)
             {
@@ -725,7 +725,7 @@ namespace MPEventFramework
                 state_inCombat = false;
                 if (debug) Utils.Log("OnPlayerLeftMeleeCombat");
                 OnPlayerLeftMeleeCombat?.Invoke();
-                TriggerServerEvent("OnPlayerLeftMeleeCombat");
+                TriggerServerEvent("OnPlayerLeftMeleeCombat", currentWeapon);
             }
 
             if (state_onVehicle)
@@ -749,7 +749,7 @@ namespace MPEventFramework
                 state_aimingFromCover = false;
                 if (debug) Utils.Log("OnPlayerStoppedToAimFromCover");
                 OnPlayerStoppedToAimFromCover?.Invoke(currentWeapon);
-                TriggerServerEvent("OnPlayerStoppedToAimFromCover");
+                TriggerServerEvent("OnPlayerStoppedToAimFromCover", currentWeapon);
             }
 
             if (state_gettingUp)
@@ -805,7 +805,7 @@ namespace MPEventFramework
                 state_stealthKilling = false;
                 if (debug) Utils.Log("OnPlayerStoppedStealthKill");
                 OnPlayerStoppedStealthKill?.Invoke(currentWeapon);
-                TriggerServerEvent("OnPlayerStoppedStealthKill");
+                TriggerServerEvent("OnPlayerStoppedStealthKill", currentWeapon);
             }
         }
 
@@ -818,7 +818,7 @@ namespace MPEventFramework
                 state_vehicleBurnouting = false;
                 if (debug) Utils.Log("OnPlayerStoppedBurnouting");
                 OnPlayerStoppedBurnouting?.Invoke(VehicleHandle);
-                TriggerServerEvent("OnPlayerStoppedBurnouting");
+                TriggerServerEvent("OnPlayerStoppedBurnouting", VehicleNetworkId);
             }
 
             if(state_onBike)
@@ -826,7 +826,7 @@ namespace MPEventFramework
                 state_onBike = false;
                 if (debug) Utils.Log("OnPlayerStoppedOnBike");
                 OnPlayerStoppedOnBike?.Invoke(VehicleHandle, state_vehicleSeat);
-                TriggerServerEvent("OnPlayerStoppedOnBike");
+                TriggerServerEvent("OnPlayerStoppedOnBike", VehicleNetworkId, state_vehicleSeat);
             }
 
             if(state_inTrain)
@@ -834,7 +834,7 @@ namespace MPEventFramework
                 state_inTrain = false;
                 if (debug) Utils.Log("OnPlayerLeftTrain");
                 OnPlayerLeftTrain?.Invoke(VehicleHandle, state_vehicleSeat);
-                TriggerServerEvent("OnPlayerLeftTrain");
+                TriggerServerEvent("OnPlayerLeftTrain", VehicleNetworkId, state_vehicleSeat);
             }
 
             if(state_inTaxi)
@@ -842,7 +842,7 @@ namespace MPEventFramework
                 state_inTaxi = false;
                 if (debug) Utils.Log("OnPlayerLeftTaxi");
                 OnPlayerLeftTaxi?.Invoke(VehicleHandle, state_vehicleSeat);
-                TriggerServerEvent("OnPlayerLeftTaxi");
+                TriggerServerEvent("OnPlayerLeftTaxi", VehicleNetworkId, state_vehicleSeat);
             }
 
             if(state_inSub)
@@ -850,7 +850,7 @@ namespace MPEventFramework
                 state_inSub = false;
                 if (debug) Utils.Log("OnPlayerLeftSub");
                 OnPlayerLeftSub?.Invoke(VehicleHandle);
-                TriggerServerEvent("OnPlayerLeftSub");
+                TriggerServerEvent("OnPlayerLeftSub", VehicleNetworkId, state_vehicleSeat);
             }
 
             if(state_inPoliceVehicle)
@@ -858,7 +858,7 @@ namespace MPEventFramework
                 state_inPoliceVehicle = false;
                 if (debug) Utils.Log("OnPlayerLeftPoliceVehicle");
                 OnPlayerLeftPoliceVehicle?.Invoke(VehicleHandle, state_vehicleSeat);
-                TriggerServerEvent("OnPlayerLeftPoliceVehicle");
+                TriggerServerEvent("OnPlayerLeftPoliceVehicle", VehicleNetworkId, state_vehicleSeat);
             }
 
             if(state_inPlane)
@@ -866,7 +866,7 @@ namespace MPEventFramework
                 state_inPlane = false;
                 if (debug) Utils.Log("OnPlayerLeftPlane");
                 OnPlayerLeftPlane?.Invoke(VehicleHandle, state_vehicleSeat);
-                TriggerServerEvent("OnPlayerLeftPlane");
+                TriggerServerEvent("OnPlayerLeftPlane", VehicleNetworkId, state_vehicleSeat);
             }
 
             if(state_inHeli)
@@ -874,7 +874,7 @@ namespace MPEventFramework
                 state_inHeli = false;
                 if (debug) Utils.Log("OnPlayerLeftHeli");
                 OnPlayerLeftHeli?.Invoke(VehicleHandle, state_vehicleSeat);
-                TriggerServerEvent("OnPlayerLeftHeli");
+                TriggerServerEvent("OnPlayerLeftHeli", VehicleNetworkId, state_vehicleSeat);
             }
 
             if(state_inFlyingVehicle)
@@ -882,7 +882,7 @@ namespace MPEventFramework
                 state_inFlyingVehicle = false;
                 if (debug) Utils.Log("OnPlayerLeftFlyingVehicle");
                 OnPlayerLeftFlyingVehicle?.Invoke(VehicleHandle, state_vehicleSeat);
-                TriggerServerEvent("OnPlayerLeftFlyingVehicle");
+                TriggerServerEvent("OnPlayerLeftFlyingVehicle", VehicleNetworkId, state_vehicleSeat);
             }
 
             if(state_driveBying)
@@ -890,7 +890,7 @@ namespace MPEventFramework
                 state_driveBying = false;
                 if (debug) Utils.Log("OnPlayerStoppedDriveBy");
                 OnPlayerStoppedDriveBy?.Invoke(VehicleHandle, currentWeapon);
-                TriggerServerEvent("OnPlayerStoppedDriveBy");
+                TriggerServerEvent("OnPlayerStoppedDriveBy", VehicleNetworkId, state_vehicleSeat);
             }
 
             if(state_inBoat)
@@ -898,7 +898,7 @@ namespace MPEventFramework
                 state_inBoat = false;
                 if(debug) Utils.Log("OnPlayerLeftBoat");
                 OnPlayerLeftBoat?.Invoke(VehicleHandle, state_vehicleSeat);
-                TriggerServerEvent("OnPlayerLeftBoat");
+                TriggerServerEvent("OnPlayerLeftBoat", VehicleNetworkId, state_vehicleSeat);
             }
         }
 
@@ -913,14 +913,14 @@ namespace MPEventFramework
                 state_aiming = state;
                 if (debug) Utils.Log("OnPlayerStartedAiming");
                 OnPlayerStartedAiming?.Invoke(currentWeapon);
-                TriggerServerEvent("OnPlayerStartedAiming");
+                TriggerServerEvent("OnPlayerStartedAiming", currentWeapon);
             }
             else if (!state && state_aiming)
             {
                 state_aiming = state;
                 if (debug) Utils.Log("OnPlayerStoppedAiming");
                 OnPlayerStoppedAiming?.Invoke(currentWeapon);
-                TriggerServerEvent("OnPlayerStoppedAiming");
+                TriggerServerEvent("OnPlayerStoppedAiming", currentWeapon);
             }
         }
         private void CheckPlayerBurnouting()
@@ -932,14 +932,14 @@ namespace MPEventFramework
                 state_vehicleBurnouting = state;
                 if (debug) Utils.Log("OnPlayerStartedBurnouting");
                 OnPlayerStartedBurnouting?.Invoke(VehicleHandle);
-                TriggerServerEvent("OnPlayerStartedBurnouting");
+                TriggerServerEvent("OnPlayerStartedBurnouting", VehicleNetworkId);
             }
             else if (!state && state_vehicleBurnouting)
             {
                 state_vehicleBurnouting = state;
                 if (debug) Utils.Log("OnPlayerStoppedBurnouting");
                 OnPlayerStoppedBurnouting?.Invoke(VehicleHandle);
-                TriggerServerEvent("OnPlayerStoppedBurnouting");
+                TriggerServerEvent("OnPlayerStoppedBurnouting", VehicleNetworkId);
             }
         }
         private void CheckPlayerStoppingVehicle()
@@ -949,14 +949,14 @@ namespace MPEventFramework
                 state_vehicleStopped = true;
                 if (debug) Utils.Log("OnPlayerStoppedVehicle");
                 OnPlayerStoppedVehicle?.Invoke(VehicleHandle);
-                TriggerServerEvent("OnPlayerStoppedVehicle");
+                TriggerServerEvent("OnPlayerStoppedVehicle", VehicleNetworkId);
             }
             else if ((vehicleSpeed > 0 || vehicleSpeed < 0) && state_vehicleStopped)
             {
                 state_vehicleStopped = false;
                 if (debug) Utils.Log("OnPlayerStartedMovingVehicle");
                 OnPlayerStartedMovingVehicle?.Invoke(VehicleHandle);
-                TriggerServerEvent("OnPlayerStartedMovingVehicle");
+                TriggerServerEvent("OnPlayerStartedMovingVehicle", VehicleNetworkId);
             }
         }
         private void CheckPlayerReadyToShoot()
@@ -968,7 +968,7 @@ namespace MPEventFramework
                 state_readyToShoot = state;
                 if (debug) Utils.Log("OnPlayerReadyToShoot");
                 OnPlayerReadyToShoot?.Invoke(currentWeapon);
-                TriggerServerEvent("OnPlayerReadyToShoot");
+                TriggerServerEvent("OnPlayerReadyToShoot", currentWeapon);
             }
             else if (!state && state_readyToShoot)
             {
@@ -1025,14 +1025,14 @@ namespace MPEventFramework
                 state_jumpingOutOfVehicle = state;
                 if (debug) Utils.Log("OnPlayerStartedJumpingOutOfVehicle");
                 OnPlayerStartedJumpingOutOfVehicle?.Invoke(VehicleHandle, state_vehicleSeat);
-                TriggerServerEvent("OnPlayerStartedJumpingOutOfVehicle");
+                TriggerServerEvent("OnPlayerStartedJumpingOutOfVehicle", VehicleNetworkId, state_vehicleSeat);
             }
             else if (!state && state_jumpingOutOfVehicle)
             {
                 state_jumpingOutOfVehicle = state;
                 if (debug) Utils.Log("OnPlayerStoppedJumpingOutOfVehicle");
                 OnPlayerStoppedJumpingOutOfVehicle?.Invoke(VehicleHandle, state_vehicleSeat);
-                TriggerServerEvent("OnPlayerStoppedJumpingOutOfVehicle");
+                TriggerServerEvent("OnPlayerStoppedJumpingOutOfVehicle", VehicleNetworkId, state_vehicleSeat);
             }
         }
         private void CheckPlayerVaulting()
@@ -1063,14 +1063,14 @@ namespace MPEventFramework
                 state_stealthKilling = state;
                 if (debug) Utils.Log("OnPlayerStartedStealthKill");
                 OnPlayerStartedStealthKill?.Invoke(currentWeapon);
-                TriggerServerEvent("OnPlayerStartedStealthKill");
+                TriggerServerEvent("OnPlayerStartedStealthKill", currentWeapon);
             }
             else if (!state && state_stealthKilling)
             {
                 state_stealthKilling = state;
                 if (debug) Utils.Log("OnPlayerStoppedStealthKill");
                 OnPlayerStoppedStealthKill?.Invoke(currentWeapon);
-                TriggerServerEvent("OnPlayerStoppedStealthKill");
+                TriggerServerEvent("OnPlayerStoppedStealthKill", currentWeapon);
             }
         }
         private void CheckPlayerSwimmingUnderwater()
@@ -1124,14 +1124,14 @@ namespace MPEventFramework
                 state_shooting = state_btn_lmb;
                 if (debug) Utils.Log("OnPlayerStartedShooting");
                 OnPlayerStartedShooting?.Invoke(currentWeapon, GetCurrentWeaponAmmo());
-                TriggerServerEvent("OnPlayerStartedShooting");
+                TriggerServerEvent("OnPlayerStartedShooting", currentWeapon);
             }
             else if (state_shooting && (!state_btn_lmb || state_reloading))
             {
                 state_shooting = false;
                 if (debug) Utils.Log("OnPlayerStoppedShooting");
                 OnPlayerStoppedShooting?.Invoke(currentWeapon, GetCurrentWeaponAmmo());
-                TriggerServerEvent("OnPlayerStoppedShooting");
+                TriggerServerEvent("OnPlayerStoppedShooting", currentWeapon);
             }
         }
         private void CheckPlayerReloading()
@@ -1143,14 +1143,14 @@ namespace MPEventFramework
                 state_reloading = state;
                 if (debug) Utils.Log("OnPlayerStartedReloading");
                 OnPlayerStartedReloading?.Invoke(currentWeapon);
-                TriggerServerEvent("OnPlayerStartedReloading");
+                TriggerServerEvent("OnPlayerStartedReloading", currentWeapon);
             }
             else if (!state && state_reloading)
             {
                 state_reloading = state;
                 if (debug) Utils.Log("OnPlayerStoppedReloading");
                 OnPlayerStoppedReloading?.Invoke(currentWeapon);
-                TriggerServerEvent("OnPlayerStoppedReloading");
+                TriggerServerEvent("OnPlayerStoppedReloading", currentWeapon);
             }
         }
         private void CheckPlayerJacking()
@@ -1220,14 +1220,14 @@ namespace MPEventFramework
                 state_inCombat = state;
                 if (debug) Utils.Log("OnPlayerEnteredMeleeCombat");
                 OnPlayerEnteredMeleeCombat?.Invoke();
-                TriggerServerEvent("OnPlayerEnteredMeleeCombat");
+                TriggerServerEvent("OnPlayerEnteredMeleeCombat", currentWeapon);
             }
             else if (!state && state_inCombat)
             {
                 state_inCombat = state;
                 if (debug) Utils.Log("OnPlayerLeftMeleeCombat");
                 OnPlayerLeftMeleeCombat?.Invoke();
-                TriggerServerEvent("OnPlayerLeftMeleeCombat");
+                TriggerServerEvent("OnPlayerLeftMeleeCombat", currentWeapon);
             }
         }
         private void CheckPlayerOnVehicle()
@@ -1258,14 +1258,14 @@ namespace MPEventFramework
                 state_onBike = state;
                 if (debug) Utils.Log("OnPlayerStartedOnBike");
                 OnPlayerStartedOnBike?.Invoke(VehicleHandle, state_vehicleSeat);
-                TriggerServerEvent("OnPlayerStartedOnBike");
+                TriggerServerEvent("OnPlayerStartedOnBike", VehicleNetworkId, state_vehicleSeat);
             }
             else if (!state && state_onBike)
             {
                 state_onBike = state;
                 if (debug) Utils.Log("OnPlayerStoppedOnBike");
                 OnPlayerStoppedOnBike?.Invoke(VehicleHandle, state_vehicleSeat);
-                TriggerServerEvent("OnPlayerStoppedOnBike");
+                TriggerServerEvent("OnPlayerStoppedOnBike", VehicleNetworkId, state_vehicleSeat);
             }
         }
         private void CheckPlayerOnFoot()
@@ -1297,14 +1297,14 @@ namespace MPEventFramework
                 state_inFlyingVehicle = state;
                 if (debug) Utils.Log("OnPlayerEnteredFlyingVehicle");
                 OnPlayerEnteredFlyingVehicle?.Invoke(VehicleHandle, state_vehicleSeat);
-                TriggerServerEvent("OnPlayerEnteredFlyingVehicle");
+                TriggerServerEvent("OnPlayerEnteredFlyingVehicle", VehicleNetworkId, state_vehicleSeat);
             }
             else if (!state && state_inFlyingVehicle)
             {
                 state_inFlyingVehicle = state;
                 if (debug) Utils.Log("OnPlayerLeftFlyingVehicle");
                 OnPlayerLeftFlyingVehicle?.Invoke(VehicleHandle, state_vehicleSeat);
-                TriggerServerEvent("OnPlayerLeftFlyingVehicle");
+                TriggerServerEvent("OnPlayerLeftFlyingVehicle", VehicleNetworkId, state_vehicleSeat);
             }
         }
         private void CheckPlayerInAnyHeli()
@@ -1316,14 +1316,14 @@ namespace MPEventFramework
                 state_inHeli = state;
                 if (debug) Utils.Log("OnPlayerEnteredHeli");
                 OnPlayerEnteredHeli?.Invoke(VehicleHandle, state_vehicleSeat);
-                TriggerServerEvent("OnPlayerEnteredHeli");
+                TriggerServerEvent("OnPlayerEnteredHeli", VehicleNetworkId, state_vehicleSeat);
             }
             else if (!state && state_inHeli)
             {
                 state_inHeli = state;
                 if (debug) Utils.Log("OnPlayerLeftHeli");
                 OnPlayerLeftHeli?.Invoke(VehicleHandle, state_vehicleSeat);
-                TriggerServerEvent("OnPlayerLeftHeli");
+                TriggerServerEvent("OnPlayerLeftHeli", VehicleNetworkId, state_vehicleSeat);
             }
         }
         private void CheckPlayerInAnyPlane()
@@ -1335,14 +1335,14 @@ namespace MPEventFramework
                 state_inPlane = state;
                 if (debug) Utils.Log("OnPlayerEnteredPlane");
                 OnPlayerEnteredPlane?.Invoke(VehicleHandle, state_vehicleSeat);
-                TriggerServerEvent("OnPlayerEnteredPlane");
+                TriggerServerEvent("OnPlayerEnteredPlane", VehicleNetworkId, state_vehicleSeat);
             }
             else if (!state && state_inPlane)
             {
                 state_inPlane = state;
                 if (debug) Utils.Log("OnPlayerLeftPlane");
                 OnPlayerLeftPlane?.Invoke(VehicleHandle, state_vehicleSeat);
-                TriggerServerEvent("OnPlayerLeftPlane");
+                TriggerServerEvent("OnPlayerLeftPlane", VehicleNetworkId, state_vehicleSeat);
             }
         }
         private void CheckPlayerInAnyPoliceVehicle()
@@ -1354,14 +1354,14 @@ namespace MPEventFramework
                 state_inPoliceVehicle = state;
                 if (debug) Utils.Log("OnPlayerEnteredPoliceVehicle");
                 OnPlayerEnteredPoliceVehicle?.Invoke(VehicleHandle, state_vehicleSeat);
-                TriggerServerEvent("OnPlayerEnteredPoliceVehicle");
+                TriggerServerEvent("OnPlayerEnteredPoliceVehicle", VehicleNetworkId, state_vehicleSeat);
             }
             else if (!state && state_inPoliceVehicle)
             {
                 state_inPoliceVehicle = state;
                 if (debug) Utils.Log("OnPlayerLeftPoliceVehicle");
                 OnPlayerLeftPoliceVehicle?.Invoke(VehicleHandle, state_vehicleSeat);
-                TriggerServerEvent("OnPlayerLeftPoliceVehicle");
+                TriggerServerEvent("OnPlayerLeftPoliceVehicle", VehicleNetworkId, state_vehicleSeat);
             }
         }
         private void CheckPlayerInAnySub()
@@ -1373,14 +1373,14 @@ namespace MPEventFramework
                 state_inSub = state;
                 if (debug) Utils.Log("OnPlayerEnteredSub");
                 OnPlayerEnteredSub?.Invoke(VehicleHandle);
-                TriggerServerEvent("OnPlayerEnteredSub");
+                TriggerServerEvent("OnPlayerEnteredSub", VehicleNetworkId, state_vehicleSeat);
             }
             else if (!state && state_inSub)
             {
                 state_inSub = state;
                 if (debug) Utils.Log("OnPlayerLeftSub");
                 OnPlayerLeftSub?.Invoke(VehicleHandle);
-                TriggerServerEvent("OnPlayerLeftSub");
+                TriggerServerEvent("OnPlayerLeftSub", VehicleNetworkId, state_vehicleSeat);
             }
         }
         private void CheckPlayerInAnyTaxi()
@@ -1392,14 +1392,14 @@ namespace MPEventFramework
                 state_inTaxi = state;
                 if (debug) Utils.Log("OnPlayerEnteredTaxi");
                 OnPlayerEnteredTaxi?.Invoke(VehicleHandle, state_vehicleSeat);
-                TriggerServerEvent("OnPlayerEnteredTaxi");
+                TriggerServerEvent("OnPlayerEnteredTaxi", VehicleNetworkId, state_vehicleSeat);
             }
             else if (!state && state_inTaxi)
             {
                 state_inTaxi = state;
                 if (debug) Utils.Log("OnPlayerLeftTaxi");
                 OnPlayerLeftTaxi?.Invoke(VehicleHandle, state_vehicleSeat);
-                TriggerServerEvent("OnPlayerLeftTaxi");
+                TriggerServerEvent("OnPlayerLeftTaxi", VehicleNetworkId, state_vehicleSeat);
             }
         }
         private void CheckPlayerInAnyTrain()
@@ -1411,14 +1411,14 @@ namespace MPEventFramework
                 state_inTrain = state;
                 if (debug) Utils.Log("OnPlayerEnteredTrain");
                 OnPlayerEnteredTrain?.Invoke(VehicleHandle, state_vehicleSeat);
-                TriggerServerEvent("OnPlayerEnteredTrain");
+                TriggerServerEvent("OnPlayerEnteredTrain", VehicleNetworkId, state_vehicleSeat);
             }
             else if (!state && state_inTrain)
             {
                 state_inTrain = state;
                 if (debug) Utils.Log("OnPlayerLeftTrain");
                 OnPlayerLeftTrain?.Invoke(VehicleHandle, state_vehicleSeat);
-                TriggerServerEvent("OnPlayerLeftTrain");
+                TriggerServerEvent("OnPlayerLeftTrain", VehicleNetworkId, state_vehicleSeat);
             }
         }
         private void CheckPlayerInAnyBoat()
@@ -1430,14 +1430,14 @@ namespace MPEventFramework
                 state_inBoat = state;
                 if (debug) Utils.Log("OnPlayerEnteredBoat");
                 OnPlayerEnteredBoat?.Invoke(VehicleHandle, state_vehicleSeat);
-                TriggerServerEvent("OnPlayerEnteredBoat");
+                TriggerServerEvent("OnPlayerEnteredBoat", VehicleNetworkId, state_vehicleSeat);
             }
             else if (!state && state_inBoat)
             {
                 state_inBoat = state;
                 if (debug) Utils.Log("OnPlayerLeftBoat");
                 OnPlayerLeftBoat?.Invoke(VehicleHandle, state_vehicleSeat);
-                TriggerServerEvent("OnPlayerLeftBoat");
+                TriggerServerEvent("OnPlayerLeftBoat", VehicleNetworkId, state_vehicleSeat);
             }
         }
         private void CheckPlayerFalling()
@@ -1469,14 +1469,14 @@ namespace MPEventFramework
                 state_driveBying = state;
                 if (debug) Utils.Log("OnPlayerStartedDriveBy");
                 OnPlayerStartedDriveBy?.Invoke(VehicleHandle, currentWeapon);
-                TriggerServerEvent("OnPlayerStartedDriveBy");
+                TriggerServerEvent("OnPlayerStartedDriveBy", currentWeapon);
             }
             else if (!state && state_driveBying)
             {
                 state_driveBying = state;
                 if (debug) Utils.Log("OnPlayerStoppedDriveBy");
                 OnPlayerStoppedDriveBy?.Invoke(VehicleHandle, currentWeapon);
-                TriggerServerEvent("OnPlayerStoppedDriveBy");
+                TriggerServerEvent("OnPlayerStoppedDriveBy", currentWeapon);
             }
         }
 
@@ -1511,7 +1511,7 @@ namespace MPEventFramework
                 if (debug) Utils.Log("OnPlayerDied");
                 UpdateCurrentPos();
                 OnPlayerDied?.Invoke(currentPos.X, currentPos.Y, currentPos.Z);
-                TriggerServerEvent("OnPlayerDied");
+                TriggerServerEvent("OnPlayerDied", currentPos.X, currentPos.Y, currentPos.Z);
             }
             else if (!state && state_dead)
             {
@@ -1519,7 +1519,7 @@ namespace MPEventFramework
                 if (debug) Utils.Log("OnPlayerRevived");
                 UpdateCurrentPos();
                 OnPlayerRevived?.Invoke(currentPos.X, currentPos.Y, currentPos.Z);
-                TriggerServerEvent("OnPlayerRevived");
+                TriggerServerEvent("OnPlayerRevived", currentPos.X, currentPos.Y, currentPos.Z);
             }
         }
 
@@ -1642,14 +1642,14 @@ namespace MPEventFramework
                 state_aimingFromCover = state;
                 if (debug) Utils.Log("OnPlayerStartedToAimFromCover");
                 OnPlayerStartedToAimFromCover?.Invoke(currentWeapon);
-                TriggerServerEvent("OnPlayerStartedToAimFromCover");
+                TriggerServerEvent("OnPlayerStartedToAimFromCover", currentWeapon);
             }
             else if (!state && state_aimingFromCover)
             {
                 state_aimingFromCover = state;
                 if (debug) Utils.Log("OnPlayerStoppedToAimFromCover");
                 OnPlayerStoppedToAimFromCover?.Invoke(currentWeapon);
-                TriggerServerEvent("OnPlayerStoppedToAimFromCover");
+                TriggerServerEvent("OnPlayerStoppedToAimFromCover", currentWeapon);
             }
         }
 
@@ -1884,7 +1884,7 @@ namespace MPEventFramework
                         state_vehicleSeat = seatIdx;
                         if (debug) Utils.Log("OnPlayerSeatChange " + state_vehicleSeat);
                         OnPlayerSeatChange?.Invoke(VehicleHandle, state_vehicleSeat);
-                        TriggerServerEvent("OnPlayerSeatChange");
+                        TriggerServerEvent("OnPlayerSeatChange", VehicleNetworkId, state_vehicleSeat);
                     }
                     //Utils.Log("SEAT BREAK " + i);
                     break;
@@ -1910,7 +1910,7 @@ namespace MPEventFramework
                             state_vehicleSeat = seat;
                             if (debug) Utils.Log("OnPlayerSeatChange " + state_vehicleSeat);
                             OnPlayerSeatChange?.Invoke(VehicleHandle, state_vehicleSeat);
-                            TriggerServerEvent("OnPlayerSeatChange");
+                            TriggerServerEvent("OnPlayerSeatChange", VehicleNetworkId, state_vehicleSeat);
                         }
                         //Utils.Log("SEAT BREAK-2: " + seat);
                         break;
