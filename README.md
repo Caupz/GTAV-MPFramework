@@ -289,6 +289,7 @@ OnPlayerWeaponChange(Player player, uint oldWeapon, uint newWeapon);
 ### Contribution guidelines ###
 
 * All kinds of suggestions for changes and further developments
+* Donations to https://www.paypal.com/donate?hosted_button_id=JRK6N2NR5FUD4
 
 Created by Caupo Helvik (https://caupo.ee)
 
