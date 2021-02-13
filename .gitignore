@@ -52,5 +52,5 @@ MPEventFramework/obj/Debug/
 MPEventFramework/.vs/
 MPFrameworkServer/obj/Debug/
 
-!MPEventFramework/CitizenFX.Core.dll
-!MPFrameworkServer/CitizenFX.Core.dll
+!MPFrameworkClient.dll
+!MPFrameworkServer.dll
