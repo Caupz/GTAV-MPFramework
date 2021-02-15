@@ -76,15 +76,15 @@ version '0.1'
 
 files {
     'dlls/MPFrameworkServer.dll',
-    'dlls/MPEventFramework.dll',
+    'dlls/MPEventFramework.dll'
 }
 
 client_scripts {
-    'client/CopsAndRobbers.net.dll',
+    'client/CopsAndRobbers.net.dll'
 }
 
 server_scripts {
-    'server/CopsAndRobbersServer.net.dll',
+    'server/CopsAndRobbersServer.net.dll'
 }
 ```
 
