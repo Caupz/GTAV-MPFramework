@@ -6,7 +6,7 @@ Framework has about 100 callbacks in client- and serverside which can be used to
   
 This project is currently work in progress and if you have any suggestions then be welcome to let me know.
 
-## Usage / Installation ##
+## Installation ##
 
 1. Download MPFrameworkClient.dll and MPFrameworkServer.dll  
 2. In your client resource add *PreBuiltDLLs/MPFrameworkClient.dll* as reference in Visual Studio  
@@ -88,10 +88,11 @@ server_scripts {
 
 7. Build & run your gameserver.
 
-## Events clientside ##
+## Usage ##
+### Events ###
 
 <details>
-  <summary>Click to open clientside callbacks</summary>
+  <summary>Clientside events / callbacks</summary>
 
 ```csharp
 
@@ -202,10 +203,8 @@ OnKeyReleased(int key);
 ```
 </details>
 
-## Events serverside ##
-
 <details>
-  <summary>Click to open serverside callbacks</summary>
+  <summary>Serverside events / callbacks</summary>
 
 ```csharp
 OnPlayerStartedBurnouting(Player player, int vehicleNetworkId);
@@ -309,6 +308,42 @@ OnPlayerWeaponChange(Player player, uint oldWeapon, uint newWeapon);
 ```
 </details>
 
+# #
+
+### Additional Usages ###  
+  
+There are several additional experimental features in clientside which are enabled by default. Probably in future I will make the weather stuff serverside so all clients are sync with the same wind and weather values.  
+
+- Realtime setting to gametime, which can be turned off by:
+```csharp
+core.enableRealtimeGametime = false;
+```
+- Random wind direction and force. By default every minute a new random wind direction is generated with given range. You can change following variables to your liking:
+```csharp
+core.enableRandomWinds = true;
+core.maxWindSpeed = 70;
+core.minWindSpeed = 0;
+```
+- Random weather every 10 minutes by default. Variables to change them are:
+```csharp
+core.enableRandomWeathers = true;
+core.enableSnowyWeathers = false;
+core.enableSnowOnly = false;
+core.weatherUpdateIntervalInMinutes = 10;
+```
+- Access various properties like:
+```csharp
+ClientCore.PlayerHandle // Updates every second if theres a change.
+ClientCore.PlayerNetworkId // Updates every second if theres a change.
+ClientCore.PedHandle // Updates every second if theres a change.
+ClientCore.PedNetworkId // Updates every second if theres a change.
+ClientCore.VehicleHandle // Updates every second if theres a change.
+ClientCore.VehicleNetworkId // Updates every second if theres a change.
+ClientCore.ControlsPressed[keyID] // return true/false according to if pressed or not.
+```
+
+# #
+  
 ### Contribution guidelines ###
 
 * All kinds of suggestions for changes and further developments
