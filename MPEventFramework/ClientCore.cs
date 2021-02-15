@@ -404,7 +404,7 @@ namespace MPFrameworkClient
 
         private void SetCurrentWeatherState()
         {
-            Utils.Log("previouslySelectedWeathers.Count: "+ previouslySelectedWeathers.Count+ " previouseWeather" + previouseWeather+ " selectedWeathers.Count:"+ selectedWeathers.Count+ " currentWeather: "+ currentWeather+ " weatherTransition: "+ weatherTransition);
+            if(debug) Utils.Log("previouslySelectedWeathers.Count: "+ previouslySelectedWeathers.Count+ " previouseWeather" + previouseWeather+ " selectedWeathers.Count:"+ selectedWeathers.Count+ " currentWeather: "+ currentWeather+ " weatherTransition: "+ weatherTransition);
             API.SetWeatherTypeTransition((uint)API.GetHashKey(previouslySelectedWeathers[previouseWeather]), (uint)API.GetHashKey(selectedWeathers[currentWeather]), weatherTransition);
         }
 
@@ -467,7 +467,7 @@ namespace MPFrameworkClient
             PedHandle = API.GetPlayerPed(PlayerHandle);
             PedNetworkId = API.NetworkGetNetworkIdFromEntity(PedHandle);
 
-            Utils.Log("InitPlayerIds pedHandle [" + PedHandle + "] pedNetworkId [" + PedNetworkId + "]");
+            if(debug) Utils.Log("InitPlayerIds pedHandle [" + PedHandle + "] pedNetworkId [" + PedNetworkId + "]");
         }
 
         public async Task Process() // MAIN LOOP
@@ -1906,13 +1906,13 @@ namespace MPFrameworkClient
                 if (veh == 0)
                 {
                     veh = API.GetVehiclePedIsIn(PedHandle, false);
-                    Utils.Log("BASE OnPlayerSpawnIntoVehicle]VEH: [" + veh + "] SEAT: [" + seatTryingtoEnter + "] vHandle: " + veh);
+                    if(debug) Utils.Log("BASE OnPlayerSpawnIntoVehicle]VEH: [" + veh + "] SEAT: [" + seatTryingtoEnter + "] vHandle: " + veh);
                     OnPlayerSpawnIntoVehicle?.Invoke(veh);
                     TriggerServerEvent("OnPlayerSpawnIntoVehicle", VehicleNetworkId);
                 }
                 else
                 {
-                    Utils.Log("BASE OnTryingToEnterVehicle]VEH: [" + veh + "] SEAT: [" + seatTryingtoEnter + "]");
+                    if (debug) Utils.Log("BASE OnTryingToEnterVehicle]VEH: [" + veh + "] SEAT: [" + seatTryingtoEnter + "]");
                     OnPlayerTryingToEnterVehicle?.Invoke(veh, state_vehicleSeat);
                     TriggerServerEvent("OnPlayerTryingToEnterVehicle", VehicleNetworkId, state_vehicleSeat);
                 }
