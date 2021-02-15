@@ -1592,7 +1592,9 @@ namespace MPFrameworkClient
 
             if(newWeapon != currentWeapon)
             {
+                if (debug) Utils.Log(String.Format("OnPlayerWeaponChange {0} newWeapon {1}", currentWeapon, newWeapon));
                 OnPlayerWeaponChange?.Invoke(currentWeapon, newWeapon);
+                TriggerServerEvent("OnPlayerWeaponChange", currentWeapon, newWeapon);
                 currentWeapon = newWeapon;
             }
         }

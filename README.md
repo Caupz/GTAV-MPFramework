@@ -346,6 +346,11 @@ ClientCore.ControlsPressed[keyID] // return true/false according to if pressed o
   
 ### Contribution guidelines ###
 
+* These are currently the only untested callbacks, if someone is willing to test them and confirm if they work then please let me know.
+```
+OnPlayerStartedGettingStunned
+OnPlayerStoppedGettingStunned
+```
 * All kinds of suggestions for changes and further developments
 * Donations to https://www.paypal.com/donate?hosted_button_id=JRK6N2NR5FUD4
 

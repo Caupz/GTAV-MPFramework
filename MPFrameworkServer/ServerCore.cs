@@ -313,6 +313,7 @@ namespace MPFrameworkServer
             EventHandlers["OnVehicleHealthGain"] += new Action<Player, int, int, float, float, float>(RemoteOnVehicleHealthGain);
             EventHandlers["OnVehicleHealthLoss"] += new Action<Player, int, int, float, float, float>(RemoteOnVehicleHealthLoss);
             EventHandlers["OnVehicleCrash"] += new Action<Player, int>(RemoteOnVehicleCrash);
+            EventHandlers["OnPlayerWeaponChange"] += new Action<Player, uint, uint>(RemoteOnPlayerWeaponChange);
 
             Utils.Log("MP FRAMEWORK: Adding events to handler - END");
         }
@@ -418,5 +419,6 @@ namespace MPFrameworkServer
         public void RemoteOnVehicleHealthGain([FromSource]Player client, int vehicleNetworkId, int vehicleHealth, float vehicleBodyHealth, float vehicleEngineHealth, float vehiclePetrolTankHealth) { OnVehicleHealthGain?.Invoke(client, vehicleNetworkId, vehicleHealth, vehicleBodyHealth, vehicleEngineHealth, vehiclePetrolTankHealth); }
         public void RemoteOnVehicleHealthLoss([FromSource]Player client, int vehicleNetworkId, int vehicleHealth, float vehicleBodyHealth, float vehicleEngineHealth, float vehiclePetrolTankHealth) { OnVehicleHealthLoss?.Invoke(client, vehicleNetworkId, vehicleHealth, vehicleBodyHealth, vehicleEngineHealth, vehiclePetrolTankHealth); }
         public void RemoteOnVehicleCrash([FromSource]Player client, int vehicleNetworkId) { OnVehicleCrash?.Invoke(client, vehicleNetworkId); }
+        public void RemoteOnPlayerWeaponChange([FromSource]Player client, uint oldWeapon, uint newWeapon) { OnPlayerWeaponChange?.Invoke(client, oldWeapon, newWeapon); }
     }
 }
