@@ -36,7 +36,7 @@ namespace CopsAndRobbers
         [Tick]
         async Task OnTickMain()
         {
-            core.Process(); // Without this in Tick none of the events will fire!
+            await core.Process();
         }
     }
 }
@@ -63,7 +63,32 @@ namespace CopsAndRobbersServer
     }
 }
 ```
-6. Build & run your gameserver.
+6. Configure your server something like this:  
+```json
+// Filename: fxmanifest.lua
+
+fx_version 'adamant'
+
+game 'gta5'
+description 'Some Server Name Here'
+author 'Caupo Helvik'
+version '0.1'
+
+files {
+    'dlls/MPFrameworkServer.dll',
+    'dlls/MPEventFramework.dll',
+}
+
+client_scripts {
+    'client/CopsAndRobbers.net.dll',
+}
+
+server_scripts {
+    'server/CopsAndRobbersServer.net.dll',
+}
+```
+
+7. Build & run your gameserver.
 
 ## Events clientside ##
 

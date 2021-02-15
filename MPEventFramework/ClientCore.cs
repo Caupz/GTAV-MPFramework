@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using CitizenFX.Core;
 using API = CitizenFX.Core.Native.API;
 
@@ -469,9 +470,9 @@ namespace MPFrameworkClient
             Utils.Log("InitPlayerIds pedHandle [" + PedHandle + "] pedNetworkId [" + PedNetworkId + "]");
         }
 
-        public void Process() // MAIN LOOP
+        public async Task Process() // MAIN LOOP
         {
-            API.Wait(0);
+            await Delay(0);
             DateTime dt = DateTime.Now;
 
             if (previouseSecond != dt.Second)
