@@ -63,10 +63,8 @@ namespace CopsAndRobbersServer
     }
 }
 ```
-6. Configure your server something like this:  
+6. Configure your server (for example fxmanifest.lua) something like this:  
 ```json
-// Filename: fxmanifest.lua
-
 fx_version 'adamant'
 
 game 'gta5'
