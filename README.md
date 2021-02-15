@@ -74,7 +74,7 @@ version '0.1'
 
 files {
     'dlls/MPFrameworkServer.dll',
-    'dlls/MPEventFramework.dll'
+    'dlls/MPFrameworkClient.dll'
 }
 
 client_scripts {
