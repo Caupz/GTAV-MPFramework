@@ -444,7 +444,9 @@ namespace MPFrameworkClient
 
         private void InitControls()
         {
-            for(int i = 0; i <= maxControls; i++)
+            ControlsPressed = new Dictionary<int, bool>();
+
+            for (int i = 0; i <= maxControls; i++)
             {
                 ControlsPressed.Add(i, false);
             }
@@ -472,6 +474,8 @@ namespace MPFrameworkClient
 
         public async Task Process() // MAIN LOOP
         {
+            //int startTick = Environment.TickCount;
+
             await Delay(0);
             DateTime dt = DateTime.Now;
 
@@ -508,6 +512,8 @@ namespace MPFrameworkClient
                     CallbackOnControlMillisecondUpdate();
                 }
             }
+
+            //Utils.Log("TICKS SPENT: " + (Environment.TickCount - startTick));
         }
 
         private void CallbackOnControlMillisecondUpdate()
