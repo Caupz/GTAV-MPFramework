@@ -14,28 +14,6 @@ namespace MPFrameworkClient
         public bool debug = false;
         const int maxControls = 360;
 
-        // TIME SYSTEM
-        public bool enableRealtimeGametime = true;
-
-        // WIND SYSTEM
-        public bool enableRandomWinds = true;
-        public int maxWindSpeed = 70;
-        public int minWindSpeed = 0;
-        public int currentWind = 0;
-        public float currentWindDirection = 0;
-
-        // WEATHER SYSTEM
-        public bool enableRandomWeathers = true;
-        public bool enableSnowyWeathers = false;
-        public bool enableSnowOnly = false;
-        public int weatherUpdateIntervalInMinutes = 10;
-        int currentWeatherUpdateInMinutes = 0;
-        int currentWeather = 0;
-        int previouseWeather = 0;
-        float weatherTransition = 0;
-        List<string> previouslySelectedWeathers = MEF_Weathers.weathersWithSnow;
-        List<string> selectedWeathers = MEF_Weathers.weathersWithSnow;
-        const float weatherTransitionPerSecond = 0.0167f;
 
         // IDS
         public static int PlayerHandle { get; protected set; }
@@ -343,103 +321,30 @@ namespace MPFrameworkClient
             DateTime dt = DateTime.Now;
             InitPlayerIds();
             InitSystemVariables();
-            UpdateWind();
-            UpdateWeather();
-            UpdateTime(dt.Hour, dt.Minute, dt.Second);
+            InitEventHandlers();
         }
 
-        private void TransitionWeather()
+        public void InitEventHandlers()
         {
-            if (enableRandomWeathers && weatherTransition > 0.0)
-            {
-                weatherTransition += weatherTransitionPerSecond;
-
-                if (weatherTransition > 1.0f)
-                {
-                    weatherTransition = 1.0f;
-                    SetCurrentWeatherState();
-                    weatherTransition = 0f;
-                }
-                else
-                {
-                    SetCurrentWeatherState();
-                }
-            }
+            EventHandlers["SetWeatherTransition"] += new Action<uint, uint, float>(SetWeatherTransition);
+            EventHandlers["SetWind"] += new Action<int, float>(SetWind);
+            EventHandlers["SetClock"] += new Action<int, int, int>(SetClock);
         }
 
-        private void UpdateWeather()
+        public void SetClock(int hour, int minute, int second)
         {
-            if(enableRandomWeathers)
-            {
-                currentWeatherUpdateInMinutes--;
-
-                if (currentWeatherUpdateInMinutes <= 0)
-                {
-                    previouslySelectedWeathers = selectedWeathers;
-                    GetNewSelectedWeathers();
-                    SetCurrentWeatherState();
-                    GetNewWeatherUpdates();
-                }
-            }
+            API.SetClockTime(hour, minute, second);
         }
 
-        private void GetNewSelectedWeathers()
+        public void SetWind(int wind, float direction)
         {
-            if (enableSnowOnly)
-            {
-                selectedWeathers = MEF_Weathers.snowWeathers;
-            }
-            else
-            {
-                if (enableSnowyWeathers)
-                {
-                    selectedWeathers = MEF_Weathers.weathersWithSnow;
-                }
-                else
-                {
-                    selectedWeathers = MEF_Weathers.weathersWithoutSnow;
-                }
-            }
+            API.SetWind(wind);
+            API.SetWindDirection(direction);
         }
 
-        private void SetCurrentWeatherState()
+        public void SetWeatherTransition(uint weatherFrom, uint weatherTo, float percentageOfWeatherTo)
         {
-            if(debug) Utils.Log("previouslySelectedWeathers.Count: "+ previouslySelectedWeathers.Count+ " previouseWeather" + previouseWeather+ " selectedWeathers.Count:"+ selectedWeathers.Count+ " currentWeather: "+ currentWeather+ " weatherTransition: "+ weatherTransition);
-            API.SetWeatherTypeTransition((uint)API.GetHashKey(previouslySelectedWeathers[previouseWeather]), (uint)API.GetHashKey(selectedWeathers[currentWeather]), weatherTransition);
-        }
-
-        private void GetNewWeatherUpdates()
-        {
-            weatherTransition = weatherTransitionPerSecond;
-            previouseWeather = currentWeather;
-            currentWeather = Utils.GetRandom(0, selectedWeathers.Count - 1);
-            currentWeatherUpdateInMinutes = weatherUpdateIntervalInMinutes;
-        }
-
-        private void UpdateWind()
-        {
-            if(enableRandomWinds)
-            {
-                GetRandomWind();
-                GetRandomWindDirection();
-                ApplyCurrentWind();
-            }
-        }
-
-        private void GetRandomWind()
-        {
-            currentWind = Utils.GetRandom(minWindSpeed, maxWindSpeed);
-        }
-
-        public void GetRandomWindDirection()
-        {
-            currentWindDirection = Utils.GetRandom(0, 8);
-        }
-
-        private void ApplyCurrentWind()
-        {
-            API.SetWind(currentWind);
-            API.SetWindDirection(currentWindDirection);
+            API.SetWeatherTypeTransition(weatherFrom, weatherTo, percentageOfWeatherTo);
         }
 
         private void InitControls()
@@ -542,26 +447,13 @@ namespace MPFrameworkClient
 
         private void CallbackOnMinutePassed()
         {
-            UpdateWind();
-            UpdateWeather();
             OnMinutePassed?.Invoke();
-        }
-
-        private void UpdateTime(int hour, int minute, int second)
-        {
-            if (enableRealtimeGametime)
-            {
-                API.SetClockTime(hour, minute, second);
-            }
         }
 
         private void CallbackOnSecondPassed(int hour, int minute, int second)
         {
-            UpdateTime(hour, minute, second);
             UpdateCurrentPos();
-
-            TransitionWeather();
-
+            
             //if (debug) Utils.Log("OnSecondPassed");
             CheckPlayerSpawned();
             CheckVehicleEvents();

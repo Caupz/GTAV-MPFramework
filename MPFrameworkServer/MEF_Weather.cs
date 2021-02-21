@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace MPFrameworkClient
+namespace MPFrameworkServer
 {
     class MEF_Weathers
     {

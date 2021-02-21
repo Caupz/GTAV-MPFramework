@@ -1,10 +1,21 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Threading;
 using CitizenFX.Core;
+using API = CitizenFX.Core.Native.API;
 
 namespace MPFrameworkServer
 {
     public class ServerCore : BaseScript
     {
+        public bool debug = false;
+
+        public static event SecondUpdate OnSecondUpdate;
+        public delegate void SecondUpdate(int hour, int minute, int second);
+        public static event MinuteUpdate OnMinuteUpdate;
+        public delegate void MinuteUpdate(int hour, int minute, int second);
+        public static event HourUpdate OnHourUpdate;
+        public delegate void HourUpdate(int hour, int minute, int second);
         // PLAYER RELATED EVENTS
         public static event PlayerSpawned OnPlayerSpawned;
         public static event PlayerStartedWalking OnPlayerStartedWalking;
@@ -210,10 +221,38 @@ namespace MPFrameworkServer
         public delegate void PlayerArmourLoss(Player player, int oldArmour, int newArmour);
         public delegate void PlayerWeaponChange(Player player, uint oldWeapon, uint newWeapon);
 
+        int previouseSecond = 0;
+        int previouseMinute = 0;
+        int previouseHour = 0;
+        // TIME SYSTEM
+        public bool enableRealtimeGametime = true;
+
+        // WIND SYSTEM
+        public bool enableRandomWinds = true;
+        public int maxWindSpeed = 70;
+        public int minWindSpeed = 0;
+        public int currentWind = 0;
+        public float currentWindDirection = 0;
+
+        // WEATHER SYSTEM
+        public bool enableRandomWeathers = true;
+        public bool enableSnowyWeathers = false;
+        public bool enableSnowOnly = false;
+        public int weatherUpdateIntervalInMinutes = 10;
+        int currentWeatherUpdateInMinutes = 0;
+        int currentWeather = 0;
+        int previouseWeather = 0;
+        float weatherTransition = 0;
+        List<string> previouslySelectedWeathers = MEF_Weathers.weathersWithSnow;
+        List<string> selectedWeathers = MEF_Weathers.weathersWithSnow;
+        const float weatherTransitionPerSecond = 0.0167f;
+
+        Timer timer;
+        TimerCallback callback;
+
         public ServerCore()
         {
             Utils.Log("MP FRAMEWORK: Created by Caupo Helvik (https://caupo.ee)");
-
             Utils.Log("MP FRAMEWORK: Adding events to handler - START");
 
             EventHandlers["OnPlayerSpawned"] += new Action<Player>(RemoteOnPlayerSpawned);
@@ -316,13 +355,71 @@ namespace MPFrameworkServer
             EventHandlers["OnPlayerWeaponChange"] += new Action<Player, uint, uint>(RemoteOnPlayerWeaponChange);
 
             Utils.Log("MP FRAMEWORK: Adding events to handler - END");
+
+            InitTimeVars();
+            InitWeather();
+            InitMainLoop();
+
+            Utils.Log("MP FRAMEWORK: INIT END");
         }
 
-        public void RemoteOnPlayerSpawned([FromSource]Player client) {
-            Utils.Log("RemoteOnPlayerSpawned");
-            OnPlayerSpawned?.Invoke(client);
-            Utils.Log("RemoteOnPlayerSpawned 2");
+        public void InitTimeVars()
+        {
+            DateTime dt = DateTime.Now;
+            previouseHour = dt.Hour;
+            previouseMinute = dt.Minute;
+            previouseSecond = dt.Second;
+            UpdateTime(dt.Hour, dt.Minute, dt.Second);
         }
+
+        public void InitWeather()
+        {
+            UpdateWind();
+            UpdateWeather();
+        }
+
+        public void InitMainLoop()
+        {
+            callback = new TimerCallback(CallbackOnSecondUpdate);
+            timer = new Timer(callback, null, 1000, 1000);
+        }
+
+        public void CallbackOnSecondUpdate(object obj)
+        {
+            DateTime dt = DateTime.Now;
+
+            if (previouseHour != dt.Hour)
+            {
+                CallbackOnHourUpdate(dt.Hour, dt.Minute, dt.Second);
+                previouseHour = dt.Hour;
+            }
+
+            if (previouseMinute != dt.Minute)
+            {
+                CallbackOnMinuteUpdate(dt.Hour, dt.Minute, dt.Second);
+                previouseMinute = dt.Minute;
+            }
+
+            OnSecondUpdate?.Invoke(dt.Hour, dt.Minute, dt.Second);
+            previouseSecond = dt.Second;
+
+            UpdateTime(dt.Hour, dt.Minute, dt.Second);
+            TransitionWeather();
+        }
+
+        public void CallbackOnMinuteUpdate(int hour, int minute, int second)
+        {
+            OnMinuteUpdate?.Invoke(hour, minute, second);
+            UpdateWind();
+            UpdateWeather();
+        }
+
+        public void CallbackOnHourUpdate(int hour, int minute, int second)
+        {
+            OnHourUpdate?.Invoke(hour, minute, second);
+        }
+
+        public void RemoteOnPlayerSpawned([FromSource]Player client) { OnPlayerSpawned?.Invoke(client); }
         public void RemoteOnPlayerStartedWalking([FromSource]Player client) { OnPlayerStartedWalking?.Invoke(client); }
         public void RemoteOnPlayerStoppedWalking([FromSource]Player client) { OnPlayerStoppedWalking?.Invoke(client); }
         public void RemoteOnPlayerStartedRunning([FromSource]Player client) { OnPlayerStartedRunning?.Invoke(client); }
@@ -420,5 +517,112 @@ namespace MPFrameworkServer
         public void RemoteOnVehicleHealthLoss([FromSource]Player client, int vehicleNetworkId, int vehicleHealth, float vehicleBodyHealth, float vehicleEngineHealth, float vehiclePetrolTankHealth) { OnVehicleHealthLoss?.Invoke(client, vehicleNetworkId, vehicleHealth, vehicleBodyHealth, vehicleEngineHealth, vehiclePetrolTankHealth); }
         public void RemoteOnVehicleCrash([FromSource]Player client, int vehicleNetworkId) { OnVehicleCrash?.Invoke(client, vehicleNetworkId); }
         public void RemoteOnPlayerWeaponChange([FromSource]Player client, uint oldWeapon, uint newWeapon) { OnPlayerWeaponChange?.Invoke(client, oldWeapon, newWeapon); }
+
+
+
+        private void TransitionWeather()
+        {
+            if (enableRandomWeathers && weatherTransition > 0.0)
+            {
+                weatherTransition += weatherTransitionPerSecond;
+
+                if (weatherTransition > 1.0f)
+                {
+                    weatherTransition = 1.0f;
+                    SetCurrentWeatherState();
+                    weatherTransition = 0f;
+                }
+                else
+                {
+                    SetCurrentWeatherState();
+                }
+            }
+        }
+
+        private void UpdateWeather()
+        {
+            if (enableRandomWeathers)
+            {
+                currentWeatherUpdateInMinutes--;
+
+                if (currentWeatherUpdateInMinutes <= 0)
+                {
+                    previouslySelectedWeathers = selectedWeathers;
+                    GetNewSelectedWeathers();
+                    SetCurrentWeatherState();
+                    GetNewWeatherUpdates();
+                }
+            }
+        }
+
+        private void GetNewSelectedWeathers()
+        {
+            if (enableSnowOnly)
+            {
+                selectedWeathers = MEF_Weathers.snowWeathers;
+            }
+            else
+            {
+                if (enableSnowyWeathers)
+                {
+                    selectedWeathers = MEF_Weathers.weathersWithSnow;
+                }
+                else
+                {
+                    selectedWeathers = MEF_Weathers.weathersWithoutSnow;
+                }
+            }
+        }
+
+        private void SetCurrentWeatherState()
+        {
+            if (debug) Utils.Log("previouslySelectedWeathers.Count: " + previouslySelectedWeathers.Count + " previouseWeather" + previouseWeather + " selectedWeathers.Count:" + selectedWeathers.Count + " currentWeather: " + currentWeather + " weatherTransition: " + weatherTransition);
+
+            TriggerClientEvent("SetWeatherTransition",
+                (uint)API.GetHashKey(previouslySelectedWeathers[previouseWeather]),
+                (uint)API.GetHashKey(selectedWeathers[currentWeather]),
+                weatherTransition);
+        }
+
+        private void GetNewWeatherUpdates()
+        {
+            weatherTransition = weatherTransitionPerSecond;
+            previouseWeather = currentWeather;
+            currentWeather = Utils.GetRandom(0, selectedWeathers.Count - 1);
+            currentWeatherUpdateInMinutes = weatherUpdateIntervalInMinutes;
+        }
+
+        private void UpdateWind()
+        {
+            if (enableRandomWinds)
+            {
+                GetRandomWind();
+                GetRandomWindDirection();
+                ApplyCurrentWind();
+            }
+        }
+
+        private void GetRandomWind()
+        {
+            currentWind = Utils.GetRandom(minWindSpeed, maxWindSpeed);
+        }
+
+        public void GetRandomWindDirection()
+        {
+            currentWindDirection = Utils.GetRandom(0, 8);
+        }
+
+        private void ApplyCurrentWind()
+        {
+            TriggerClientEvent("SetWind", currentWind, currentWindDirection);
+        }
+
+        private void UpdateTime(int hour, int minute, int second)
+        {
+            if (enableRealtimeGametime)
+            {
+                TriggerClientEvent("SetClock", hour, minute, second);
+            }
+        }
     }
 }
