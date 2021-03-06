@@ -8,7 +8,7 @@ namespace MPFrameworkServer
 {
     public class ServerCore : BaseScript
     {
-        public bool debug = false;
+        public static bool debug = false;
 
         public static event SecondUpdate OnSecondUpdate;
         public delegate void SecondUpdate(int hour, int minute, int second);
@@ -225,20 +225,20 @@ namespace MPFrameworkServer
         int previouseMinute = 0;
         int previouseHour = 0;
         // TIME SYSTEM
-        public bool enableRealtimeGametime = true;
+        public static bool enableRealtimeGametime = true;
 
         // WIND SYSTEM
-        public bool enableRandomWinds = true;
-        public int maxWindSpeed = 70;
-        public int minWindSpeed = 0;
-        public int currentWind = 0;
-        public float currentWindDirection = 0;
+        public static bool enableRandomWinds = true;
+        public static int maxWindSpeed = 70;
+        public static int minWindSpeed = 0;
+        public static int currentWind = 0;
+        public static float currentWindDirection = 0;
 
         // WEATHER SYSTEM
-        public bool enableRandomWeathers = true;
-        public bool enableSnowyWeathers = false;
-        public bool enableSnowOnly = false;
-        public int weatherUpdateIntervalInMinutes = 10;
+        public static bool enableRandomWeathers = true;
+        public static bool enableSnowyWeathers = false;
+        public static bool enableSnowOnly = false;
+        public static int weatherUpdateIntervalInMinutes = 10;
         int currentWeatherUpdateInMinutes = 0;
         int currentWeather = 0;
         int previouseWeather = 0;
@@ -578,10 +578,11 @@ namespace MPFrameworkServer
         {
             if (debug) Utils.Log("previouslySelectedWeathers.Count: " + previouslySelectedWeathers.Count + " previouseWeather" + previouseWeather + " selectedWeathers.Count:" + selectedWeathers.Count + " currentWeather: " + currentWeather + " weatherTransition: " + weatherTransition);
 
-            TriggerClientEvent("SetWeatherTransition",
-                (uint)API.GetHashKey(previouslySelectedWeathers[previouseWeather]),
-                (uint)API.GetHashKey(selectedWeathers[currentWeather]),
-                weatherTransition);
+            uint weatherFrom = (uint)API.GetHashKey(previouslySelectedWeathers[previouseWeather]);
+            uint weatherTo = (uint)API.GetHashKey(selectedWeathers[currentWeather]);
+
+            TriggerClientEvent("SetWeatherTransition", weatherFrom, weatherTo, weatherTransition);
+            if (debug) Utils.Log(String.Format("SetWeatherTransition {0} {1} {2}", weatherFrom, weatherTo, weatherTransition));
         }
 
         private void GetNewWeatherUpdates()
@@ -615,12 +616,14 @@ namespace MPFrameworkServer
         private void ApplyCurrentWind()
         {
             TriggerClientEvent("SetWind", currentWind, currentWindDirection);
+            if (debug) Utils.Log(String.Format("SetWind {0} {1}", currentWind, currentWindDirection));
         }
 
         private void UpdateTime(int hour, int minute, int second)
         {
             if (enableRealtimeGametime)
             {
+                if(debug) Utils.Log(String.Format("SetClock {0}:{1}:{2}", hour, minute, second));
                 TriggerClientEvent("SetClock", hour, minute, second);
             }
         }

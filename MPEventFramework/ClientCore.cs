@@ -326,24 +326,29 @@ namespace MPFrameworkClient
 
         public void InitEventHandlers()
         {
+            Utils.Log("MP FRAMEWORK: InitEventHandlers");
             EventHandlers["SetWeatherTransition"] += new Action<uint, uint, float>(SetWeatherTransition);
             EventHandlers["SetWind"] += new Action<int, float>(SetWind);
             EventHandlers["SetClock"] += new Action<int, int, int>(SetClock);
+            Utils.Log("MP FRAMEWORK: InitEventHandlers - END");
         }
 
         public void SetClock(int hour, int minute, int second)
         {
+            if (debug) Utils.Log(String.Format("SetClock {0} {1} {2}", hour, minute, second));
             API.SetClockTime(hour, minute, second);
         }
 
         public void SetWind(int wind, float direction)
         {
+            if (debug) Utils.Log(String.Format("SetWind {0} {1}", wind, direction));
             API.SetWind(wind);
             API.SetWindDirection(direction);
         }
 
         public void SetWeatherTransition(uint weatherFrom, uint weatherTo, float percentageOfWeatherTo)
         {
+            if (debug) Utils.Log(String.Format("SetWeatherTransition {0} {1} {2}", weatherFrom, weatherTo, percentageOfWeatherTo));
             API.SetWeatherTypeTransition(weatherFrom, weatherTo, percentageOfWeatherTo);
         }
 
