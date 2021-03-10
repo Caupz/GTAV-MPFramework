@@ -243,8 +243,8 @@ namespace MPFrameworkServer
         int currentWeather = 0;
         int previouseWeather = 0;
         float weatherTransition = 0;
-        List<string> previouslySelectedWeathers = MEF_Weathers.weathersWithSnow;
-        List<string> selectedWeathers = MEF_Weathers.weathersWithSnow;
+        List<string> previouslySelectedWeathers = MPF_Weathers.weathersWithSnow;
+        List<string> selectedWeathers = MPF_Weathers.weathersWithSnow;
         const float weatherTransitionPerSecond = 0.0167f;
 
         Timer timer;
@@ -252,8 +252,8 @@ namespace MPFrameworkServer
 
         public ServerCore()
         {
-            Utils.Log("MP FRAMEWORK: Created by Caupo Helvik (https://caupo.ee)");
-            Utils.Log("MP FRAMEWORK: Adding events to handler - START");
+            MPF_Utils.Log("MP FRAMEWORK: Created by Caupo Helvik (https://caupo.ee)");
+            MPF_Utils.Log("MP FRAMEWORK: Adding events to handler - START");
 
             EventHandlers["OnPlayerSpawned"] += new Action<Player>(RemoteOnPlayerSpawned);
             EventHandlers["OnPlayerStartedWalking"] += new Action<Player>(RemoteOnPlayerStartedWalking);
@@ -354,13 +354,13 @@ namespace MPFrameworkServer
             EventHandlers["OnVehicleCrash"] += new Action<Player, int>(RemoteOnVehicleCrash);
             EventHandlers["OnPlayerWeaponChange"] += new Action<Player, uint, uint>(RemoteOnPlayerWeaponChange);
 
-            Utils.Log("MP FRAMEWORK: Adding events to handler - END");
+            MPF_Utils.Log("MP FRAMEWORK: Adding events to handler - END");
 
             InitTimeVars();
             InitWeather();
             InitMainLoop();
 
-            Utils.Log("MP FRAMEWORK: INIT END");
+            MPF_Utils.Log("MP FRAMEWORK: INIT END");
         }
 
         public void InitTimeVars()
@@ -559,37 +559,37 @@ namespace MPFrameworkServer
         {
             if (enableSnowOnly)
             {
-                selectedWeathers = MEF_Weathers.snowWeathers;
+                selectedWeathers = MPF_Weathers.snowWeathers;
             }
             else
             {
                 if (enableSnowyWeathers)
                 {
-                    selectedWeathers = MEF_Weathers.weathersWithSnow;
+                    selectedWeathers = MPF_Weathers.weathersWithSnow;
                 }
                 else
                 {
-                    selectedWeathers = MEF_Weathers.weathersWithoutSnow;
+                    selectedWeathers = MPF_Weathers.weathersWithoutSnow;
                 }
             }
         }
 
         private void SetCurrentWeatherState()
         {
-            if (debug) Utils.Log("previouslySelectedWeathers.Count: " + previouslySelectedWeathers.Count + " previouseWeather" + previouseWeather + " selectedWeathers.Count:" + selectedWeathers.Count + " currentWeather: " + currentWeather + " weatherTransition: " + weatherTransition);
+            if (debug) MPF_Utils.Log("previouslySelectedWeathers.Count: " + previouslySelectedWeathers.Count + " previouseWeather" + previouseWeather + " selectedWeathers.Count:" + selectedWeathers.Count + " currentWeather: " + currentWeather + " weatherTransition: " + weatherTransition);
 
             uint weatherFrom = (uint)API.GetHashKey(previouslySelectedWeathers[previouseWeather]);
             uint weatherTo = (uint)API.GetHashKey(selectedWeathers[currentWeather]);
 
             TriggerClientEvent("SetWeatherTransition", weatherFrom, weatherTo, weatherTransition);
-            if (debug) Utils.Log(String.Format("SetWeatherTransition {0} {1} {2}", weatherFrom, weatherTo, weatherTransition));
+            if (debug) MPF_Utils.Log(String.Format("SetWeatherTransition {0} {1} {2}", weatherFrom, weatherTo, weatherTransition));
         }
 
         private void GetNewWeatherUpdates()
         {
             weatherTransition = weatherTransitionPerSecond;
             previouseWeather = currentWeather;
-            currentWeather = Utils.GetRandom(0, selectedWeathers.Count - 1);
+            currentWeather = MPF_Utils.GetRandom(0, selectedWeathers.Count - 1);
             currentWeatherUpdateInMinutes = weatherUpdateIntervalInMinutes;
         }
 
@@ -605,25 +605,25 @@ namespace MPFrameworkServer
 
         private void GetRandomWind()
         {
-            currentWind = Utils.GetRandom(minWindSpeed, maxWindSpeed);
+            currentWind = MPF_Utils.GetRandom(minWindSpeed, maxWindSpeed);
         }
 
         public void GetRandomWindDirection()
         {
-            currentWindDirection = Utils.GetRandom(0, 8);
+            currentWindDirection = MPF_Utils.GetRandom(0, 8);
         }
 
         private void ApplyCurrentWind()
         {
             TriggerClientEvent("SetWind", currentWind, currentWindDirection);
-            if (debug) Utils.Log(String.Format("SetWind {0} {1}", currentWind, currentWindDirection));
+            if (debug) MPF_Utils.Log(String.Format("SetWind {0} {1}", currentWind, currentWindDirection));
         }
 
         private void UpdateTime(int hour, int minute, int second)
         {
             if (enableRealtimeGametime)
             {
-                if(debug) Utils.Log(String.Format("SetClock {0}:{1}:{2}", hour, minute, second));
+                if(debug) MPF_Utils.Log(String.Format("SetClock {0}:{1}:{2}", hour, minute, second));
                 TriggerClientEvent("SetClock", hour, minute, second);
             }
         }

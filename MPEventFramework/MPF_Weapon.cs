@@ -2,7 +2,7 @@
 
 namespace MPFrameworkClient
 {
-    public class MEF_Weapon
+    public class MPF_Weapon
     {
         public static List<string> weaponNames = new List<string>() {
             "WEAPON_KNIFE", "WEAPON_NIGHTSTICK", "WEAPON_HAMMER", "WEAPON_BAT", "WEAPON_GOLFCLUB",

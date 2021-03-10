@@ -3,7 +3,7 @@ using static CitizenFX.Core.Native.API;
 
 namespace MPFrameworkClient
 {
-    class MEF_Vehicle : BaseScript
+    class MPF_Vehicle : BaseScript
     {
         public const int HEALTH_NONE = -1;
         public const int HANDLE_NONE = -1;

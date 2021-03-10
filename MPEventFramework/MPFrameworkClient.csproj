@@ -46,11 +46,11 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ClientCore.cs" />
-    <Compile Include="MEF_Player.cs" />
+    <Compile Include="MPF_Player.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Utils.cs" />
-    <Compile Include="MEF_Vehicle.cs" />
-    <Compile Include="MEF_Weapon.cs" />
+    <Compile Include="MPF_Utils.cs" />
+    <Compile Include="MPF_Vehicle.cs" />
+    <Compile Include="MPF_Weapon.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

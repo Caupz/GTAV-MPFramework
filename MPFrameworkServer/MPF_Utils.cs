@@ -7,7 +7,7 @@ using CitizenFX.Core;
 
 namespace MPFrameworkServer
 {
-    class Utils
+    class MPF_Utils
     {
         public static void Log(string data)
         {

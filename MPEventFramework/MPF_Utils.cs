@@ -3,7 +3,7 @@ using CitizenFX.Core;
 
 namespace MPFrameworkClient
 {
-    class Utils : BaseScript
+    class MPF_Utils : BaseScript
     {
         public static void Log(string data)
         {

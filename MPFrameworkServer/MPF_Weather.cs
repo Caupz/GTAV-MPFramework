@@ -2,7 +2,7 @@
 
 namespace MPFrameworkServer
 {
-    class MEF_Weathers
+    class MPF_Weathers
     {
         public static List<string> weathersWithoutSnow = new List<string>()
         {

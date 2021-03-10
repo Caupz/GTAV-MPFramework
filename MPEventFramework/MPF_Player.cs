@@ -1,6 +1,6 @@
 ﻿namespace MPFrameworkClient
 {
-    class MEF_Player
+    class MPF_Player
     {
         public const int INVALID_PED = 0;
         public const int HEALTH_NONE = -1;
