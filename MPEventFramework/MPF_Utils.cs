@@ -3,12 +3,16 @@ using CitizenFX.Core;
 
 namespace MPFrameworkClient
 {
-    class MPF_Utils : BaseScript
+    public class MPF_Utils : BaseScript
     {
-        public static void Log(string data)
+        public static void Log(string data, string prefix = "")
         {
-            Debug.WriteLine(String.Format("BASE: {0}", data));
-            SendChatMessage(data);
+            if(prefix == "")
+            {
+                prefix = "Framework";
+            }
+            Debug.WriteLine(String.Format("{0}:{1}", prefix, data));
+            SendChatMessage(data, prefix);
         }
         public static int GetRandom(int min, int max)
         {
@@ -19,13 +23,13 @@ namespace MPFrameworkClient
         {
             TriggerEvent(eventName, args);
         }
-        public static void SendChatMessage(string message)
+        public static void SendChatMessage(string message, string prefix)
         {
             TriggerClientEvent("chat:addMessage", new
             {
                 color = new[] { 255, 255, 255 },
                 multiline = true,
-                args = new[] { "MP BASE:", message }
+                args = new[] { prefix+":", message }
             });
         }
     }
