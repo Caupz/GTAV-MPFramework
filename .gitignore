@@ -54,3 +54,5 @@ MPFrameworkServer/obj/Debug/
 
 !MPFrameworkClient.dll
 !MPFrameworkServer.dll
+MPEventFramework/bin/
+MPFrameworkServer/bin/
