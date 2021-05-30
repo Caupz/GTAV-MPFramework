@@ -342,6 +342,9 @@ ClientCore.VehicleNetworkId // Updates every second if theres a change.
 ClientCore.ControlsPressed[keyID] // return true/false according to if pressed or not.
 ```
 
+### Working gamemode using MPFramework ###  
+https://github.com/Caupz/GTAV-ExampleGamemode
+
 # #
   
 ### Contribution guidelines ###
